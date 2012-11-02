@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<buildings path="images/">
+	<shape title="FS1" file="fs1.png">
+		<Lat1>28.596665</Lat1>
+		<Lng1>-81.301963</Lng1>
+		<Lat2>28.59593</Lat2>
+		<Lng2>-81.300643</Lng2>
+		<mapPath>mc_fs1</mapPath>
+		<start>117</start>
+		<end>121</end>
+	</shape>
+	<shape title="FS2" file="fs2.png">
+		<Lat1>28.596844</Lat1>
+		<Lng1>-81.302971</Lng1>
+		<Lat2>28.595751</Lat2>
+		<Lng2>-81.301694</Lng2>
+		<mapPath>mc_fs2</mapPath>
+		<start>122</start>
+		<end>134</end>
+	</shape>
+	<shape title="FS3B" file="fs3b.png">
+		<Lat1>28.595384</Lat1>
+		<Lng1>-81.304269</Lng1>
+		<Lat2>28.594635</Lat2>
+		<Lng2>-81.30378</Lng2>
+		<mapPath>mc_fs3b</mapPath>
+		<start>52</start>
+		<end>78</end>
+	</shape>
+	<shape title="FS3C" file="fs3c.png">
+		<Lat1>28.594625</Lat1>
+		<Lng1>-81.304279</Lng1>
+		<Lat2>28.594244</Lat2>
+		<Lng2>-81.30377</Lng2>
+		<mapPath>mc_fs3d</mapPath>
+		<start>0</start>
+		<end>10</end>
+	</shape>
+	<shape title="FS3D" file="fs3d.png">
+		<Lat1>28.594234</Lat1>
+		<Lng1>-81.304236</Lng1>
+		<Lat2>28.593971</Lat2>
+		<Lng2>-81.303973</Lng2>
+		<mapPath>mc_fs3e</mapPath>
+		<start>85</start>
+		<end>100</end>
+	</shape>
+	<shape title="FS3F" file="fs3f.png">
+		<Lat1>28.593957</Lat1>
+		<Lng1>-81.305502</Lng1>
+		<Lat2>28.593274</Lat2>
+		<Lng2>-81.304531</Lng2>
+		<mapPath>mc_fs3f</mapPath>
+		<start>0</start>
+		<end>10</end>
+	</shape>
+	<shape title="FS4A" file="fs4a.png">
+		<Lat1>28.592873</Lat1>
+		<Lng1>-81.305486</Lng1>
+		<Lat2>28.592011</Lat2>
+		<Lng2>-81.304016</Lng2>
+		<mapPath>mc_fs4a</mapPath>
+		<start>0</start>
+		<end>10</end>
+	</shape>
+	<shape title="FS4B" file="fs4b.png">
+		<Lat1>28.591997</Lat1>
+		<Lng1>-81.304252</Lng1>
+		<Lat2>28.591573</Lat2>
+		<Lng2>-81.303571</Lng2>
+		<mapPath>mc_fs4b</mapPath>
+		<start>0</start>
+		<end>10</end>
+	</shape>
+	<shape title="FS4E" file="fs4e.png">
+		<Lat1>28.590824</Lat1>
+		<Lng1>-81.30503</Lng1>
+		<Lat2>28.590082</Lat2>
+		<Lng2>-81.30419</Lng2>
+		<mapPath>mc_fs4e</mapPath>
+		<start>0</start>
+		<end>10</end>
+	</shape>
+	<shape title="FS3E Library" file="fsLibrary.png">
+		<Lat1>28.593975</Lat1>
+		<Lng1>-81.304563</Lng1>
+		<Lat2>28.593778</Lat2>
+		<Lng2>-81.304204</Lng2>
+		<mapPath>mc_fsLibrary</mapPath>
+		<start>4</start>
+		<end>22</end>
+	</shape>
+	<shape title="FS Live" file="fsLive.png">
+		<Lat1>28.596057</Lat1>
+		<Lng1>-81.30436</Lng1>
+		<Lat2>28.59569</Lat2>
+		<Lng2>-81.303861</Lng2>
+		<mapPath>mc_fsLive</mapPath>
+		<start>135</start>
+		<end>145</end>
+	</shape>
+</buildings>

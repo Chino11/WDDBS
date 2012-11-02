@@ -50,7 +50,7 @@ package com.dfp.model
 			var i:int = 0;
 			trace("These are the buildings: ", buildings);
 			for each(var xml:XML in xmlData.shape){
-				var bldVO:BldgPointVO = new BldgPointVO;
+				var bldVO:BuildingVO = new BuildingVO;
 				bldVO.Lat1 = Number(xml.Lat1);
 				bldVO.Lng1 = Number(xml.Lng1);
 				bldVO.Lat2 = Number(xml.Lat2);

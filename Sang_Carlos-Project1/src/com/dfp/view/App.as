@@ -1,6 +1,6 @@
 package com.dfp.view
 {
-	import com.dfp.model.BldgPointVO;
+	import com.dfp.model.BuildingVO;
 	import com.mapquest.LatLng;
 	import com.mapquest.LatLngCollection;
 	import com.mapquest.tilemap.Size;
@@ -96,7 +96,7 @@ package com.dfp.view
 			//Adding buildings to the map
 			_bldPoints = value;
 			var io:IOView = new IOView();
-			for each(var b:BldgPointVO in _bldPoints){
+			for each(var b:BuildingVO in _bldPoints){
 				io = new IOView();
 				var shapePts:LatLngCollection = new LatLngCollection();
 				var latLng1:LatLng = new LatLng(b.Lat1, b.Lng1);
@@ -188,6 +188,8 @@ package com.dfp.view
 			addChild(_fullScreen);
 			
 			_map.scaleX = _map.scaleY = .15;
+			_map.x = _map.width/2 + 10;
+			_map.y = _map.height/2 + 10;
 			_fullScreen.viewFullScreen.addChild(_map);
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			

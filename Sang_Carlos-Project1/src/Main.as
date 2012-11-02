@@ -2,7 +2,7 @@ package
 {
 	import com.dfp.controller.BuildingArrayEvent;
 	import com.dfp.model.ApiService;
-	import com.dfp.model.BldgPointVO;
+	import com.dfp.model.BuildingVO;
 	import com.dfp.view.App;
 	import com.dfp.view.Preloader;
 	

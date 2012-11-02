@@ -21,7 +21,7 @@ package
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
 		
-	[SWF (width="900", height="480")]
+	[SWF (width="1103", height="570")]
 	
 	public class Main extends Sprite
 	{	

@@ -63,6 +63,7 @@ package
 			_preloader = new Preloader;
 			_preloader.x = stage.stageWidth*.5 - _preloader.width*.5;
 			_preloader.y = stage.stageHeight*.5 - _preloader.height *.5;
+			
 			addChild(_preloader);
 		}
 		
@@ -98,6 +99,7 @@ package
 			tf.autoSize = TextFieldAutoSize.LEFT;
 			tf.x = stage.stageWidth*.5 - tf.width*.5;
 			tf.y = stage.stageHeight*.5 - tf.height*.5;
+			
 			addChild(tf);
 			removeChild(_preloader);
 		}
@@ -106,6 +108,7 @@ package
 		{
 			//Setting appView's voArray equal to apiService voArray when info is parsed and removing preloader;
 			removeChild(_preloader);
+			
 			_appView = new App();
 			_appView.voArray = event.voArray;
 			

@@ -68,7 +68,6 @@ package com.dfp.view
 			
 			_tileMap = new TileMap(MAP_KEY,16, new LatLng(28.59334,-81.303166));
 			_tileMap.size = new Size(500, 425);
-			//_tileMap.addControl(new MouseWheelZoomControl());
 			_tileMap.addControl(new SMViewControl());
 			_tileMap.addControl(new SMLargeZoomControl());
 			_tileMap.zoomIn();
@@ -82,8 +81,6 @@ package com.dfp.view
 			_autoplay = "0";
 			_color = "white";
 			_rel = "0";
-			var start:uint = 0;
-			var end:uint = 10;
 			
 			_video = new Loader();
 			_video.load(new URLRequest("http://www.youtube.com/v/"+_videoCode+"?version=3&autoplay="+_autoplay+"&color="+_color+"&rel="+_rel));
@@ -127,6 +124,7 @@ package com.dfp.view
 			_tooltip.tfTooltip.text = bld.tooltip;
 			_tooltip.x = mouseX;
 			_tooltip.y = mouseY;
+			
 			addChild(_tooltip)
 		}
 		
@@ -153,11 +151,10 @@ package com.dfp.view
 			_map = MovieClip(_fsMap.getChildByName(path));
 			
 			if(this.contains(_tooltip)) removeChild(_tooltip);
-
 			if(_video.getChildAt(0)) (_video.getChildAt(0) as Object).stopVideo();
 
 			viewVideo.removeChildren();
-
+			
 			buildThumbMap();
 			
 			//Preparing next video
@@ -167,6 +164,7 @@ package com.dfp.view
 			_videoBld = new Loader();
 			_videoBld.load(new URLRequest("http://www.youtube.com/v/4Rp-pJxXj6Y?version=3&autoplay=0&color=white&rel=0&start="+start+"&end="+end));
 			_videoBld.contentLoaderInfo.addEventListener(Event.INIT, onLoaderInitBld);
+			
 			viewVideo.addChild(_videoBld);	
 		}
 		
@@ -195,9 +193,9 @@ package com.dfp.view
 			
 			_map.addEventListener(MouseEvent.MOUSE_DOWN, onDrag);
 			_map.addEventListener(MouseEvent.MOUSE_UP, onStopDrag);
+			_map.addEventListener(Event.ENTER_FRAME, onEnterFrame);		
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onBldKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onBldKeyUp);
-			_map.addEventListener(Event.ENTER_FRAME, onEnterFrame);		
 			
 			_fullScreen.btnClose.buttonMode = true;
 			_fullScreen.btnClose.mouseChildren = false;
@@ -222,6 +220,7 @@ package com.dfp.view
 			while(_fullScreen.viewFullScreen.numChildren > 2){
 				_fullScreen.viewFullScreen.removeChildAt(_fullScreen.viewFullScreen.numChildren-1)
 			}
+			
 			removeChild(_fullScreen);
 			buildThumbMap();
 		}

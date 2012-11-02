@@ -8,11 +8,11 @@ package com.dfp.model
 	{
 		public var Lat1:Number;
 		public var Lng1:Number;
-		
 		public var Lat2:Number;
 		public var Lng2:Number;
 		
 		public var bldIndex:int;
+		
 		public var imageURL:String;
 		public var mapPath:String;
 		public var title:String;

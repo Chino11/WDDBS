@@ -11,7 +11,6 @@ package
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
-	import flash.geom.Rectangle;
 	import flash.media.Camera;
 	import flash.media.Video;
 	import flash.ui.Keyboard;

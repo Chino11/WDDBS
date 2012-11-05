@@ -2,8 +2,13 @@ package
 {
 	import com.ca.model.AppModel;
 	import com.ca.view.Settings;
+	import com.greensock.*;
+	import com.greensock.easing.*;
 	
 	import flash.display.NativeWindow;
+	import flash.display.NativeWindowInitOptions;
+	import flash.display.NativeWindowSystemChrome;
+	import flash.display.NativeWindowType;
 	import flash.display.Screen;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -16,7 +21,7 @@ package
 	import flash.media.Video;
 	import flash.system.Capabilities;
 	import flash.ui.Keyboard;
-	
+
 	public class Main extends Sprite
 	{
 		private var _video:Video;
@@ -24,6 +29,7 @@ package
 		private var _resolutions:Array = ["128 x 96","176 x 144","352 x 288","704 x 576","1408 x 1152"];
 		private var _c:Camera;
 		private var _settings:Settings;
+		private var _mainScreen:NativeWindow;
 		
 		
 		public function Main()
@@ -47,7 +53,8 @@ package
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			stage.scaleMode = StageScaleMode.SHOW_ALL;
 			stage.align = StageAlign.TOP;
-			stage.nativeWindow.alwaysInFront = true;		
+			stage.nativeWindow.alwaysInFront = true;	
+			_mainScreen = stage.nativeWindow;
 		}
 		
 		// Responds to StageFunctions
@@ -125,13 +132,22 @@ package
 		
 		private function addSettings():void
 		{
+			var options:NativeWindowInitOptions = new NativeWindowInitOptions();
+//			options.transparent = true;
+			options.systemChrome = NativeWindowSystemChrome.STANDARD;
+			options.type = NativeWindowType.NORMAL;
+			var nw:NativeWindow = new NativeWindow(options);
+			nw.x = _mainScreen.x;
+			nw.y = _mainScreen.y;
 			_settings = new Settings();
 			//_settings.width = _video.width;
 			//_settings.height = _video.height / 2;
 			_settings.y = _video.height - _settings.height;
 			_settings.x = (_video.width - _settings.width) / 2;
 			_settings.closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
-			addChild(_settings);
+			nw.stage.addChild(_settings);
+			nw.activate();
+			TweenLite.to(nw, 1, {x:_mainScreen.x, y:_mainScreen.y + _mainScreen.height, ease:Linear.easeNone});
 		}
 		
 		private function onCloseClick(event:MouseEvent):void

@@ -83,7 +83,7 @@ package
 //				"stage.nativeWindow.width : ",stage.nativeWindow.bounds, Screen.mainScreen.bounds,
 			}
 			if(event.keyCode == Keyboard.M){
-				stage.nativeWindow.x =  470;
+				stage.nativeWindow.x =  471;
 				stage.nativeWindow.y = 225;
 			}
 		}

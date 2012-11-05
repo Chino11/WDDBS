@@ -1,5 +1,4 @@
-package
-{
+package{
 	import com.ca.model.AppModel;
 	import com.ca.view.Settings;
 	import com.greensock.*;
@@ -23,38 +22,30 @@ package
 	import flash.system.Capabilities;
 	import flash.ui.Keyboard;
 
-	public class Main extends Sprite
-	{
+	public class Main extends Sprite{
 		private var _video:Video;
 		private var _webcams:Array = Camera.names;
 		private var _resolutions:Array = ["128 x 96","176 x 144","352 x 288","704 x 576","1408 x 1152"];
 		private var _c:Camera;
 		private var _settings:Settings;
 		private var _mainScreen:NativeWindow;
-
 		private var _nw:NativeWindow;
-
 		private var _bar:Sprite;
 		
 		
-		public function Main()
-		{
+		public function Main(){
 			settingWebcam();
 			stageFunctions();
 			settingEffects();
-			
-			var model:AppModel = new AppModel;
 		}
 		
-		private function settingEffects():void
-		{
+		private function settingEffects():void{
 			var b:BlurFilter = new BlurFilter(0,0,0);
 			_video.filters = [b];
 		}
 		
 		// Responds to Constructor
-		private function stageFunctions():void
-		{
+		private function stageFunctions():void{
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			stage.scaleMode = StageScaleMode.SHOW_ALL;
 			stage.align = StageAlign.TOP;
@@ -63,14 +54,12 @@ package
 		}
 		
 		// Responds to StageFunctions
-		private function onEnterFrame(event:Event):void
-		{
+		private function onEnterFrame(event:Event):void{
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		}
 		
 		// Responds to EnterFrame Event
-		private function onKeyDown(event:KeyboardEvent):void
-		{
+		private function onKeyDown(event:KeyboardEvent):void{
 			if(event.keyCode == Keyboard.L){
 				stage.nativeWindow.width = 500;
 				stage.nativeWindow.height = 397;
@@ -115,8 +104,8 @@ package
 			}
 		}
 		
-		private function settingWebcam():void
-		{	
+		// Responds to the Constructor
+		private function settingWebcam():void{	
 			drawRect();
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
@@ -138,8 +127,7 @@ package
 			//addItem({data:1, Label:"Apple iSight});
 		}
 		
-		private function drawRect():void
-		{
+		private function drawRect():void{
 			_bar = new Sprite;
 			_bar.graphics.beginFill(0xff0000,5);
 			_bar.graphics.drawRect(0,stage.stageHeight-10,stage.stageWidth,10);
@@ -147,17 +135,15 @@ package
 			_bar.addEventListener(MouseEvent.CLICK, onBarClick);
 		}
 		
-		private function onBarClick(event:MouseEvent):void
-		{
+		private function onBarClick(event:MouseEvent):void{
 			addSettings();
 		}
 		
-		private function addSettings():void
-		{
+		private function addSettings():void{
 			var options:NativeWindowInitOptions = new NativeWindowInitOptions();
-//			options.transparent = true;
-			options.systemChrome = NativeWindowSystemChrome.STANDARD;
+			options.systemChrome = NativeWindowSystemChrome.NONE;
 			options.type = NativeWindowType.NORMAL;
+			options.transparent = true;
 			_nw = new NativeWindow(options);
 			_nw.x = _mainScreen.x;
 			_nw.y = _mainScreen.y;		
@@ -165,8 +151,8 @@ package
 			_nw.width = _mainScreen.width;
 			_settings = new Settings();
 			_settings.y = 0;
-			_settings.x = -15;
-			_settings.scaleX = _settings.scaleY = .21;
+			_settings.x = -10;
+			_settings.scaleX = _settings.scaleY = .19;
 			_settings.closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
 			_nw.stage.addChild(_settings);
 			_nw.stage.addEventListener(MouseEvent.CLICK, onStageClick);
@@ -174,14 +160,12 @@ package
 			TweenLite.to(_nw, 1, {x:_mainScreen.x, y:_mainScreen.y + _mainScreen.height, ease:Linear.easeNone});
 		}
 		
-		protected function onStageClick(event:MouseEvent):void
-		{
+		private function onStageClick(event:MouseEvent):void{
 			var s:Stage = Stage(event.currentTarget)
 			trace(s.mouseX, s.mouseY);
 		}
 		
-		private function onCloseClick(event:MouseEvent):void
-		{
+		private function onCloseClick(event:MouseEvent):void{
 			removeChild(_settings);
 		}
 	}

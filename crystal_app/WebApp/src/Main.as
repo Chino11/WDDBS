@@ -11,6 +11,7 @@ package
 	import flash.display.NativeWindowType;
 	import flash.display.Screen;
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
@@ -121,6 +122,8 @@ package
 			_video.smoothing = true;
 			addChild(_video);
 			addChild(_bar);
+			stage.nativeWindow.y = 0;
+			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width) / 2;
 			
 			_c = Camera.getCamera();
 			_c.setMode(stage.stageWidth, stage.stageHeight, 30);
@@ -157,16 +160,24 @@ package
 			options.type = NativeWindowType.NORMAL;
 			_nw = new NativeWindow(options);
 			_nw.x = _mainScreen.x;
-			_nw.y = _mainScreen.y;
+			_nw.y = _mainScreen.y;		
+			_nw.height = 375;
+			_nw.width = _mainScreen.width;
 			_settings = new Settings();
-			//_settings.width = _video.width;
-			//_settings.height = _video.height / 2;
-			_settings.y = _video.height - _settings.height;
-			_settings.x = (_video.width - _settings.width) / 2;
+			_settings.y = 0;
+			_settings.x = -15;
+			_settings.scaleX = _settings.scaleY = .21;
 			_settings.closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
 			_nw.stage.addChild(_settings);
-			_nw.activate();
+			_nw.stage.addEventListener(MouseEvent.CLICK, onStageClick);
+			_nw.activate();	
 			TweenLite.to(_nw, 1, {x:_mainScreen.x, y:_mainScreen.y + _mainScreen.height, ease:Linear.easeNone});
+		}
+		
+		protected function onStageClick(event:MouseEvent):void
+		{
+			var s:Stage = Stage(event.currentTarget)
+			trace(s.mouseX, s.mouseY);
 		}
 		
 		private function onCloseClick(event:MouseEvent):void

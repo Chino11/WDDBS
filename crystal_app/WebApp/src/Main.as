@@ -2,8 +2,13 @@ package
 {
 	import com.ca.model.AppModel;
 	import com.ca.view.Settings;
+	import com.greensock.*;
+	import com.greensock.easing.*;
 	
 	import flash.display.NativeWindow;
+	import flash.display.NativeWindowInitOptions;
+	import flash.display.NativeWindowSystemChrome;
+	import flash.display.NativeWindowType;
 	import flash.display.Screen;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -16,7 +21,7 @@ package
 	import flash.media.Video;
 	import flash.system.Capabilities;
 	import flash.ui.Keyboard;
-	
+
 	public class Main extends Sprite
 	{
 		private var _video:Video;
@@ -26,6 +31,7 @@ package
 		private var _settings:Settings;
 
 		private var _bar:Sprite;
+		private var _mainScreen:NativeWindow;
 		
 		
 		public function Main()
@@ -49,7 +55,8 @@ package
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			stage.scaleMode = StageScaleMode.SHOW_ALL;
 			stage.align = StageAlign.TOP;
-			stage.nativeWindow.alwaysInFront = true;		
+			stage.nativeWindow.alwaysInFront = true;	
+			_mainScreen = stage.nativeWindow;
 		}
 		
 		// Responds to StageFunctions
@@ -62,34 +69,34 @@ package
 		private function onKeyDown(event:KeyboardEvent):void
 		{
 			if(event.keyCode == Keyboard.L){
-				stage.nativeWindow.x = 0;
-				stage.nativeWindow.y = 0;
 				stage.nativeWindow.width = 500;
 				stage.nativeWindow.height = 397;
+				stage.nativeWindow.x = 0;
+				stage.nativeWindow.y = 0;
 			}
 			if(event.keyCode == Keyboard.R){
-				stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
-				stage.nativeWindow.y = 0;
 				stage.nativeWindow.width = 500;
 				stage.nativeWindow.height = 397;
+				stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
+				stage.nativeWindow.y = 0;
 			}
 			if(event.keyCode == Keyboard.V){
-				stage.nativeWindow.x = 0;
-				stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
 				stage.nativeWindow.width = 500;
 				stage.nativeWindow.height = 397;
+				stage.nativeWindow.x = 0;
+				stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
 			}
 			if(event.keyCode == Keyboard.N){
-				stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
-				stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
 				stage.nativeWindow.width = 500;
 				stage.nativeWindow.height = 397;
+				stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
+				stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
 			}
 			if(event.keyCode == Keyboard.F){
-				stage.nativeWindow.x = 0;
-				stage.nativeWindow.y = 0;
 				stage.nativeWindow.width = Capabilities.screenResolutionX;
 				stage.nativeWindow.height = Capabilities.screenResolutionY;
+				stage.nativeWindow.x = 0;
+				stage.nativeWindow.y = 0;
 				
 				//stage.scaleMode = StageScaleMode.SHOW_ALL;
 				//stage.align = StageAlign.TOP;
@@ -98,6 +105,8 @@ package
 //				trace("stage.nativeWindow.width : ",stage.nativeWindow.bounds)
 			}
 			if(event.keyCode == Keyboard.M){
+				stage.nativeWindow.width = 500;
+				stage.nativeWindow.height = 397;
 				stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width)/2;
 				stage.nativeWindow.y = (Screen.mainScreen.bounds.height - stage.nativeWindow.height)/2;
 			}
@@ -118,7 +127,7 @@ package
 			
 			//Screen.mainScreen.visibleBounds()
 			Screen.mainScreen.visibleBounds.x = 0;
-			Screen.mainScreen.visibleBounds.y = 22;
+			Screen.mainScreen.visibleBounds.y = 0;
 			Screen.mainScreen.visibleBounds.width = 1440;
 			Screen.mainScreen.visibleBounds.height = _c.height;
 			//addItem({data:1, Label:"Apple iSight});
@@ -138,15 +147,25 @@ package
 			addSettings();
 		}
 		
-		private function addSettings():void
-		{
+		private function addSettings():void {
+			var options:NativeWindowInitOptions = new NativeWindowInitOptions();
+//			options.transparent = true;
+			options.systemChrome = NativeWindowSystemChrome.STANDARD;
+			options.type = NativeWindowType.NORMAL;
+			var nw:NativeWindow = new NativeWindow(options);
+			nw.x = _mainScreen.x;
+			nw.y = _mainScreen.y;
+			nw.width = _mainScreen.width;
+			nw.height = _mainScreen.height;
 			_settings = new Settings();
-			//_settings.width = _video.width;
-			//_settings.height = _video.height / 2;
-			_settings.y = _video.height - _settings.height;
-			_settings.x = (_video.width - _settings.width) / 2;
+			_settings.width = nw.width;
+			_settings.height = nw.height;
+//			_settings.x = nw.x;
+//			_settings.y = nw.y;
 			_settings.closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
-			addChild(_settings);
+			nw.stage.addChild(_settings);
+			nw.activate();
+			TweenLite.to(nw, 1, {x:_mainScreen.x, y:_mainScreen.y + _mainScreen.height, ease:Linear.easeNone});
 		}
 		
 		private function onCloseClick(event:MouseEvent):void

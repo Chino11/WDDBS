@@ -24,6 +24,8 @@ package
 		private var _resolutions:Array = ["128 x 96","176 x 144","352 x 288","704 x 576","1408 x 1152"];
 		private var _c:Camera;
 		private var _settings:Settings;
+
+		private var _bar:Sprite;
 		
 		
 		public function Main()
@@ -62,43 +64,57 @@ package
 			if(event.keyCode == Keyboard.L){
 				stage.nativeWindow.x = 0;
 				stage.nativeWindow.y = 0;
+				stage.nativeWindow.width = 500;
+				stage.nativeWindow.height = 397;
 			}
 			if(event.keyCode == Keyboard.R){
-				stage.nativeWindow.x =  940;
+				stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
 				stage.nativeWindow.y = 0;
+				stage.nativeWindow.width = 500;
+				stage.nativeWindow.height = 397;
 			}
 			if(event.keyCode == Keyboard.V){
 				stage.nativeWindow.x = 0;
-				stage.nativeWindow.y = 450;
+				stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
+				stage.nativeWindow.width = 500;
+				stage.nativeWindow.height = 397;
 			}
 			if(event.keyCode == Keyboard.N){
-				stage.nativeWindow.x =  Screen.mainScreen.bounds.width - stage.nativeWindow.width;
-				stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height;
+				stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
+				stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
+				stage.nativeWindow.width = 500;
+				stage.nativeWindow.height = 397;
 			}
 			if(event.keyCode == Keyboard.F){
+				stage.nativeWindow.x = 0;
+				stage.nativeWindow.y = 0;
+				stage.nativeWindow.width = Capabilities.screenResolutionX;
+				stage.nativeWindow.height = Capabilities.screenResolutionY;
+				
 				//stage.scaleMode = StageScaleMode.SHOW_ALL;
 				//stage.align = StageAlign.TOP;
 				
-				trace("X & Y :",Capabilities.screenResolutionX, Capabilities.screenResolutionY)
-//				"stage.nativeWindow.width : ",stage.nativeWindow.bounds, Screen.mainScreen.bounds,
+//				trace("X & Y :",Capabilities.screenResolutionX, Capabilities.screenResolutionY)
+//				trace("stage.nativeWindow.width : ",stage.nativeWindow.bounds)
 			}
 			if(event.keyCode == Keyboard.M){
-				stage.nativeWindow.x =  471;
-				stage.nativeWindow.y = 225;
+				stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width)/2;
+				stage.nativeWindow.y = (Screen.mainScreen.bounds.height - stage.nativeWindow.height)/2;
 			}
 		}
 		
 		private function settingWebcam():void
 		{	
+			drawRect();
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
 			addChild(_video);
+			addChild(_bar);
 			
 			_c = Camera.getCamera();
 			_c.setMode(stage.stageWidth, stage.stageHeight, 30);
 			_video.attachCamera(_c);
 			
-			drawRect();
 			
 			//Screen.mainScreen.visibleBounds()
 			Screen.mainScreen.visibleBounds.x = 0;
@@ -110,12 +126,11 @@ package
 		
 		private function drawRect():void
 		{
-			var bar:Sprite = new Sprite;
-			bar.graphics.beginFill(0xff0000,5);
-			bar.graphics.drawRect(0,stage.stageHeight,stage.stageWidth,10);
-			bar.graphics.endFill();
-			bar.addEventListener(MouseEvent.CLICK, onBarClick);
-			addChild(bar);
+			_bar = new Sprite;
+			_bar.graphics.beginFill(0xff0000,5);
+			_bar.graphics.drawRect(0,stage.stageHeight-10,stage.stageWidth,10);
+			_bar.graphics.endFill();
+			_bar.addEventListener(MouseEvent.CLICK, onBarClick);
 		}
 		
 		private function onBarClick(event:MouseEvent):void

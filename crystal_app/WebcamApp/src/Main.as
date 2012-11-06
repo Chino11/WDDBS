@@ -25,13 +25,12 @@ package{
 	
 	public class Main extends Sprite{
 		private var _video:Video;
-		private var _webcams:Array = Camera.names;
+//		private var _webcams:Array = Camera.names;
 		private var _resolutions:Array = ["128 x 96","176 x 144","352 x 288","704 x 576","1408 x 1152"];
 		private var _c:Camera;
 		private var _settings:Settings;
-		
 		private var _settingsIcon:Sprite;
-		private var _bar:Sprite;
+//		private var _bar:Sprite;
 		private var _mainScreen:NativeWindow;
 		private var _nw:NativeWindow;
 		

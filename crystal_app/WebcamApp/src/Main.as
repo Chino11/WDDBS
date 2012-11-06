@@ -192,7 +192,7 @@ package
 		
 		private function settingWebcam():void
 		{	
-			drawRect();
+			createSettingIcon();
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
 			addChild(_video);
@@ -213,17 +213,15 @@ package
 			//addItem({data:1, Label:"Apple iSight});
 		}
 		
-		private function drawRect():void
+		private function createSettingIcon():void
 		{
-			_bar = new Sprite;
 			_bar.graphics.beginFill(0xff0000,5);
 			_bar.graphics.drawRect(0,stage.stageHeight-10,stage.stageWidth,10);
 			_bar.graphics.endFill();
 			_bar.addEventListener(MouseEvent.CLICK, onBarClick);
 		}
 		
-		private function onBarClick(event:MouseEvent):void
-		{
+		private function onBarClick(event:MouseEvent):void{
 			addSettings();
 		}
 		

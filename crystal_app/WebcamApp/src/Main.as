@@ -29,6 +29,8 @@ package{
 		private var _resolutions:Array = ["128 x 96","176 x 144","352 x 288","704 x 576","1408 x 1152"];
 		private var _c:Camera;
 		private var _settings:Settings;
+		
+		private var _settingsIcon:Sprite;
 		private var _bar:Sprite;
 		private var _mainScreen:NativeWindow;
 		private var _nw:NativeWindow;
@@ -157,14 +159,22 @@ package{
 			stage.align = StageAlign.TOP;
 			stage.nativeWindow.alwaysInFront = true;	
 			_mainScreen = stage.nativeWindow;
+			_mainScreen.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+			_mainScreen.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+		}
+		
+		private function onMouseOut(event:Event):void{
+			
+		}
+		
+		private function onMouseOver(event:Event):void{
+			settingsIcon();
 		}
 		
 		private function settingWebcam():void{	
-			createSettingIcon();
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
 			addChild(_video);
-			addChild(_bar);
 			stage.nativeWindow.y = 0;
 			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width) / 2;
 			
@@ -181,12 +191,18 @@ package{
 			//addItem({data:1, Label:"Apple iSight});
 		}
 		
-		private function createSettingIcon():void{
-			_bar.graphics.beginFill(0xff0000,5);
-			_bar.graphics.drawRect(0,stage.stageHeight-10,stage.stageWidth,10);
-			_bar.graphics.endFill();
-			_bar.addEventListener(MouseEvent.CLICK, onBarClick);
+		private function settingsIcon():void{
+			_settingsIcon = new Gear;
+			_settingsIcon.x = (_mainScreen.width - _settingsIcon.width) - 5;
+			_settingsIcon.y = (_mainScreen.height - _settingsIcon.height) - 5;
+			_settingsIcon.addEventListener(MouseEvent.CLICK, onSettingsClick);
+			addChild(_settingsIcon);
+
 		}
+		
+		private function onSettingsClick(event:MouseEvent):void{
+		}
+		
 		
 		private function onBarClick(event:MouseEvent):void{
 			addSettings();
@@ -194,7 +210,7 @@ package{
 		
 		private function addSettings():void {
 			var options:NativeWindowInitOptions = new NativeWindowInitOptions();
-			//			options.transparent = true;
+			options.transparent = true;
 			options.systemChrome = NativeWindowSystemChrome.STANDARD;
 			options.type = NativeWindowType.NORMAL;
 			var nw:NativeWindow = new NativeWindow(options);
@@ -205,8 +221,6 @@ package{
 			_settings = new Settings();
 			_settings.width = nw.width;
 			_settings.height = nw.height;
-			//			_settings.x = nw.x;
-			//			_settings.y = nw.y;
 			_nw = new NativeWindow(options);
 			_nw.x = _mainScreen.x;
 			_nw.y = _mainScreen.y;		

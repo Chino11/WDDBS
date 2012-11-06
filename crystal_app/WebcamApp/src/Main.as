@@ -1,5 +1,4 @@
-package
-{
+package{
 	import com.ca.model.AppModel;
 	import com.ca.view.Settings;
 	import com.greensock.*;
@@ -18,30 +17,28 @@ package
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
-	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
 	import flash.filters.BlurFilter;
 	import flash.media.Camera;
 	import flash.media.Video;
 	import flash.system.Capabilities;
-	import flash.ui.Keyboard;
 	
-	public class Main extends Sprite
-	{
+	public class Main extends Sprite{
 		private var _video:Video;
 		private var _webcams:Array = Camera.names;
 		private var _resolutions:Array = ["128 x 96","176 x 144","352 x 288","704 x 576","1408 x 1152"];
 		private var _c:Camera;
 		private var _settings:Settings;
+<<<<<<< HEAD
 		
 		private var _settingsIcon:Sprite;
+=======
+		private var _bar:Sprite;
+>>>>>>> bf24bf4c9d4e109d5fe02cd229de8d96fdc166d0
 		private var _mainScreen:NativeWindow;
-		
 		private var _nw:NativeWindow;
 		
-		public function Main()
-		{
+		public function Main(){
 			settingWebcam();
 			stageFunctions();
 			settingEffects();
@@ -51,8 +48,7 @@ package
 			var model:AppModel = new AppModel;
 		}
 		
-		private function setupMenu():void
-		{
+		private function setupMenu():void{
 			var menu:NativeMenu = NativeApplication.nativeApplication.menu;
 			
 			var positionMenu:NativeMenuItem = new NativeMenuItem("Position");
@@ -99,56 +95,49 @@ package
 			NativeApplication.nativeApplication.menu = menu;
 		}
 		
-		private function onFullscreen(event:Event):void
-		{
+		private function onFullscreen(event:Event):void{
 			stage.nativeWindow.width = Capabilities.screenResolutionX;
 			stage.nativeWindow.height = Capabilities.screenResolutionY;
 			stage.nativeWindow.x = 0;
 			stage.nativeWindow.y = 0;
 		}
 		
-		private function onMiddle(event:Event):void
-		{
+		private function onMiddle(event:Event):void{
 			stage.nativeWindow.width = 500;
 			stage.nativeWindow.height = 397;
 			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width)/2;
 			stage.nativeWindow.y = (Screen.mainScreen.bounds.height - stage.nativeWindow.height)/2;
 		}
 		
-		private function onTopRight(event:Event):void
-		{
+		private function onTopRight(event:Event):void{
 			stage.nativeWindow.width = 500;
 			stage.nativeWindow.height = 397;
 			stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
 			stage.nativeWindow.y = 0;
 		}
 		
-		private function onTopLeft(event:Event):void
-		{
+		private function onTopLeft(event:Event):void{
 			stage.nativeWindow.width = 500;
 			stage.nativeWindow.height = 397;
 			stage.nativeWindow.x = 0;
 			stage.nativeWindow.y = 0;
 		}
 		
-		private function onBottomRight(event:Event):void
-		{
+		private function onBottomRight(event:Event):void{
 			stage.nativeWindow.width = 500;
 			stage.nativeWindow.height = 397;
 			stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
 			stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
 		}
 		
-		private function onBottomLeft(event:Event):void
-		{
+		private function onBottomLeft(event:Event):void{
 			stage.nativeWindow.width = 500;
 			stage.nativeWindow.height = 397;
 			stage.nativeWindow.x = 0;
 			stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
 		}
 		
-		private function setupChrome():void
-		{
+		private function setupChrome():void{
 			//just add the assets for the close button
 			
 			//for close window function
@@ -162,16 +151,13 @@ package
 			//stage.nativeWindow.startMove();
 		}
 		
-		private function settingEffects():void
-		{
+		private function settingEffects():void{
 			var b:BlurFilter = new BlurFilter(0,0,0);
 			_video.filters = [b];
 		}
 		
 		// Responds to Constructor
-		private function stageFunctions():void
-		{
-			addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		private function stageFunctions():void{
 			stage.scaleMode = StageScaleMode.SHOW_ALL;
 			stage.align = StageAlign.TOP;
 			stage.nativeWindow.alwaysInFront = true;	
@@ -180,6 +166,7 @@ package
 			_mainScreen.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 		}
 		
+<<<<<<< HEAD
 		private function onMouseOut(event:Event):void
 		{
 			
@@ -205,6 +192,10 @@ package
 		
 		private function settingWebcam():void
 		{	
+=======
+		private function settingWebcam():void{	
+			createSettingIcon();
+>>>>>>> bf24bf4c9d4e109d5fe02cd229de8d96fdc166d0
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
 			addChild(_video);
@@ -224,6 +215,7 @@ package
 			//addItem({data:1, Label:"Apple iSight});
 		}
 		
+<<<<<<< HEAD
 		private function settingsIcon():void
 		{
 			_settingsIcon = new Gear;
@@ -236,6 +228,16 @@ package
 		
 		private function onSettingsClick(event:MouseEvent):void
 		{
+=======
+		private function createSettingIcon():void{
+			_bar.graphics.beginFill(0xff0000,5);
+			_bar.graphics.drawRect(0,stage.stageHeight-10,stage.stageWidth,10);
+			_bar.graphics.endFill();
+			_bar.addEventListener(MouseEvent.CLICK, onBarClick);
+		}
+		
+		private function onBarClick(event:MouseEvent):void{
+>>>>>>> bf24bf4c9d4e109d5fe02cd229de8d96fdc166d0
 			addSettings();
 		}
 		
@@ -268,14 +270,12 @@ package
 			TweenLite.to(_nw, 1, {x:_mainScreen.x, y:_mainScreen.y + _mainScreen.height, ease:Linear.easeNone});
 		}
 		
-		private function onStageClick(event:MouseEvent):void
-		{
+		private function onStageClick(event:MouseEvent):void{
 			var s:Stage = Stage(event.currentTarget)
 			trace(s.mouseX, s.mouseY);
 		}
 		
-		private function onCloseClick(event:MouseEvent):void
-		{
+		private function onCloseClick(event:MouseEvent):void{
 			removeChild(_settings);
 		}
 	}

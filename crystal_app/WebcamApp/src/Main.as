@@ -29,12 +29,9 @@ package{
 		private var _resolutions:Array = ["128 x 96","176 x 144","352 x 288","704 x 576","1408 x 1152"];
 		private var _c:Camera;
 		private var _settings:Settings;
-<<<<<<< HEAD
 		
 		private var _settingsIcon:Sprite;
-=======
 		private var _bar:Sprite;
->>>>>>> bf24bf4c9d4e109d5fe02cd229de8d96fdc166d0
 		private var _mainScreen:NativeWindow;
 		private var _nw:NativeWindow;
 		
@@ -166,36 +163,15 @@ package{
 			_mainScreen.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 		}
 		
-<<<<<<< HEAD
-		private function onMouseOut(event:Event):void
-		{
+		private function onMouseOut(event:Event):void{
 			
 		}
 		
-		private function onMouseOver(event:Event):void
-		{
+		private function onMouseOver(event:Event):void{
 			settingsIcon();
 		}
 		
-		
-		// Responds to StageFunctions
-		private function onEnterFrame(event:Event):void
-		{
-			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyDown);
-		}
-		
-		// Responds to EnterFrame Event
-		private function onKeyDown(event:KeyboardEvent):void
-		{
-
-		}
-		
-		private function settingWebcam():void
-		{	
-=======
 		private function settingWebcam():void{	
-			createSettingIcon();
->>>>>>> bf24bf4c9d4e109d5fe02cd229de8d96fdc166d0
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
 			addChild(_video);
@@ -215,9 +191,7 @@ package{
 			//addItem({data:1, Label:"Apple iSight});
 		}
 		
-<<<<<<< HEAD
-		private function settingsIcon():void
-		{
+		private function settingsIcon():void{
 			_settingsIcon = new Gear;
 			_settingsIcon.x = (_mainScreen.width - _settingsIcon.width) - 5;
 			_settingsIcon.y = (_mainScreen.height - _settingsIcon.height) - 5;
@@ -226,18 +200,11 @@ package{
 
 		}
 		
-		private function onSettingsClick(event:MouseEvent):void
-		{
-=======
-		private function createSettingIcon():void{
-			_bar.graphics.beginFill(0xff0000,5);
-			_bar.graphics.drawRect(0,stage.stageHeight-10,stage.stageWidth,10);
-			_bar.graphics.endFill();
-			_bar.addEventListener(MouseEvent.CLICK, onBarClick);
+		private function onSettingsClick(event:MouseEvent):void{
 		}
 		
+		
 		private function onBarClick(event:MouseEvent):void{
->>>>>>> bf24bf4c9d4e109d5fe02cd229de8d96fdc166d0
 			addSettings();
 		}
 		

@@ -5,22 +5,28 @@ package
 	import com.greensock.*;
 	import com.greensock.easing.*;
 	
+	import flash.desktop.NativeApplication;
+	import flash.display.NativeMenu;
+	import flash.display.NativeMenuItem;
 	import flash.display.NativeWindow;
 	import flash.display.NativeWindowInitOptions;
 	import flash.display.NativeWindowSystemChrome;
 	import flash.display.NativeWindowType;
 	import flash.display.Screen;
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.filters.BlurFilter;
 	import flash.media.Camera;
 	import flash.media.Video;
 	import flash.system.Capabilities;
 	import flash.ui.Keyboard;
+	import flash.utils.Timer;
 
 	public class Main extends Sprite
 	{
@@ -32,15 +38,52 @@ package
 
 		private var _bar:Sprite;
 		private var _mainScreen:NativeWindow;
+
+		private var _nw:NativeWindow;
 		
+		private var _keys:Array = [];
+		private var _combo:Array = [];
 		
 		public function Main()
 		{
 			settingWebcam();
 			stageFunctions();
 			settingEffects();
+			setupChrome();
+			setupMenu();
 			
 			var model:AppModel = new AppModel;
+		}
+		
+		private function setupMenu():void
+		{
+			var menu:NativeMenu = NativeApplication.nativeApplication.menu;
+			
+			var mItem:NativeMenuItem = new NativeMenuItem("Carlos");
+			menu.addItem(mItem);
+			
+			mItem.submenu = new NativeMenu();
+			
+			var mSubItem:NativeMenuItem = new NativeMenuItem("Carlos");
+			mSubItem.keyEquivalent = "X";
+			mItem.submenu.addItem(mSubItem);
+			
+			NativeApplication.nativeApplication.menu = menu;
+		}
+		
+		private function setupChrome():void
+		{
+			//just add the assets for the close button
+			
+			//for close window function
+			//stage.nativeWindow.close();
+			
+			//for minimize function
+			//stage.nativeWindow.minimize();
+			
+			//to move window
+			//(MouseEvent.MOUSE_DOWN,onMouseDown);
+			//stage.nativeWindow.startMove();
 		}
 		
 		private function settingEffects():void
@@ -62,7 +105,8 @@ package
 		// Responds to StageFunctions
 		private function onEnterFrame(event:Event):void
 		{
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyDown);
+//			stage.addEventListener(KeyboardEvent.KEY_UP, emptyArray);
 		}
 		
 		// Responds to EnterFrame Event
@@ -78,31 +122,39 @@ package
 				stage.nativeWindow.width = 500;
 				stage.nativeWindow.height = 397;
 				stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
-				stage.nativeWindow.y = 0;
-			}
-			if(event.keyCode == Keyboard.V){
-				stage.nativeWindow.width = 500;
-				stage.nativeWindow.height = 397;
-				stage.nativeWindow.x = 0;
 				stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
 			}
-			if(event.keyCode == Keyboard.N){
-				stage.nativeWindow.width = 500;
-				stage.nativeWindow.height = 397;
-				stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
-				stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
+			if(event.shiftKey){
+				switch(event.keyCode){
+					case Keyboard.L:
+						stage.nativeWindow.width = 500;
+						stage.nativeWindow.height = 397;
+						stage.nativeWindow.x = 0;
+						stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
+					break;
+				}
 			}
+			else{
+				switch(event.keyCode){
+					case Keyboard.R:
+						stage.nativeWindow.width = 500;
+						stage.nativeWindow.height = 397;
+						stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
+						stage.nativeWindow.y = 0;
+					break;
+				}
+			}
+//			if(event.shiftKey && Keyboard.R){
+//				stage.nativeWindow.width = 500;
+//				stage.nativeWindow.height = 397;
+//				stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
+//				stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
+//			}
 			if(event.keyCode == Keyboard.F){
 				stage.nativeWindow.width = Capabilities.screenResolutionX;
 				stage.nativeWindow.height = Capabilities.screenResolutionY;
 				stage.nativeWindow.x = 0;
 				stage.nativeWindow.y = 0;
-				
-				//stage.scaleMode = StageScaleMode.SHOW_ALL;
-				//stage.align = StageAlign.TOP;
-				
-//				trace("X & Y :",Capabilities.screenResolutionX, Capabilities.screenResolutionY)
-//				trace("stage.nativeWindow.width : ",stage.nativeWindow.bounds)
 			}
 			if(event.keyCode == Keyboard.M){
 				stage.nativeWindow.width = 500;
@@ -110,7 +162,38 @@ package
 				stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width)/2;
 				stage.nativeWindow.y = (Screen.mainScreen.bounds.height - stage.nativeWindow.height)/2;
 			}
+			
+//			_keys.push(event.keyCode);
+//			
+//			for each(var c:int in _keys){
+//				if(c==16) _combo.push(c);
+//				if(c==Keyboard.R) _combo.push(c);
+//				if(c==Keyboard.L) _combo.push(c)
+//				if(c==Keyboard.M) _combo.push(c);
+//				if(c==Keyboard.F) _combo.push(c);
+//			}
+//			trace(_combo);
+//			for(var i:int=0; i<_combo.length-1; i++){
+//				if(_combo[i] == 16 && _combo[i+1] == Keyboard.R){
+//					stage.nativeWindow.width = 500;
+//					stage.nativeWindow.height = 397;
+//					stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
+//					stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
+//				}
+//				if(_combo[i] == 16 && _combo[i+1] == Keyboard.L){
+//					stage.nativeWindow.width = 500;
+//					stage.nativeWindow.height = 397;
+//					stage.nativeWindow.x = 0;
+//					stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
+//				}
+//			}
 		}
+//		
+//		private function emptyArray(event:KeyboardEvent):void
+//		{
+//			_keys = [];
+//			_combo = [];
+//		}
 		
 		private function settingWebcam():void
 		{	
@@ -119,6 +202,8 @@ package
 			_video.smoothing = true;
 			addChild(_video);
 			addChild(_bar);
+			stage.nativeWindow.y = 0;
+			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width) / 2;
 			
 			_c = Camera.getCamera();
 			_c.setMode(stage.stageWidth, stage.stageHeight, 30);
@@ -162,10 +247,26 @@ package
 			_settings.height = nw.height;
 //			_settings.x = nw.x;
 //			_settings.y = nw.y;
+			_nw = new NativeWindow(options);
+			_nw.x = _mainScreen.x;
+			_nw.y = _mainScreen.y;		
+			_nw.height = 375;
+			_nw.width = _mainScreen.width;
+			_settings = new Settings();
+			_settings.y = 0;
+			_settings.x = -15;
+			_settings.scaleX = _settings.scaleY = .21;
 			_settings.closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
-			nw.stage.addChild(_settings);
-			nw.activate();
-			TweenLite.to(nw, 1, {x:_mainScreen.x, y:_mainScreen.y + _mainScreen.height, ease:Linear.easeNone});
+			_nw.stage.addChild(_settings);
+			_nw.stage.addEventListener(MouseEvent.CLICK, onStageClick);
+			_nw.activate();	
+			TweenLite.to(_nw, 1, {x:_mainScreen.x, y:_mainScreen.y + _mainScreen.height, ease:Linear.easeNone});
+		}
+		
+		private function onStageClick(event:MouseEvent):void
+		{
+			var s:Stage = Stage(event.currentTarget)
+			trace(s.mouseX, s.mouseY);
 		}
 		
 		private function onCloseClick(event:MouseEvent):void

@@ -159,8 +159,10 @@ package{
 			stage.align = StageAlign.TOP;
 			stage.nativeWindow.alwaysInFront = true;	
 			_mainScreen = stage.nativeWindow;
-			_mainScreen.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-			_mainScreen.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+			settingsIcon();
+
+//			_mainScreen.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+//			_mainScreen.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 		}
 		
 		private function onMouseOut(event:Event):void{

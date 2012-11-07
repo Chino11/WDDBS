@@ -14,8 +14,11 @@ package{
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.events.ActivityEvent;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.StatusEvent;
+	import flash.events.TimerEvent;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
@@ -24,6 +27,7 @@ package{
 	import flash.media.Video;
 	import flash.net.registerClassAlias;
 	import flash.utils.ByteArray;
+	import flash.utils.Timer;
 	
 	public class Main extends Sprite{
 		private var _video:Video;
@@ -151,7 +155,7 @@ package{
 		private function settingWebcam():void{	
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
-			_video.addEventListener(Event.COMPLETE, onVideoComplete);
+//			_video.addEventListener(Event.ADDED_TO_STAGE, onVideoComplete);
 			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
 			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width) / 2;
 			addChild(_video);
@@ -159,17 +163,15 @@ package{
 			_camera = Camera.getCamera();
 			_camera.setMode(stage.stageWidth, stage.stageHeight, 30);
 			_video.attachCamera(_camera);
-		}
-		
-		private function onVideoComplete(event:Event):void{
-			settingsIcon();
+//			for each(var s:String in Camera.names) 
+//			trace("camera's : ", s, Camera.names.length);
 		}
 		
 		// Called by Mouse OVER and OUT functions -  adding settings Icon to the screen
 		private function settingsIcon():void{
 			_settingsIcon = new Gear;
-			_settingsIcon.x = (_mainScreen.width - _settingsIcon.width) - 5;
-			_settingsIcon.y = (_mainScreen.height - _settingsIcon.height) - 5;
+//			_settingsIcon.x = (_mainScreen.width - _settingsIcon.width) - 5;
+//			_settingsIcon.y = (_mainScreen.height - _settingsIcon.height) - 5;
 			_settingsIcon.addEventListener(MouseEvent.CLICK, onSettingsClick);
 			addChild(_settingsIcon);
 		}

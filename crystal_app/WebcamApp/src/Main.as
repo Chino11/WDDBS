@@ -21,6 +21,7 @@ package{
 	import flash.media.Camera;
 	import flash.media.Video;
 	import flash.system.Capabilities;
+	import flash.utils.ByteArray;
 	
 	public class Main extends Sprite{
 		private var _video:Video;
@@ -31,6 +32,8 @@ package{
 		private var _settingsIcon:Sprite;
 		private var _mainScreen:NativeWindow;
 		private var _nw:NativeWindow;
+		private var _storageArray:ByteArray = new ByteArray();
+		
 		
 		public function Main(){
 			settingWebcam();
@@ -39,6 +42,11 @@ package{
 			setupMenu();
 			
 			var model:AppModel = new AppModel;
+			
+			// STORING SOMETHING TO FILE SYSTEM WITH VO
+//			_storageArray.writeUTF("");
+//			_storageArray.writeObject(myVO);
+			// remote object meta data tag
 		}
 		
 		private function setupMenu():void{
@@ -152,6 +160,7 @@ package{
 			stage.nativeWindow.startMove();
 		}
 		
+		// What is this effect doing ?  ?  Can we have an effect called on settings window that blurs and darkens video ? ? ? ? ? ? ? ? ? ? ? ? 
 		private function settingEffects():void{
 			var b:BlurFilter = new BlurFilter(10,10,10);
 			_video.filters = [b];
@@ -163,14 +172,18 @@ package{
 			stage.align = StageAlign.TOP;
 			stage.nativeWindow.alwaysInFront = true;	
 			_mainScreen = stage.nativeWindow;
-			settingsIcon();
+			
+			// Why arent these working ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+			_mainScreen.addEventListener(MouseEvent.MOUSE_OVER , onMouseOver);
+			_mainScreen.addEventListener(MouseEvent.MOUSE_OUT , onMouseOut);
 
 //			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 //			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 		}
 		
+		// Who is listening for this mouse out ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 
 		private function onMouseOut(event:Event):void{
-			
+			this.removeChild(_settingsIcon);
 		}
 		
 		private function onMouseOver(event:Event):void{
@@ -180,9 +193,9 @@ package{
 		private function settingWebcam():void{	
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
-			addChild(_video);
 			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
 			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width) / 2;
+			addChild(_video);
 			
 			_camera = Camera.getCamera();
 			_camera.setMode(stage.stageWidth, stage.stageHeight, 30);
@@ -201,7 +214,6 @@ package{
 			_settingsIcon.y = (_mainScreen.height - _settingsIcon.height) - 5;
 			_settingsIcon.addEventListener(MouseEvent.CLICK, onSettingsClick);
 			addChild(_settingsIcon);
-
 		}
 		
 		private function onSettingsClick(event:MouseEvent):void{
@@ -215,8 +227,8 @@ package{
 			options.type = NativeWindowType.NORMAL;
 			
 			_nw = new NativeWindow(options);		
-//			_nw.height = _mainScreen.height;
-//			_nw.width = _mainScreen.width;
+			_nw.height = _mainScreen.height;
+			_nw.width = _mainScreen.width;
 			_nw.x = _mainScreen.x;
 			_nw.y = _mainScreen.y;
 			_nw.alwaysInFront = true;
@@ -234,7 +246,6 @@ package{
 			_nw.stage.addChild(_settings);
 			
 			TweenLite.to(_settings, 1, {alpha:1});
-			//settingEffects();
 		}
 		
 		private function onCloseClick(event:MouseEvent):void{

@@ -203,6 +203,10 @@ package{
 			
 			_nw.stage.addChild(_settings);
 			
+			stage.align = StageAlign.BOTTOM;
+			_nw.stage.align = StageAlign.TOP;
+
+			
 			TweenLite.to(_settings, 1, {alpha:1});
 		}
 		

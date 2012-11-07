@@ -39,8 +39,11 @@ package{
 		private var _inFront:Boolean;
 		private var _resolution:String;
 		private var _settingsVO:SettingsVO;
+
+		private var _preBg:PreBackground;
 		
 		public function Main(){
+			
 			settingWebcam();
 			stageFunctions();
 			setupChrome();
@@ -133,16 +136,13 @@ package{
 			
 			
 			// Why arent these working ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
-<<<<<<< HEAD
 			stage.addEventListener(MouseEvent.MOUSE_OVER , onMouseOver);
 			stage.addEventListener(MouseEvent.MOUSE_OUT , onMouseOut);
 
 //			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 //			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-=======
 			addEventListener(MouseEvent.MOUSE_OVER , onMouseOver);
 			_mainScreen.addEventListener(MouseEvent.MOUSE_OUT , onMouseOut);
->>>>>>> f4707bfb831835c3390ca396d417d5994c52f15e
 		}
 		
 		// BG is listening for mouse OVER and OUT
@@ -157,6 +157,8 @@ package{
 		
 		// Being called in the constructor - calling camera and video to life
 		private function settingWebcam():void{	
+			_preBg = new PreBackground();
+			addChild(_preBg);
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
 			_video.addEventListener(Event.COMPLETE, onVideoComplete);

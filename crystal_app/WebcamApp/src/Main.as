@@ -14,6 +14,7 @@ package{
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.events.ActivityEvent;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
@@ -39,10 +40,13 @@ package{
 		private var _inFront:Boolean;
 		private var _resolution:String;
 		private var _settingsVO:SettingsVO;
-
 		private var _preBg:PreBackground;
+		private var _holder:Sprite;
 		
 		public function Main(){
+			
+			_holder = new Sprite();
+			addChild(_holder);
 			
 			settingWebcam();
 			stageFunctions();
@@ -100,7 +104,8 @@ package{
 			private function setupChrome():void{
 			//just add the assets for the close button
 			var closeButton:CloseButton = new CloseButton();
-			stage.addChild(closeButton);
+			_holder.addChild(closeButton);
+			settingsIcon();
 			
 			//for close window function
 			//stage.nativeWindow.close();
@@ -115,7 +120,6 @@ package{
 		}
 		
 		private function onMouseDown(event:MouseEvent):void{
-			// This isnt working? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 
 			stage.nativeWindow.startMove();
 		}
 		
@@ -139,48 +143,57 @@ package{
 			stage.addEventListener(MouseEvent.MOUSE_OVER , onMouseOver);
 			stage.addEventListener(MouseEvent.MOUSE_OUT , onMouseOut);
 
-//			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-//			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-			addEventListener(MouseEvent.MOUSE_OVER , onMouseOver);
-			_mainScreen.addEventListener(MouseEvent.MOUSE_OUT , onMouseOut);
+			_holder.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+			_holder.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 		}
 		
 		// BG is listening for mouse OVER and OUT
 		private function onMouseOut(event:Event):void{
 			//  turn mouseenable false on the video, and have a bg that is listening for these events, and the bg loads b4 everything
-			this.removeChild(_settingsIcon);
+			if(this.contains(_settingsIcon)) TweenLite.to(_settingsIcon, 1, {alpha:0});;
 		}
 		// BG is listening for mouse OVER and OUT
 		private function onMouseOver(event:Event):void{
-			settingsIcon();
+			TweenLite.to(_settingsIcon, 1, {alpha:1});
 		}
 		
 		// Being called in the constructor - calling camera and video to life
 		private function settingWebcam():void{	
 			_preBg = new PreBackground();
+<<<<<<< HEAD
 			addChild(_preBg);
 			
+=======
+			_holder.addChild(_preBg);
+>>>>>>> ba989da69180bfe235b3250be99e8cc21495d25b
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
-			_video.addEventListener(Event.COMPLETE, onVideoComplete);
 			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
 			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width) / 2;
-			addChild(_video);
+			_holder.addChild(_video);
 			
 			_camera = Camera.getCamera();
 			_camera.setMode(stage.stageWidth, stage.stageHeight, 30);
 			_video.attachCamera(_camera);
+			_camera.addEventListener(ActivityEvent.ACTIVITY, onActive);
+			
+			// FINDING OTHER CAMERAS
+			
+//			for each(var s:String in Camera.names) 
+//			trace("camera's : ", s, Camera.names.length);
 		}
 		
-		private function onVideoComplete(event:Event):void{
+		private function onActive(event:ActivityEvent):void{
+			if(_holder.contains(_preBg)) _holder.removeChild(_preBg);
 			settingsIcon();
+			_camera.removeEventListener(ActivityEvent.ACTIVITY, onActive);
 		}
 		
 		// Called by Mouse OVER and OUT functions -  adding settings Icon to the screen
 		private function settingsIcon():void{
 			_settingsIcon = new Gear;
 			_settingsIcon.x = (_mainScreen.width - _settingsIcon.width) - 5;
-			_settingsIcon.y = (_mainScreen.height - _settingsIcon.height) - 5;
+			_settingsIcon.y = (_mainScreen.height - _settingsIcon.height) - 20;
 			_settingsIcon.addEventListener(MouseEvent.CLICK, onSettingsClick);
 			addChild(_settingsIcon);
 		}

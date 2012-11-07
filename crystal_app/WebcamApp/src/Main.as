@@ -36,7 +36,6 @@ package{
 		public function Main(){
 			settingWebcam();
 			stageFunctions();
-			settingEffects();
 			setupChrome();
 			setupMenu();
 			
@@ -155,7 +154,7 @@ package{
 		}
 		
 		private function settingEffects():void{
-			var b:BlurFilter = new BlurFilter(0,0,0);
+			var b:BlurFilter = new BlurFilter(10,10,10);
 			_video.filters = [b];
 		}
 		
@@ -183,7 +182,7 @@ package{
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
 			addChild(_video);
-			stage.nativeWindow.y = 0;
+			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
 			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width) / 2;
 			
 			_camera = Camera.getCamera();
@@ -192,10 +191,7 @@ package{
 			
 			
 			//Screen.mainScreen.visibleBounds()
-			Screen.mainScreen.visibleBounds.x = 0;
-			Screen.mainScreen.visibleBounds.y = 0;
-			Screen.mainScreen.visibleBounds.width = 1440;
-			Screen.mainScreen.visibleBounds.height = _camera.height;
+			
 			//addItem({data:1, Label:"Apple iSight});
 			
 		}
@@ -215,31 +211,32 @@ package{
 		
 		private function addSettings():void {
 			var options:NativeWindowInitOptions = new NativeWindowInitOptions();
-			options.transparent = false;
+			options.transparent = true;
 			options.systemChrome = NativeWindowSystemChrome.NONE;
 			options.type = NativeWindowType.NORMAL;
 			
-			_nw = new NativeWindow(options);
-			_nw.x = _mainScreen.x;
-			_nw.y = _mainScreen.y;		
+			_nw = new NativeWindow(options);		
 			_nw.height = _mainScreen.height;
 			_nw.width = _mainScreen.width;
-			//_nw.activate();	
+			
+			_nw.stage.scaleMode = StageScaleMode.NO_SCALE;
+			_nw.stage.align = StageAlign.TOP_LEFT;
+			_nw.activate();	
 			
 			_settings = new Settings();
 			_settings.y = 0;
 			_settings.x = 0;
-			//_settings.scaleX = _settings.scaleY = .21;
 			_settings.alpha = 0;
 			_settings.closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
 			
-			stage.addChild(_settings);
-			//_nw.stage.addEventListener(MouseEvent.CLICK, onStageClick);
+			_nw.stage.addChild(_settings);
+			
 			TweenLite.to(_settings, 1, {alpha:1});
+			//settingEffects();
 		}
 		
 		private function onCloseClick(event:MouseEvent):void{
-			stage.removeChild(_settings);
+			_settings.stage.nativeWindow.close();
 		}
 	}
 }

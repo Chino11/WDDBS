@@ -133,7 +133,7 @@
 		<!-- <image57x57></image57x57>
 		<image72x72></image72x72>
 		<image114x114></image114x114>-->
-		<image128x128>GearBee128.png</image128x128>
+		<image128x128>Bee128.png</image128x128>
 	</icon>
 
 	<!-- Whether the application handles the update when a user double-clicks an update version

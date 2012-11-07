@@ -27,10 +27,9 @@ package{
 		private var _video:Video;
 //		private var _webcams:Array = Camera.names;
 		private var _resolutions:Array = ["128 x 96","176 x 144","352 x 288","704 x 576","1408 x 1152"];
-		private var _c:Camera;
+		private var _camera:Camera;
 		private var _settings:Settings;
 		private var _settingsIcon:Sprite;
-//		private var _bar:Sprite;
 		private var _mainScreen:NativeWindow;
 		private var _nw:NativeWindow;
 		
@@ -50,7 +49,11 @@ package{
 			var positionMenu:NativeMenuItem = new NativeMenuItem("Position");
 			menu.addItem(positionMenu);
 			
+			var resolutionMenu:NativeMenuItem = new NativeMenuItem("Resolution");
+			menu.addItem(resolutionMenu);
+			
 			positionMenu.submenu = new NativeMenu();
+			resolutionMenu.submenu = new NativeMenu();
 			
 			var LeftSubItem:NativeMenuItem = new NativeMenuItem("Top-Left");
 			LeftSubItem.keyEquivalentModifiers = [];
@@ -143,8 +146,12 @@ package{
 			//stage.nativeWindow.minimize();
 			
 			//to move window
-			//(MouseEvent.MOUSE_DOWN,onMouseDown);
-			//stage.nativeWindow.startMove();
+			stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
+		}
+		
+		private function onMouseDown(event:MouseEvent):void
+		{
+			stage.nativeWindow.startMove();
 		}
 		
 		private function settingEffects():void{
@@ -160,8 +167,8 @@ package{
 			_mainScreen = stage.nativeWindow;
 			settingsIcon();
 
-//			_mainScreen.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-//			_mainScreen.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+//			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+//			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 		}
 		
 		private function onMouseOut(event:Event):void{
@@ -179,17 +186,18 @@ package{
 			stage.nativeWindow.y = 0;
 			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width) / 2;
 			
-			_c = Camera.getCamera();
-			_c.setMode(stage.stageWidth, stage.stageHeight, 30);
-			_video.attachCamera(_c);
+			_camera = Camera.getCamera();
+			_camera.setMode(stage.stageWidth, stage.stageHeight, 30);
+			_video.attachCamera(_camera);
 			
 			
 			//Screen.mainScreen.visibleBounds()
 			Screen.mainScreen.visibleBounds.x = 0;
 			Screen.mainScreen.visibleBounds.y = 0;
 			Screen.mainScreen.visibleBounds.width = 1440;
-			Screen.mainScreen.visibleBounds.height = _c.height;
+			Screen.mainScreen.visibleBounds.height = _camera.height;
 			//addItem({data:1, Label:"Apple iSight});
+			
 		}
 		
 		private function settingsIcon():void{
@@ -202,49 +210,36 @@ package{
 		}
 		
 		private function onSettingsClick(event:MouseEvent):void{
-		}
-		
-		
-		private function onBarClick(event:MouseEvent):void{
 			addSettings();
 		}
 		
 		private function addSettings():void {
 			var options:NativeWindowInitOptions = new NativeWindowInitOptions();
-			options.transparent = true;
-			options.systemChrome = NativeWindowSystemChrome.STANDARD;
+			options.transparent = false;
+			options.systemChrome = NativeWindowSystemChrome.NONE;
 			options.type = NativeWindowType.NORMAL;
-			var nw:NativeWindow = new NativeWindow(options);
-			nw.x = _mainScreen.x;
-			nw.y = _mainScreen.y;
-			nw.width = _mainScreen.width;
-			nw.height = _mainScreen.height;
-			_settings = new Settings();
-			_settings.width = nw.width;
-			_settings.height = nw.height;
+			
 			_nw = new NativeWindow(options);
 			_nw.x = _mainScreen.x;
 			_nw.y = _mainScreen.y;		
-			_nw.height = 375;
+			_nw.height = _mainScreen.height;
 			_nw.width = _mainScreen.width;
+			//_nw.activate();	
+			
 			_settings = new Settings();
 			_settings.y = 0;
-			_settings.x = -15;
-			_settings.scaleX = _settings.scaleY = .21;
+			_settings.x = 0;
+			//_settings.scaleX = _settings.scaleY = .21;
+			_settings.alpha = 0;
 			_settings.closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
-			_nw.stage.addChild(_settings);
-			_nw.stage.addEventListener(MouseEvent.CLICK, onStageClick);
-			_nw.activate();	
-			TweenLite.to(_nw, 1, {x:_mainScreen.x, y:_mainScreen.y + _mainScreen.height, ease:Linear.easeNone});
-		}
-		
-		private function onStageClick(event:MouseEvent):void{
-			var s:Stage = Stage(event.currentTarget)
-			trace(s.mouseX, s.mouseY);
+			
+			stage.addChild(_settings);
+			//_nw.stage.addEventListener(MouseEvent.CLICK, onStageClick);
+			TweenLite.to(_settings, 1, {alpha:1});
 		}
 		
 		private function onCloseClick(event:MouseEvent):void{
-			removeChild(_settings);
+			stage.removeChild(_settings);
 		}
 	}
 }

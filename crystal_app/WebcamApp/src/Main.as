@@ -174,8 +174,8 @@ package{
 			_mainScreen = stage.nativeWindow;
 			
 			// Why arent these working ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
-			_mainScreen.addEventListener(MouseEvent.MOUSE_OVER , onMouseOver);
-			_mainScreen.addEventListener(MouseEvent.MOUSE_OUT , onMouseOut);
+			stage.addEventListener(MouseEvent.MOUSE_OVER , onMouseOver);
+			stage.addEventListener(MouseEvent.MOUSE_OUT , onMouseOut);
 
 //			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 //			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);

@@ -159,6 +159,7 @@ package{
 		private function settingWebcam():void{	
 			_preBg = new PreBackground();
 			addChild(_preBg);
+			
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
 			_video.addEventListener(Event.COMPLETE, onVideoComplete);

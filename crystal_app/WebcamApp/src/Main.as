@@ -13,7 +13,6 @@ package{
 	import flash.display.NativeWindowType;
 	import flash.display.Screen;
 	import flash.display.Sprite;
-	import flash.display.Stage;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
@@ -216,8 +215,11 @@ package{
 			options.type = NativeWindowType.NORMAL;
 			
 			_nw = new NativeWindow(options);		
-			_nw.height = _mainScreen.height;
-			_nw.width = _mainScreen.width;
+//			_nw.height = _mainScreen.height;
+//			_nw.width = _mainScreen.width;
+			_nw.x = _mainScreen.x;
+			_nw.y = _mainScreen.y;
+			_nw.alwaysInFront = true;
 			
 			_nw.stage.scaleMode = StageScaleMode.NO_SCALE;
 			_nw.stage.align = StageAlign.TOP_LEFT;

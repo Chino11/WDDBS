@@ -1,12 +1,11 @@
 package{
 	import com.ca.model.AppModel;
+	import com.ca.view.Menus;
 	import com.ca.view.Settings;
+	import com.ca.vo.SettingsVO;
 	import com.greensock.*;
 	import com.greensock.easing.*;
 	
-	import flash.desktop.NativeApplication;
-	import flash.display.NativeMenu;
-	import flash.display.NativeMenuItem;
 	import flash.display.NativeWindow;
 	import flash.display.NativeWindowInitOptions;
 	import flash.display.NativeWindowSystemChrome;
@@ -17,10 +16,13 @@ package{
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.filesystem.FileMode;
+	import flash.filesystem.FileStream;
 	import flash.filters.BlurFilter;
 	import flash.media.Camera;
 	import flash.media.Video;
-	import flash.system.Capabilities;
+	import flash.net.registerClassAlias;
 	import flash.utils.ByteArray;
 	
 	public class Main extends Sprite{
@@ -33,117 +35,69 @@ package{
 		private var _mainScreen:NativeWindow;
 		private var _nw:NativeWindow;
 		private var _storageArray:ByteArray = new ByteArray();
-		
+		private var _defaultCamera:String;
+		private var _inFront:Boolean;
+		private var _resolution:String;
+		private var _settingsVO:SettingsVO;
 		
 		public function Main(){
 			settingWebcam();
 			stageFunctions();
 			setupChrome();
-			setupMenu();
+			
+			// Called in Constructor - sets up the menu that appears on the top of the screen
+			var menu:Menus = new Menus();
 			
 			var model:AppModel = new AppModel;
-			
-			// STORING SOMETHING TO FILE SYSTEM WITH VO
-//			_storageArray.writeUTF("");
-//			_storageArray.writeObject(myVO);
-			// remote object meta data tag
+
+			openSavedSettings();
+			registerClassAlias("com.ca.vo.SettingsVO",SettingsVO);
 		}
 		
-		private function setupMenu():void{
-			var menu:NativeMenu = NativeApplication.nativeApplication.menu;
+		// ACTUALLY listen on native window to close, that will call the onSave
+		private function openSavedSettings():void{
+			var file:File = File.applicationStorageDirectory;
+			file.nativePath += File.separator + "settings.data";
+						
+			_settingsVO = new SettingsVO();
+			_settingsVO.x = _mainScreen.x;
+			_settingsVO.y = _mainScreen.y;
+			_settingsVO.width = _mainScreen.width;
+			_settingsVO.height = _mainScreen.height;
+			_settingsVO.inFront = _inFront;
+			_settingsVO.resolution = _resolution;
+			_settingsVO.defaultCamera = _defaultCamera;
 			
-			var positionMenu:NativeMenuItem = new NativeMenuItem("Position");
-			menu.addItem(positionMenu);
+			var fs:FileStream = new FileStream();
+			fs.open(file,FileMode.WRITE);
+			fs.writeObject(_settingsVO);
+			fs.close();
 			
-			var resolutionMenu:NativeMenuItem = new NativeMenuItem("Resolution");
-			menu.addItem(resolutionMenu);
-			
-			positionMenu.submenu = new NativeMenu();
-			resolutionMenu.submenu = new NativeMenu();
-			
-			var LeftSubItem:NativeMenuItem = new NativeMenuItem("Top-Left");
-			LeftSubItem.keyEquivalentModifiers = [];
-			LeftSubItem.keyEquivalent = "l";
-			LeftSubItem.addEventListener(Event.SELECT, onTopLeft);
-			positionMenu.submenu.addItem(LeftSubItem);
-			
-			var RightSubItem:NativeMenuItem = new NativeMenuItem("Top-Right");
-			RightSubItem.keyEquivalentModifiers = [];
-			RightSubItem.keyEquivalent = "r";
-			RightSubItem.addEventListener(Event.SELECT, onTopRight);
-			positionMenu.submenu.addItem(RightSubItem);
-			
-			var bLeftSubItem:NativeMenuItem = new NativeMenuItem("Bottom-Left");
-			bLeftSubItem.keyEquivalentModifiers = [];
-			bLeftSubItem.keyEquivalent = "L";
-			bLeftSubItem.addEventListener(Event.SELECT, onBottomLeft);
-			positionMenu.submenu.addItem(bLeftSubItem);
-			
-			var bRightSubItem:NativeMenuItem = new NativeMenuItem("Bottom-Right");
-			bRightSubItem.keyEquivalentModifiers = [];
-			bRightSubItem.keyEquivalent = "R";
-			bRightSubItem.addEventListener(Event.SELECT, onBottomRight);
-			positionMenu.submenu.addItem(bRightSubItem);
-			
-			var middleSubItem:NativeMenuItem = new NativeMenuItem("Middle");
-			middleSubItem.keyEquivalentModifiers = [];
-			middleSubItem.keyEquivalent = "m";
-			middleSubItem.addEventListener(Event.SELECT, onMiddle);
-			positionMenu.submenu.addItem(middleSubItem);
-			
-			var fullscreenSubItem:NativeMenuItem = new NativeMenuItem("FullScreen");
-			fullscreenSubItem.keyEquivalentModifiers = [];
-			fullscreenSubItem.keyEquivalent = "f";
-			fullscreenSubItem.addEventListener(Event.SELECT, onFullscreen);
-			positionMenu.submenu.addItem(fullscreenSubItem);
-			
-			NativeApplication.nativeApplication.menu = menu;
+			onAppOpening();
 		}
 		
-		private function onFullscreen(event:Event):void{
-			stage.nativeWindow.width = Capabilities.screenResolutionX;
-			stage.nativeWindow.height = Capabilities.screenResolutionY;
-			stage.nativeWindow.x = 0;
-			stage.nativeWindow.y = 0;
+		// ACTUALLY call this function when the app opens
+		private function onAppOpening():void{
+			var file:File = File.applicationStorageDirectory;
+			file.nativePath += File.separator + "settings.data";
+			
+			if(! file.exists){
+				trace("File Does not exist");
+				return
+			}
+			
+			var fs:FileStream = new FileStream();
+			fs.open(file,FileMode.WRITE);
+//			var settingsVO:SettingsVO = fs.readObject();
+			fs.close();
 		}
 		
-		private function onMiddle(event:Event):void{
-			stage.nativeWindow.width = 500;
-			stage.nativeWindow.height = 397;
-			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width)/2;
-			stage.nativeWindow.y = (Screen.mainScreen.bounds.height - stage.nativeWindow.height)/2;
-		}
+
 		
-		private function onTopRight(event:Event):void{
-			stage.nativeWindow.width = 500;
-			stage.nativeWindow.height = 397;
-			stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
-			stage.nativeWindow.y = 0;
-		}
-		
-		private function onTopLeft(event:Event):void{
-			stage.nativeWindow.width = 500;
-			stage.nativeWindow.height = 397;
-			stage.nativeWindow.x = 0;
-			stage.nativeWindow.y = 0;
-		}
-		
-		private function onBottomRight(event:Event):void{
-			stage.nativeWindow.width = 500;
-			stage.nativeWindow.height = 397;
-			stage.nativeWindow.x = Screen.mainScreen.bounds.width - stage.nativeWindow.width;
-			stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
-		}
-		
-		private function onBottomLeft(event:Event):void{
-			stage.nativeWindow.width = 500;
-			stage.nativeWindow.height = 397;
-			stage.nativeWindow.x = 0;
-			stage.nativeWindow.y = Screen.mainScreen.bounds.height - stage.nativeWindow.height - 75;
-		}
-		
-		private function setupChrome():void{
+			private function setupChrome():void{
 			//just add the assets for the close button
+			var closeButton:CloseButton = new CloseButton();
+			stage.addChild(closeButton);
 			
 			//for close window function
 			//stage.nativeWindow.close();
@@ -153,10 +107,12 @@ package{
 			
 			//to move window
 			stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
+			
+			// ADD RESIZE BACK --------------------------------------------------------------------------------------------------------------
 		}
 		
-		private function onMouseDown(event:MouseEvent):void
-		{
+		private function onMouseDown(event:MouseEvent):void{
+			// This isnt working? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 
 			stage.nativeWindow.startMove();
 		}
 		
@@ -168,31 +124,34 @@ package{
 		
 		// Responds to Constructor
 		private function stageFunctions():void{
-			stage.scaleMode = StageScaleMode.SHOW_ALL;
+//			stage.scaleMode = StageScaleMode.SHOW_ALL;
 			stage.align = StageAlign.TOP;
 			stage.nativeWindow.alwaysInFront = true;	
 			_mainScreen = stage.nativeWindow;
+			_mainScreen.width = 500;
+			_mainScreen.height = 397;
+			
 			
 			// Why arent these working ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
-			_mainScreen.addEventListener(MouseEvent.MOUSE_OVER , onMouseOver);
+			addEventListener(MouseEvent.MOUSE_OVER , onMouseOver);
 			_mainScreen.addEventListener(MouseEvent.MOUSE_OUT , onMouseOut);
-
-//			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-//			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 		}
 		
-		// Who is listening for this mouse out ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 
+		// BG is listening for mouse OVER and OUT
 		private function onMouseOut(event:Event):void{
+			//  turn mouseenable false on the video, and have a bg that is listening for these events, and the bg loads b4 everything
 			this.removeChild(_settingsIcon);
 		}
-		
+		// BG is listening for mouse OVER and OUT
 		private function onMouseOver(event:Event):void{
 			settingsIcon();
 		}
 		
+		// Being called in the constructor - calling camera and video to life
 		private function settingWebcam():void{	
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
+			_video.addEventListener(Event.COMPLETE, onVideoComplete);
 			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
 			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width) / 2;
 			addChild(_video);
@@ -200,14 +159,13 @@ package{
 			_camera = Camera.getCamera();
 			_camera.setMode(stage.stageWidth, stage.stageHeight, 30);
 			_video.attachCamera(_camera);
-			
-			
-			//Screen.mainScreen.visibleBounds()
-			
-			//addItem({data:1, Label:"Apple iSight});
-			
 		}
 		
+		private function onVideoComplete(event:Event):void{
+			settingsIcon();
+		}
+		
+		// Called by Mouse OVER and OUT functions -  adding settings Icon to the screen
 		private function settingsIcon():void{
 			_settingsIcon = new Gear;
 			_settingsIcon.x = (_mainScreen.width - _settingsIcon.width) - 5;

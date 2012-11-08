@@ -151,7 +151,6 @@ package{
 			addChild(_preBg);
 			
 			_holder.addChild(_preBg);
-			_holder.addChild(_preBg);
 			
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;

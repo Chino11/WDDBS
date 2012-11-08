@@ -138,16 +138,18 @@ package{
 		}
 		
 		// BG is listening for mouse OVER and OUT
-		private function onMouseOut(event:Event):void{
-			trace(event, "<---------on out");
-			//  turn mouse enable false on the video, and have a bg that is listening for these events
-			if(_holder.contains(_settingsIcon)) TweenLite.to(_settingsIcon, .5, {alpha:0});
-		}
-		// BG is listening for mouse OVER and OUT
 		private function onMouseOver(event:Event):void{
 			TweenLite.to(_settingsIcon, .5, {alpha:1});
+			TweenLite.to(_mainCloseButton, .5, {alpha:1});
 		}
 		
+		// BG is listening for mouse OVER and OUT
+		private function onMouseOut(event:Event):void{
+			//  turn mouse enable false on the video, and have a bg that is listening for these events
+			if(_holder.contains(_settingsIcon)) TweenLite.to(_settingsIcon, .5, {alpha:0});
+			if(_holder.contains(_mainCloseButton)) TweenLite.to(_mainCloseButton, .5, {alpha:0});
+		}
+	
 		// Being called in the constructor - calling camera and video to life
 		private function settingWebcam():void{	
 			_preBg = new PreBackground();

@@ -4,6 +4,7 @@ package com.ca.view
 
 	public class Settings extends SettingsBase
 	{
+		private var frontCheckBoxChecked:Boolean;
 		public function Settings()
 		{
 			super();
@@ -12,7 +13,9 @@ package com.ca.view
 		
 		private function onUpFrontCheckBox():void
 		{
-			trace(this.frontCheckBox);
+			if(this.frontCheckBox.selected){
+				frontCheckBoxChecked = true;
+			}
 			
 		}
 	}

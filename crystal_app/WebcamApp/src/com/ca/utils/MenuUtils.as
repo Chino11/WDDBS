@@ -13,6 +13,7 @@ package com.ca.utils
 	{
 		public static const TOP_LEFT:String = "screenTopLeft"
 		public static const TOP_RIGHT:String = "screenTopRight";
+		
 		public function MenuUtils()
 		{
 		}
@@ -26,24 +27,20 @@ package com.ca.utils
 			var positionMenu:NativeMenuItem = new NativeMenuItem("Position");
 			menu.addItem(positionMenu);
 			
-			var resolutionMenu:NativeMenuItem = new NativeMenuItem("Resolution");
-			menu.addItem(resolutionMenu);
-			
 			positionMenu.submenu = new NativeMenu();
-			resolutionMenu.submenu = new NativeMenu();
 			
-			var LeftSubItem:NativeMenuItem = new NativeMenuItem("Top Left");
-			LeftSubItem.keyEquivalent = "l";
-			LeftSubItem.data = TOP_LEFT;
-			LeftSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+			var leftSubItem:NativeMenuItem = new NativeMenuItem("Top Left");
+			leftSubItem.keyEquivalent = "l";
+			leftSubItem.data = TOP_LEFT;
+			leftSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
 				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_TOP_LEFT));});
-			positionMenu.submenu.addItem(LeftSubItem);
+			positionMenu.submenu.addItem(leftSubItem);
 			
-			var RightSubItem:NativeMenuItem = new NativeMenuItem("Top Right");
-			RightSubItem.keyEquivalent = "r";
-			RightSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+			var rightSubItem:NativeMenuItem = new NativeMenuItem("Top Right");
+			rightSubItem.keyEquivalent = "r";
+			rightSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
 				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_TOP_RIGHT));});
-			positionMenu.submenu.addItem(RightSubItem);
+			positionMenu.submenu.addItem(rightSubItem);
 			
 			var bLeftSubItem:NativeMenuItem = new NativeMenuItem("Bottom Left");
 			bLeftSubItem.keyEquivalentModifiers = [];
@@ -70,6 +67,34 @@ package com.ca.utils
 			fullscreenSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
 				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_FULL_SCREEN));});
 			positionMenu.submenu.addItem(fullscreenSubItem);
+			
+			
+			var resolutionMenu:NativeMenuItem = new NativeMenuItem("Resolution");
+			menu.addItem(resolutionMenu);
+			
+			resolutionMenu.submenu = new NativeMenu();
+			
+			var smallSubItem:NativeMenuItem = new NativeMenuItem("320x240");
+			smallSubItem.keyEquivalent = "1";
+			//smallSubItem.data = SMALL;
+			smallSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_SMALL));});
+			resolutionMenu.submenu.addItem(smallSubItem);
+			
+			var wideSubItem:NativeMenuItem = new NativeMenuItem("360x240");
+			wideSubItem.keyEquivalent = "2";
+			//wideSubItem.data = SMALL;
+			wideSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_WIDE));});
+			resolutionMenu.submenu.addItem(wideSubItem);
+			
+			var fullSubItem:NativeMenuItem = new NativeMenuItem("720x480");
+			fullSubItem.keyEquivalent = "3";
+			//fullSubItem.data = SMALL;
+			fullSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_FULLSCREEN));});
+			resolutionMenu.submenu.addItem(fullSubItem);
+
 			
 			return menu;
 		}

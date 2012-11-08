@@ -11,6 +11,10 @@ package com.ca.events{
 		public static const REQUEST_CENTER:String = 'requestCenter';
 		public static const REQUEST_FULL_SCREEN:String = 'requestFullScreen';
 		
+		public static const REQUEST_SMALL:String = 'requestSmall';
+		public static const REQUEST_WIDE:String = 'requestWIDE';
+		public static const REQUEST_FULLSCREEN:String = 'requestFullscreen';
+		
 		public function MenuEvents(type:String, bubbles:Boolean=false, cancelable:Boolean=false){
 			super(type, bubbles, cancelable);
 		}

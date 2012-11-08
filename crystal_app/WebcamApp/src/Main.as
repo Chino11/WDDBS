@@ -115,6 +115,12 @@ package{
 			_mainCloseButton.name = "mainCloseButton";
 			_mainCloseButton.mouseChildern = false;
 			stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
+			closeButton.addEventListener(MouseEvent.CLICK, onWindowClose);
+		}
+		
+		private function onWindowClose(event:MouseEvent):void
+		{
+			stage.nativeWindow.close();
 		}
 		
 		private function onMouseDown(event:MouseEvent):void{
@@ -201,6 +207,9 @@ package{
 		}
 		
 		private function onCloseClick(event:MouseEvent):void{
+<<<<<<< HEAD
+			stage.removeChild(_settings);
+=======
 			trace(event.currentTarget.name);
 			if(event.currentTarget.name == 'mainCloseButton'){
 				stage.nativeWindow.close();
@@ -209,6 +218,7 @@ package{
 				_holder.removeChild(_settings);
 				_mainCloseButton.name = "mainCloseButton";
 			}
+>>>>>>> 7b211288d23b91baefc632b42b9e3523f2682a42
 		}
 		
 		private function onFullscreen(event:Event):void{

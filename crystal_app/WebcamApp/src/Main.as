@@ -115,14 +115,11 @@ package{
 			_mainCloseButton.name = "mainCloseButton";
 			_mainCloseButton.mouseChildern = false;
 			stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
-<<<<<<< HEAD
 		}
 		
 		private function onWindowClose(event:MouseEvent):void
 		{
 			stage.nativeWindow.close();
-=======
->>>>>>> 3e98b66bb7fc89e24af7da743272c28646df1121
 		}
 		
 		private function onMouseDown(event:MouseEvent):void{

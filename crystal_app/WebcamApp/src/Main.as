@@ -191,8 +191,9 @@ package{
 		}
 		
 		private function onSettingsClick(event:MouseEvent):void{
-			addSettings();
-			_mainCloseButton.name = "settingsCloseButton";
+				addSettings();
+				_mainCloseButton.name = "settingsCloseButton";
+				_settingsIcon.removeEventListener(MouseEvent.CLICK, onSettingsClick);
 		}
 		
 		private function addSettings():void {
@@ -212,6 +213,7 @@ package{
 			else{
 				_holder.removeChild(_settings);
 				_mainCloseButton.name = "mainCloseButton";
+				_settingsIcon.addEventListener(MouseEvent.CLICK, onSettingsClick);
 			}
 		}
 		

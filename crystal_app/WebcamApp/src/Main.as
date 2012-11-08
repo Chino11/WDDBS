@@ -8,12 +8,7 @@ package{
 	import com.greensock.easing.*;
 	
 	import flash.desktop.NativeApplication;
-	import flash.display.NativeMenu;
-	import flash.display.NativeMenuItem;
 	import flash.display.NativeWindow;
-	import flash.display.NativeWindowInitOptions;
-	import flash.display.NativeWindowSystemChrome;
-	import flash.display.NativeWindowType;
 	import flash.display.Screen;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -24,11 +19,9 @@ package{
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
-	import flash.filters.BlurFilter;
 	import flash.media.Camera;
 	import flash.media.Video;
 	import flash.net.registerClassAlias;
-	import flash.system.Capabilities;
 	import flash.utils.ByteArray;
 	
 	public class Main extends Sprite{
@@ -114,8 +107,11 @@ package{
 		}
 		
 		private function setupChrome():void{
-			var closeButton:CloseButton = new CloseButton();
-			_holder.addChild(closeButton);
+			var mainCloseButton:CloseButton = new CloseButton();
+			_holder.addChild(mainCloseButton);
+			mainCloseButton.addEventListener(MouseEvent.CLICK, onCloseClick);
+			mainCloseButton.name = "mainCloseButton";
+			mainCloseButton.mouseChildern = false;
 			stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
 		}
 		
@@ -148,14 +144,9 @@ package{
 		// Being called in the constructor - calling camera and video to life
 		private function settingWebcam():void{	
 			_preBg = new PreBackground();
-<<<<<<< HEAD
 			addChild(_preBg);
-			
-			_holder.addChild(_preBg);
-=======
 			_holder.addChild(_preBg);
 			
->>>>>>> 088ef9067ab37d4c3929c917295027547ee26c1d
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
 			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
@@ -187,7 +178,7 @@ package{
 			_settingsIcon = new Gear();
 			_settingsIcon.alpha = alpha;
 			_settingsIcon.x = (_mainScreen.width - _settingsIcon.width) - 5;
-			_settingsIcon.y = (_mainScreen.height - _settingsIcon.height) - 30;
+			_settingsIcon.y = (_mainScreen.height - _settingsIcon.height) - 5;
 			_settingsIcon.addEventListener(MouseEvent.CLICK, onSettingsClick);
 			_holder.addChild(_settingsIcon);
 		}
@@ -207,7 +198,13 @@ package{
 		}
 		
 		private function onCloseClick(event:MouseEvent):void{
-			_settings.stage.nativeWindow.close();
+			trace(event.currentTarget.name);
+			if(event.currentTarget.name == 'mainCloseButton'){
+				stage.nativeWindow.close();
+			}
+			else{
+				_holder.removeChild(_settings);
+			}
 		}
 		
 		private function onFullscreen(event:Event):void{

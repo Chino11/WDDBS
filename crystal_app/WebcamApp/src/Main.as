@@ -148,14 +148,11 @@ package{
 		// Being called in the constructor - calling camera and video to life
 		private function settingWebcam():void{	
 			_preBg = new PreBackground();
-<<<<<<< HEAD
 			addChild(_preBg);
 			
 			_holder.addChild(_preBg);
-=======
 			_holder.addChild(_preBg);
 			
->>>>>>> 088ef9067ab37d4c3929c917295027547ee26c1d
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
 			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
@@ -229,21 +226,25 @@ package{
 		}
 		
 		private function onTopRight(event:Event):void{
+			resetWindow();
 			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width;
 			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
 		}
 		
 		private function onTopLeft(event:Event):void{
+			resetWindow();
 			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.left;
 			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
 		}
 		
 		private function onBottomRight(event:Event):void{
+			resetWindow();
 			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width;
 			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height;
 		}
 		
 		private function onBottomLeft(event:Event):void{
+			resetWindow();
 			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.left;
 			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height;
 		}

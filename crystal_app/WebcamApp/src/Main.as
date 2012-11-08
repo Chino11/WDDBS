@@ -40,6 +40,8 @@ package{
 		private var _settingsVO:SettingsVO;
 		private var _preBg:PreBackground;
 		private var _holder:Sprite;
+
+		private var _mainCloseButton:CloseButton;
 		
 		public function Main(){
 			
@@ -107,17 +109,20 @@ package{
 		}
 		
 		private function setupChrome():void{
-			var mainCloseButton:CloseButton = new CloseButton();
-			_holder.addChild(mainCloseButton);
-			mainCloseButton.addEventListener(MouseEvent.CLICK, onCloseClick);
-			mainCloseButton.name = "mainCloseButton";
-			mainCloseButton.mouseChildern = false;
+			_mainCloseButton = new CloseButton();
+			_holder.addChild(_mainCloseButton);
+			_mainCloseButton.addEventListener(MouseEvent.CLICK, onCloseClick);
+			_mainCloseButton.name = "mainCloseButton";
+			_mainCloseButton.mouseChildern = false;
 			stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
+<<<<<<< HEAD
 		}
 		
 		private function onWindowClose(event:MouseEvent):void
 		{
 			stage.nativeWindow.close();
+=======
+>>>>>>> 3e98b66bb7fc89e24af7da743272c28646df1121
 		}
 		
 		private function onMouseDown(event:MouseEvent):void{
@@ -190,6 +195,7 @@ package{
 		
 		private function onSettingsClick(event:MouseEvent):void{
 			addSettings();
+			_mainCloseButton.name = "settingsCloseButton";
 		}
 		
 		private function addSettings():void {
@@ -208,6 +214,7 @@ package{
 			}
 			else{
 				_holder.removeChild(_settings);
+				_mainCloseButton.name = "mainCloseButton";
 			}
 		}
 		

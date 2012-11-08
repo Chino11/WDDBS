@@ -18,7 +18,11 @@ package com.ca.utils
 		}
 		public static function makeAppMenu(menu:NativeMenu):NativeMenu{
 	
-			
+			for each(var mi:NativeMenuItem in menu.items){
+				if(mi.label == "Edit"){
+					menu.removeItem(mi);
+				}
+			}
 			var positionMenu:NativeMenuItem = new NativeMenuItem("Position");
 			menu.addItem(positionMenu);
 			
@@ -51,7 +55,7 @@ package com.ca.utils
 			var bRightSubItem:NativeMenuItem = new NativeMenuItem("Bottom Right");
 			bRightSubItem.keyEquivalentModifiers = [];
 			bRightSubItem.keyEquivalent = "R";
-			bRightSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+			bRightSubItem.addEventListener(Event.SELECT, function(event:Event):void{
 				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_BOTTOM_RIGHT));});
 			positionMenu.submenu.addItem(bRightSubItem);
 			

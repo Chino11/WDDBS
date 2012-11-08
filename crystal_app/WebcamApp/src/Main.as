@@ -208,21 +208,21 @@ package{
 		}
 		
 		private function onFullscreen(event:Event):void{
-			stage.nativeWindow.width = Capabilities.screenResolutionX;
-			stage.nativeWindow.height = Capabilities.screenResolutionY;
+			stage.nativeWindow.width = Screen.mainScreen.visibleBounds.width
+			stage.nativeWindow.height = Screen.mainScreen.visibleBounds.height;
 			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.left;
 			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
 		}
 		
 		private function resetWindow():void{
-			stage.nativeWindow.width = 500;
-			stage.nativeWindow.height = 397;
+			stage.nativeWindow.width = _video.width;
+			stage.nativeWindow.height = _video.height;
 		}
 		
 		private function onCenter(event:Event):void{
 			resetWindow();
-			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.width/2;
-			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.height/2;
+			stage.nativeWindow.x = (Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2;
+			stage.nativeWindow.y = (Screen.mainScreen.visibleBounds.height - stage.nativeWindow.height)/2;
 		}
 		
 		private function onTopRight(event:Event):void{

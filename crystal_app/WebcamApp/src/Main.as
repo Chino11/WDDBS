@@ -160,12 +160,9 @@ package{
 		// Being called in the constructor - calling camera and video to life
 		private function settingWebcam():void{	
 			_preBg = new PreBackground();
-<<<<<<< HEAD
 			addChild(_preBg);
 			
-=======
 			_holder.addChild(_preBg);
->>>>>>> ba989da69180bfe235b3250be99e8cc21495d25b
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
 			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;

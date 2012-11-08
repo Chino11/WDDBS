@@ -4,17 +4,27 @@ package com.ca.view
 
 	public class Settings extends SettingsBase
 	{
-		private var frontCheckBoxChecked:Boolean;
+		private var _inFront:Boolean;
 		public function Settings()
 		{
 			super();
 			onUpFrontCheckBox();
 		}
 		
+		public function get inFront():Boolean
+		{
+			return _inFront;
+		}
+
+		public function set inFront(value:Boolean):void
+		{
+			_inFront = value;
+		}
+
 		private function onUpFrontCheckBox():void
 		{
 			if(this.frontCheckBox.selected){
-				frontCheckBoxChecked = true;
+				inFront = true;
 			}
 			
 		}

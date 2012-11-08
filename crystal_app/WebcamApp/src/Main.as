@@ -48,6 +48,7 @@ package{
 			_holder = new Sprite();
 			addChild(_holder);
 			
+			settingVOVariables();
 			settingWebcam();
 			stageFunctions();
 			setupChrome();
@@ -69,9 +70,14 @@ package{
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_CENTER, onCenter);
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_FULL_SCREEN, onFullscreen);
 		}
-
+		
+		private function settingVOVariables():void{
+			var settings:Settings = new Settings();
+			settings.inFront = _inFront;
+		}
+		
 		// ACTUALLY listen on native window to close, that will call the onSave
-		private function openSavedSettings():void{
+		private function onAppOpening():void{  //backwards
 			var file:File = File.applicationStorageDirectory;
 			file.nativePath += File.separator + "settings.data";
 			
@@ -93,7 +99,7 @@ package{
 		}
 		
 		// ACTUALLY call this function when the app opens
-		private function onAppOpening():void{
+		private function openSavedSettings():void{  //backwards
 			var file:File = File.applicationStorageDirectory;
 			file.nativePath += File.separator + "settings.data";
 			
@@ -106,6 +112,8 @@ package{
 			fs.open(file,FileMode.WRITE);
 			//			var settingsVO:SettingsVO = fs.readObject();
 			fs.close();
+			
+			//pull vo back out and cast it as vo and then set the var throughout the doc = to its variables
 		}
 		
 		private function setupChrome():void{

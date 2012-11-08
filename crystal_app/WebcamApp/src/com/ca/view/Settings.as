@@ -7,6 +7,13 @@ package com.ca.view
 		public function Settings()
 		{
 			super();
+			onUpFrontCheckBox();
+		}
+		
+		private function onUpFrontCheckBox():void
+		{
+			trace(this.frontCheckBox);
+			
 		}
 	}
 }

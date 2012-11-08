@@ -113,7 +113,6 @@ package{
 			mainCloseButton.name = "mainCloseButton";
 			mainCloseButton.mouseChildern = false;
 			stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
-			closeButton.addEventListener(MouseEvent.CLICK, onWindowClose);
 		}
 		
 		private function onWindowClose(event:MouseEvent):void
@@ -198,15 +197,11 @@ package{
 			_settings.y = 0;
 			_settings.x = 0;
 			_settings.alpha = 0;
-			_settings.closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
 			_holder.addChild(_settings);
 			TweenLite.to(_settings, 1, {alpha:1});
 		}
 		
 		private function onCloseClick(event:MouseEvent):void{
-<<<<<<< HEAD
-			stage.removeChild(_settings);
-=======
 			trace(event.currentTarget.name);
 			if(event.currentTarget.name == 'mainCloseButton'){
 				stage.nativeWindow.close();
@@ -214,7 +209,6 @@ package{
 			else{
 				_holder.removeChild(_settings);
 			}
->>>>>>> 7b211288d23b91baefc632b42b9e3523f2682a42
 		}
 		
 		private function onFullscreen(event:Event):void{

@@ -7,12 +7,6 @@ package com.ca.view
 		public function Settings()
 		{
 			super();
-			//closeButton.addEventListener(MouseEvent.CLICK, onSettingsClose);
-		}
-		
-		private function onSettingsClose(event:MouseEvent):void
-		{
-			removeChild(this);
 		}
 	}
 }

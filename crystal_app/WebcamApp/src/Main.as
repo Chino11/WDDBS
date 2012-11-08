@@ -117,6 +117,12 @@ package{
 			var closeButton:CloseButton = new CloseButton();
 			_holder.addChild(closeButton);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
+			closeButton.addEventListener(MouseEvent.CLICK, onWindowClose);
+		}
+		
+		private function onWindowClose(event:MouseEvent):void
+		{
+			stage.nativeWindow.close();
 		}
 		
 		private function onMouseDown(event:MouseEvent):void{
@@ -203,7 +209,7 @@ package{
 		}
 		
 		private function onCloseClick(event:MouseEvent):void{
-			_settings.stage.nativeWindow.close();
+			stage.removeChild(_settings);
 		}
 		
 		private function onFullscreen(event:Event):void{

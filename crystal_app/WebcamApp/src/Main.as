@@ -64,6 +64,8 @@ package{
 			openSavedSettings();
 			registerClassAlias("com.ca.vo.SettingsVO",SettingsVO);
 			
+			
+			// Event Listeners for the Key Shortcuts - Positioning
 			NativeApplication.nativeApplication.menu = MenuUtils.makeAppMenu(NativeApplication.nativeApplication.menu);
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_TOP_LEFT, onTopLeft);
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_BOTTOM_LEFT, onBottomLeft);
@@ -216,8 +218,8 @@ package{
 		
 		private function onCenter(event:Event):void{
 			resetWindow();
-			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.left;
-			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height;
+			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.width/2;
+			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.height/2;
 		}
 		
 		private function onTopRight(event:Event):void{

@@ -1,5 +1,6 @@
 package com.ca.utils
 {
+	import com.ca.events.MenuEvents;
 	import com.greensock.*;
 	import com.greensock.easing.*;
 	
@@ -27,40 +28,43 @@ package com.ca.utils
 			positionMenu.submenu = new NativeMenu();
 			resolutionMenu.submenu = new NativeMenu();
 			
-			var LeftSubItem:NativeMenuItem = new NativeMenuItem("Top-Left");
-//			LeftSubItem.keyEquivalentModifiers = [];
+			var LeftSubItem:NativeMenuItem = new NativeMenuItem("Top Left");
 			LeftSubItem.keyEquivalent = "l";
-			//LeftSubItem.addEventListener(Event.SELECT, onTopLeft);
+			LeftSubItem.data = TOP_LEFT;
+			LeftSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_TOP_LEFT));});
 			positionMenu.submenu.addItem(LeftSubItem);
 			
-			var RightSubItem:NativeMenuItem = new NativeMenuItem("Top-Right");
-//			RightSubItem.keyEquivalentModifiers = [];
+			var RightSubItem:NativeMenuItem = new NativeMenuItem("Top Right");
 			RightSubItem.keyEquivalent = "r";
-//			RightSubItem.addEventListener(Event.SELECT, onTopRight);
+			RightSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_TOP_RIGHT));});
 			positionMenu.submenu.addItem(RightSubItem);
 			
-			var bLeftSubItem:NativeMenuItem = new NativeMenuItem("Bottom-Left");
+			var bLeftSubItem:NativeMenuItem = new NativeMenuItem("Bottom Left");
 			bLeftSubItem.keyEquivalentModifiers = [];
 			bLeftSubItem.keyEquivalent = "L";
-//			bLeftSubItem.addEventListener(Event.SELECT, onBottomLeft);
+			bLeftSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_BOTTOM_LEFT));});
 			positionMenu.submenu.addItem(bLeftSubItem);
 			
-			var bRightSubItem:NativeMenuItem = new NativeMenuItem("Bottom-Right");
+			var bRightSubItem:NativeMenuItem = new NativeMenuItem("Bottom Right");
 			bRightSubItem.keyEquivalentModifiers = [];
 			bRightSubItem.keyEquivalent = "R";
-//			bRightSubItem.addEventListener(Event.SELECT, onBottomRight);
+			bRightSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_BOTTOM_RIGHT));});
 			positionMenu.submenu.addItem(bRightSubItem);
 			
-			var middleSubItem:NativeMenuItem = new NativeMenuItem("Middle");
-//			middleSubItem.keyEquivalentModifiers = [];
-			middleSubItem.keyEquivalent = "m";
-//			middleSubItem.addEventListener(Event.SELECT, onMiddle);
+			var middleSubItem:NativeMenuItem = new NativeMenuItem("Center");
+			middleSubItem.keyEquivalent = "c";
+			middleSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_CENTER));});
 			positionMenu.submenu.addItem(middleSubItem);
 			
 			var fullscreenSubItem:NativeMenuItem = new NativeMenuItem("FullScreen");
-//			fullscreenSubItem.keyEquivalentModifiers = [];
 			fullscreenSubItem.keyEquivalent = "f";
-//			fullscreenSubItem.addEventListener(Event.SELECT, onFullscreen);
+			fullscreenSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_FULL_SCREEN));});
 			positionMenu.submenu.addItem(fullscreenSubItem);
 			
 			return menu;

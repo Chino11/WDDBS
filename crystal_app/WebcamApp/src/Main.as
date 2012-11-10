@@ -77,7 +77,7 @@ package{
 		}
 		
 		// ACTUALLY listen on native window to close, that will call the onSave
-		private function onAppOpening():void{  //backwards
+		private function onAppOpening():void{
 			var file:File = File.applicationStorageDirectory;
 			file.nativePath += File.separator + "settings.data";
 			
@@ -99,7 +99,7 @@ package{
 		}
 		
 		// ACTUALLY call this function when the app opens
-		private function openSavedSettings():void{  //backwards
+		private function openSavedSettings():void{
 			var file:File = File.applicationStorageDirectory;
 			file.nativePath += File.separator + "settings.data";
 			

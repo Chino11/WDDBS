@@ -75,28 +75,23 @@ package{
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_SMALL, onSmallDisplay);
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_WIDE, onWideDisplay);
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_FULLSCREEN, onFullDisplay);
-
-
 		}
 		
-		private function onFullDisplay(event:Event):void
-		{	
+		private function onFullDisplay(event:Event):void{	
 			stage.stageWidth = _video.width = 720;
 			stage.stageHeight = _video.height = 480;
 			settingsIcon(_settingsIcon.alpha);
 			_displayState();
 		}
 		
-		private function onWideDisplay(event:Event):void
-		{
+		private function onWideDisplay(event:Event):void{
 			stage.stageWidth = _video.width = 360;
 			stage.stageHeight = _video.height = 240;
 			settingsIcon(_settingsIcon.alpha);
 			_displayState();
 		}
 		
-		private function onSmallDisplay(event:Event):void
-		{
+		private function onSmallDisplay(event:Event):void{
 			stage.stageWidth = _video.width = 320;
 			stage.stageHeight = _video.height = 240;
 			settingsIcon(_settingsIcon.alpha);
@@ -105,7 +100,7 @@ package{
 		
 		private function settingVOVariables():void{
 			var settings:Settings = new Settings();
-			settings.inFront = _inFront;
+			_inFront = settings.inFront;
 		}
 		
 		// ACTUALLY listen on native window to close, that will call the onSave
@@ -118,7 +113,7 @@ package{
 			_settingsVO.y = _mainScreen.y;
 			_settingsVO.width = _mainScreen.width;
 			_settingsVO.height = _mainScreen.height;
-			_settingsVO.inFront = _inFront;
+//			_settingsVO.inFront = _settings.inFront;
 			_settingsVO.resolution = _resolution;
 			_settingsVO.defaultCamera = _defaultCamera;
 			
@@ -157,8 +152,7 @@ package{
 			stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
 		}
 		
-		private function onWindowClose(event:MouseEvent):void
-		{
+		private function onWindowClose(event:MouseEvent):void{
 			stage.nativeWindow.close();
 		}
 		
@@ -169,12 +163,18 @@ package{
 		// Responds to Constructor
 		private function stageFunctions():void{
 			stage.align = StageAlign.TOP;
-			stage.nativeWindow.alwaysInFront = true;	
+			stage.nativeWindow.alwaysInFront = _inFront;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			_mainScreen = stage.nativeWindow;
 			_mainScreen.width = 500;
 			_mainScreen.height = 397;
+		}
+		
+		private function onBoxCheck(event:Event):void{
+			trace('I am being called');
+			stage.nativeWindow.alwaysInFront = _settings.inFront;
+			trace(_inFront);
 		}
 		
 		// BG is listening for mouse OVER and OUT
@@ -250,6 +250,7 @@ package{
 			_settings.alpha = 0;
 			_holder.addChild(_settings);
 			TweenLite.to(_settings, 1, {alpha:1});
+			_settings.addEventListener('checkBox', onBoxCheck);
 		}
 		
 		private function onCloseClick(event:MouseEvent):void{
@@ -273,50 +274,44 @@ package{
 		private function onFullscreen(event:Event):void{
 			stage.nativeWindow.width = Screen.mainScreen.visibleBounds.width
 			stage.nativeWindow.height = Screen.mainScreen.visibleBounds.height;
-//			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.left;
-//			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
-			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.left, y:Screen.mainScreen.visibleBounds.top, ease:Circ.easeOut});
+			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.left, 
+				y:Screen.mainScreen.visibleBounds.top, ease:Circ.easeOut});
 			resetWindow();
 			_displayState = onCenter;
 		}
 		
 		private function onCenter(event:Event=null):void{
-//			stage.nativeWindow.x = (Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2;
-//			stage.nativeWindow.y = (Screen.mainScreen.visibleBounds.height - stage.nativeWindow.height)/2;
-			TweenLite.to(stage.nativeWindow, .5, {x:(Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2, y:(Screen.mainScreen.visibleBounds.height - stage.nativeWindow.height)/2, ease:Circ.easeOut});
+			TweenLite.to(stage.nativeWindow, .5, {x:(Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2, 
+				y:(Screen.mainScreen.visibleBounds.height - stage.nativeWindow.height)/2, ease:Circ.easeOut});
 			resetWindow();
 			_displayState = onCenter;
 		}
 		
 		private function onTopRight(event:Event=null):void{
-//			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width;
-//			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
-			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width, y:Screen.mainScreen.visibleBounds.top, ease:Circ.easeOut});
+			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width, 
+				y:Screen.mainScreen.visibleBounds.top, ease:Circ.easeOut});
 
 			resetWindow();
 			_displayState = onTopRight;
 		}
 		
 		private function onTopLeft(event:Event=null):void{
-//			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.left;
-//			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
-			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.left, y:Screen.mainScreen.visibleBounds.top, ease:Circ.easeOut});
+			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.left, 
+				y:Screen.mainScreen.visibleBounds.top, ease:Circ.easeOut});
 			resetWindow();
 			_displayState = onTopLeft;
 		}
 		
 		private function onBottomRight(event:Event=null):void{
-//			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width;
-//			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height;
-			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width, y:Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height, ease:Circ.easeOut});
+			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width, 
+				y:Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height, ease:Circ.easeOut});
 			resetWindow();
 			_displayState = onBottomRight;
 		}
 		
 		private function onBottomLeft(event:Event=null):void{
-//			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.left;
-//			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height;
-			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.left, y:Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height, ease:Circ.easeOut});
+			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.left, 
+				y:Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height, ease:Circ.easeOut});
 			resetWindow();
 			_displayState = onBottomLeft;
 		}

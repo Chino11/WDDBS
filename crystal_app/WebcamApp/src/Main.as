@@ -27,7 +27,7 @@ package{
 	public class Main extends Sprite{
 		private var _video:Video;
 		//		private var _webcams:Array = Camera.names;
-		private var _resolutions:Array = ["128 x 96","176 x 144","352 x 288","704 x 576","1408 x 1152"];
+		private var _resolutions:Array = [];
 		private var _camera:Camera;
 		private var _settings:Settings;
 		private var _settingsIcon:Sprite;
@@ -40,6 +40,7 @@ package{
 		private var _settingsVO:SettingsVO;
 		private var _preBg:PreBackground;
 		private var _holder:Sprite;
+		private var _displayState:Object;
 
 		private var _mainCloseButton:CloseButton;
 		
@@ -69,6 +70,37 @@ package{
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_BOTTOM_RIGHT, onBottomRight);
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_CENTER, onCenter);
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_FULL_SCREEN, onFullscreen);
+			
+			// Event Listeners for the Key Shortcuts - Resolution
+			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_SMALL, onSmallDisplay);
+			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_WIDE, onWideDisplay);
+			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_FULLSCREEN, onFullDisplay);
+
+
+		}
+		
+		private function onFullDisplay(event:Event):void
+		{	
+			stage.stageWidth = _video.width = 720;
+			stage.stageHeight = _video.height = 480;
+			settingsIcon(_settingsIcon.alpha);
+			_displayState();
+		}
+		
+		private function onWideDisplay(event:Event):void
+		{
+			stage.stageWidth = _video.width = 360;
+			stage.stageHeight = _video.height = 240;
+			settingsIcon(_settingsIcon.alpha);
+			_displayState();
+		}
+		
+		private function onSmallDisplay(event:Event):void
+		{
+			stage.stageWidth = _video.width = 320;
+			stage.stageHeight = _video.height = 240;
+			settingsIcon(_settingsIcon.alpha);
+			_displayState();
 		}
 		
 		private function settingVOVariables():void{
@@ -125,6 +157,11 @@ package{
 			stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
 		}
 		
+		private function onWindowClose(event:MouseEvent):void
+		{
+			stage.nativeWindow.close();
+		}
+		
 		private function onMouseDown(event:MouseEvent):void{
 			stage.nativeWindow.startMove();
 		}
@@ -156,13 +193,14 @@ package{
 		// Being called in the constructor - calling camera and video to life
 		private function settingWebcam():void{	
 			_preBg = new PreBackground();
-			addChild(_preBg);
+			//addChild(_preBg);
+			
 			_holder.addChild(_preBg);
 			
 			_video = new Video(stage.stageWidth, stage.stageHeight);
 			_video.smoothing = true;
-			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
 			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width) / 2;
+			stage.nativeWindow.y = (Screen.mainScreen.bounds.height - stage.nativeWindow.height) / 2;
 			_holder.addChild(_video);
 			
 			_camera = Camera.getCamera();
@@ -173,6 +211,7 @@ package{
 		
 		private function onActive(event:ActivityEvent):void{
 //			trace(_camera.width,_camera.height);
+			_displayState = onCenter;   //Set display state onActive  <-------------
 			_video.height = _camera.height;
 			_video.width = _camera.width;
 			stage.nativeWindow.width = _video.width;
@@ -183,11 +222,14 @@ package{
 			_camera.removeEventListener(ActivityEvent.ACTIVITY, onActive);
 			_holder.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			_holder.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+			_displayState();
 		}
 		
 		// Called by Mouse OVER and OUT functions -  adding settings Icon to the screen
 		private function settingsIcon(alpha:Number):void{
-			_settingsIcon = new Gear();
+			if(_settingsIcon==null){
+				_settingsIcon = new Gear();
+			}
 			_settingsIcon.alpha = alpha;
 			_settingsIcon.x = (_mainScreen.width - _settingsIcon.width) - 5;
 			_settingsIcon.y = (_mainScreen.height - _settingsIcon.height) - 5;
@@ -196,9 +238,9 @@ package{
 		}
 		
 		private function onSettingsClick(event:MouseEvent):void{
-				addSettings();
-				_mainCloseButton.name = "settingsCloseButton";
-				_settingsIcon.removeEventListener(MouseEvent.CLICK, onSettingsClick);
+			addSettings();
+			_mainCloseButton.name = "settingsCloseButton";
+			_settingsIcon.removeEventListener(MouseEvent.CLICK, onSettingsClick);
 		}
 		
 		private function addSettings():void {
@@ -222,46 +264,61 @@ package{
 			}
 		}
 		
-		private function onFullscreen(event:Event):void{
-			stage.nativeWindow.width = Screen.mainScreen.visibleBounds.width
-			stage.nativeWindow.height = Screen.mainScreen.visibleBounds.height;
-			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.left;
-			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
-		}
-		
 		private function resetWindow():void{
 			stage.nativeWindow.width = _video.width;
 			stage.nativeWindow.height = _video.height;
+			settingsIcon(_settingsIcon.alpha);
 		}
 		
-		private function onCenter(event:Event):void{
+		private function onFullscreen(event:Event):void{
+			stage.nativeWindow.width = Screen.mainScreen.visibleBounds.width
+			stage.nativeWindow.height = Screen.mainScreen.visibleBounds.height;
+//			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.left;
+//			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
+			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.left, y:Screen.mainScreen.visibleBounds.top, ease:Circ.easeOut});
 			resetWindow();
-			stage.nativeWindow.x = (Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2;
-			stage.nativeWindow.y = (Screen.mainScreen.visibleBounds.height - stage.nativeWindow.height)/2;
+			_displayState = onCenter;
 		}
 		
-		private function onTopRight(event:Event):void{
+		private function onCenter(event:Event=null):void{
+//			stage.nativeWindow.x = (Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2;
+//			stage.nativeWindow.y = (Screen.mainScreen.visibleBounds.height - stage.nativeWindow.height)/2;
+			TweenLite.to(stage.nativeWindow, .5, {x:(Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2, y:(Screen.mainScreen.visibleBounds.height - stage.nativeWindow.height)/2, ease:Circ.easeOut});
 			resetWindow();
-			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width;
-			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
+			_displayState = onCenter;
 		}
 		
-		private function onTopLeft(event:Event):void{
+		private function onTopRight(event:Event=null):void{
+//			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width;
+//			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
+			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width, y:Screen.mainScreen.visibleBounds.top, ease:Circ.easeOut});
+
 			resetWindow();
-			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.left;
-			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
+			_displayState = onTopRight;
 		}
 		
-		private function onBottomRight(event:Event):void{
+		private function onTopLeft(event:Event=null):void{
+//			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.left;
+//			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.top;
+			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.left, y:Screen.mainScreen.visibleBounds.top, ease:Circ.easeOut});
 			resetWindow();
-			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width;
-			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height;
+			_displayState = onTopLeft;
 		}
 		
-		private function onBottomLeft(event:Event):void{
+		private function onBottomRight(event:Event=null):void{
+//			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width;
+//			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height;
+			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width, y:Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height, ease:Circ.easeOut});
 			resetWindow();
-			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.left;
-			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height;
+			_displayState = onBottomRight;
+		}
+		
+		private function onBottomLeft(event:Event=null):void{
+//			stage.nativeWindow.x = Screen.mainScreen.visibleBounds.left;
+//			stage.nativeWindow.y = Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height;
+			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.left, y:Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height, ease:Circ.easeOut});
+			resetWindow();
+			_displayState = onBottomLeft;
 		}
 	}
 }

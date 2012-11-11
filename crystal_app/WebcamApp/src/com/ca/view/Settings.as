@@ -10,6 +10,7 @@ package com.ca.view
 		private var _inFront:Boolean = true;
 		public function Settings(){
 			super();
+						
 			this.frontCheckBox.selected = true;
 			this.frontCheckBox.addEventListener(ComponentEvent.BUTTON_DOWN, onUpFrontCheckBox);
 		}

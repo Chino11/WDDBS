@@ -3,9 +3,11 @@ package{
 	import com.ca.model.AppModel;
 	import com.ca.utils.MenuUtils;
 	import com.ca.view.Settings;
+	import com.ca.view.SettingsShortcuts;
 	import com.ca.vo.SettingsVO;
 	import com.greensock.*;
 	import com.greensock.easing.*;
+	import com.greensock.plugins.ShortRotationPlugin;
 	
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeWindow;
@@ -43,6 +45,10 @@ package{
 		private var _displayState:Object;
 
 		private var _mainCloseButton:CloseButton;
+
+		private var _tabs:SettingsTabs;
+
+		private var _shortcuts:SettingsShortcuts;
 		
 		public function Main(){
 			
@@ -197,14 +203,14 @@ package{
 			
 			_holder.addChild(_preBg);
 			
-			_video = new Video(stage.stageWidth, stage.stageHeight);
+			_video = new Video(320, 240);
 			_video.smoothing = true;
 			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width) / 2;
 			stage.nativeWindow.y = (Screen.mainScreen.bounds.height - stage.nativeWindow.height) / 2;
 			_holder.addChild(_video);
 			
 			_camera = Camera.getCamera();
-			_camera.setMode(stage.stageWidth, stage.stageHeight, 30);
+			_camera.setMode(320, 240, 30);
 			_video.attachCamera(_camera);
 			_camera.addEventListener(ActivityEvent.ACTIVITY, onActive);
 		}
@@ -239,8 +245,39 @@ package{
 		
 		private function onSettingsClick(event:MouseEvent):void{
 			addSettings();
+			addTabs();
 			_mainCloseButton.name = "settingsCloseButton";
 			_settingsIcon.removeEventListener(MouseEvent.CLICK, onSettingsClick);
+		}
+		
+		private function addTabs():void
+		{
+			_tabs = new SettingsTabs();
+			_tabs.x = -_tabs.width/2;
+			_tabs.alpha = 0;
+			_holder.addChild(_tabs);
+			TweenLite.to(_tabs, 1, {alpha:1});
+			
+			_tabs.tabShortcuts.addEventListener(MouseEvent.CLICK, onShortcutsTabClick);
+			_tabs.tabSettings.addEventListener(MouseEvent.CLICK, onSettingsTabClick);
+		}
+		
+		private function onSettingsTabClick(event:MouseEvent):void
+		{
+			_holder.removeChild(_shortcuts);
+			addSettings();
+		}
+		
+		private function onShortcutsTabClick(event:MouseEvent):void
+		{
+			_holder.removeChild(_settings);
+
+			_shortcuts = new SettingsShortcuts();
+			_shortcuts.y = 0;
+			_shortcuts.x = 0;
+			_shortcuts.alpha = 0;
+			_holder.addChild(_shortcuts);
+			TweenLite.to(_shortcuts, 1, {alpha:1});
 		}
 		
 		private function addSettings():void {
@@ -259,7 +296,13 @@ package{
 				stage.nativeWindow.close();
 			}
 			else{
-				_holder.removeChild(_settings);
+				if(_holder.contains(_settings)){
+					_holder.removeChild(_settings);
+				}
+				else{
+					_holder.removeChild(_shortcuts);
+				}
+				_holder.removeChild(_tabs);
 				_mainCloseButton.name = "mainCloseButton";
 				_settingsIcon.addEventListener(MouseEvent.CLICK, onSettingsClick);
 			}

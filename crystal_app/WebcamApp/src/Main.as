@@ -74,7 +74,7 @@ package{
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_BOTTOM_LEFT, onBottomLeft);
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_TOP_RIGHT, onTopRight);
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_BOTTOM_RIGHT, onBottomRight);
-			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_CENTER, onCenter);
+			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_CENTER, onMiddle);
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_FULL_SCREEN, onFullscreen);
 			
 			// Event Listeners for the Key Shortcuts - Resolution
@@ -151,6 +151,7 @@ package{
 		
 		private function setupChrome():void{
 			_mainCloseButton = new CloseButton();
+			_mainCloseButton.buttonMode = true;
 			_holder.addChild(_mainCloseButton);
 			_mainCloseButton.addEventListener(MouseEvent.CLICK, onCloseClick);
 			_mainCloseButton.name = "mainCloseButton";
@@ -217,7 +218,7 @@ package{
 		
 		private function onActive(event:ActivityEvent):void{
 //			trace(_camera.width,_camera.height);
-			_displayState = onCenter;   //Set display state onActive  <-------------
+			_displayState = onMiddle;   //Set display state onActive  <-------------
 			_video.height = _camera.height;
 			_video.width = _camera.width;
 			stage.nativeWindow.width = _video.width;
@@ -236,6 +237,7 @@ package{
 			if(_settingsIcon==null){
 				_settingsIcon = new Gear();
 			}
+			_settingsIcon.buttonMode = true;
 			_settingsIcon.alpha = alpha;
 			_settingsIcon.x = (_mainScreen.width - _settingsIcon.width) - 5;
 			_settingsIcon.y = (_mainScreen.height - _settingsIcon.height) - 5;
@@ -258,6 +260,9 @@ package{
 			_holder.addChild(_tabs);
 			TweenLite.to(_tabs, 1, {alpha:1});
 			
+			_tabs.tabShortcuts.buttonMode = true;
+			_tabs.tabSettings.buttonMode = true;
+			
 			_tabs.tabShortcuts.addEventListener(MouseEvent.CLICK, onShortcutsTabClick);
 			_tabs.tabSettings.addEventListener(MouseEvent.CLICK, onSettingsTabClick);
 		}
@@ -271,13 +276,24 @@ package{
 		private function onShortcutsTabClick(event:MouseEvent):void
 		{
 			_holder.removeChild(_settings);
-
+			addShortcuts();
+		}
+		
+		private function addShortcuts():void
+		{
 			_shortcuts = new SettingsShortcuts();
 			_shortcuts.y = 0;
 			_shortcuts.x = 0;
 			_shortcuts.alpha = 0;
 			_holder.addChild(_shortcuts);
 			TweenLite.to(_shortcuts, 1, {alpha:1});
+			_shortcuts.addEventListener('topLeft', onTopLeft);
+			_shortcuts.addEventListener('topRight', onTopRight);
+			_shortcuts.addEventListener('middle', onMiddle);
+			_shortcuts.addEventListener('bottomLeft', onBottomLeft);
+			_shortcuts.addEventListener('bottomRight', onBottomRight);
+			_shortcuts.addEventListener('fullscreen', onFullscreen);
+
 		}
 		
 		private function addSettings():void {
@@ -320,14 +336,14 @@ package{
 			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.left, 
 				y:Screen.mainScreen.visibleBounds.top, ease:Circ.easeOut});
 			resetWindow();
-			_displayState = onCenter;
+			_displayState = onMiddle;
 		}
 		
-		private function onCenter(event:Event=null):void{
+		private function onMiddle(event:Event=null):void{
 			TweenLite.to(stage.nativeWindow, .5, {x:(Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2, 
 				y:(Screen.mainScreen.visibleBounds.height - stage.nativeWindow.height)/2, ease:Circ.easeOut});
 			resetWindow();
-			_displayState = onCenter;
+			_displayState = onMiddle;
 		}
 		
 		private function onTopRight(event:Event=null):void{

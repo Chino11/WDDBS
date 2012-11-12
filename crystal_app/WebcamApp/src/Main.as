@@ -29,7 +29,6 @@ package{
 	
 	public class Main extends Sprite{
 		private var _video:Video;
-		//		private var _webcams:Array = Camera.names;
 		private var _resolutions:Array = [];
 		private var _camera:Camera;
 		private var _settings:Settings;
@@ -43,11 +42,8 @@ package{
 		private var _preBg:PreBackground;
 		private var _holder:Sprite;
 		private var _displayState:Function;
-
 		private var _mainCloseButton:CloseButton;
-
 		private var _tabs:SettingsTabs;
-
 		private var _shortcuts:SettingsShortcuts;
 		
 		public function Main(){
@@ -229,6 +225,7 @@ package{
 		private function onSettingsClick(event:MouseEvent):void{
 			addSettings();
 			addTabs();
+			
 			_mainCloseButton.name = "settingsCloseButton";
 			_settingsIcon.removeEventListener(MouseEvent.CLICK, onSettingsClick);
 		}
@@ -250,7 +247,9 @@ package{
 		
 		private function onSettingsTabClick(event:MouseEvent):void
 		{
-			if(_holder.contains(_shortcuts)){
+//			_shortcuts = new SettingsShortcuts();//Ask Sean how to fix this
+
+			if(_shortcuts && _holder.contains(_shortcuts)){
 				_holder.removeChild(_shortcuts);
 				addSettings();
 			}
@@ -258,15 +257,15 @@ package{
 		
 		private function onShortcutsTabClick(event:MouseEvent):void
 		{
-			if(_holder.contains(_settings)){
+			if(_settings && _holder.contains(_settings)){
 				_holder.removeChild(_settings);
 				addShortcuts();
 			}
 		}
 		
-		private function addShortcuts():void
-		{
+		private function addShortcuts():void{
 			_shortcuts = new SettingsShortcuts();
+
 			_shortcuts.y = 0;
 			_shortcuts.x = 0;
 			_shortcuts.alpha = 0;
@@ -278,34 +277,24 @@ package{
 			_shortcuts.addEventListener('bottomLeft', onBottomLeft);
 			_shortcuts.addEventListener('bottomRight', onBottomRight);
 			_shortcuts.addEventListener('fullscreen', onFullscreen);
-
 		}
 		
 		private function addSettings():void {
 			_settings = new Settings();
 			_settings.settingsVO = _settingsVO;
-			_settings.y = 0;
 			_settings.x = 0;
+			_settings.y = 0;
 			_settings.alpha = 0;
 			_holder.addChild(_settings);
 			TweenLite.to(_settings, 1, {alpha:1});
 			_settings.addEventListener(SettingsEvent.SETTINGS_CHANGE,onSettingsChange);
-			
 		}
 		
-		private function onSettingsChange(event:SettingsEvent):void
-		{
+		private function onSettingsChange(event:SettingsEvent):void{
 			_settingsVO = Settings(event.currentTarget).settingsVO;
-			
-			// Cleaning up dirty settings. Fix how it's stored and you won't need this!
-			var resString:String = _settingsVO.resolution.replace(/\s/g,'');
-			var res:Array = resString.split("X");
-			trace(resString);
-			
-			onRezChange(res[0],res[1]);
+			onRezChange(_settingsVO.resolutionX,_settingsVO.resolutionY);
 			
 			// Use this function to update display and stuffs.
-			
 			writeSavedSettings();
 		}
 		
@@ -328,8 +317,8 @@ package{
 		}
 		
 		private function resetWindow():void{
-			stage.nativeWindow.width = _video.width;
-			stage.nativeWindow.height = _video.height;
+			stage.nativeWindow.width = _settingsVO.resolutionX;
+			stage.nativeWindow.height = _settingsVO.resolutionY;
 			settingsIcon(_settingsIcon.alpha);
 		}
 		
@@ -378,38 +367,11 @@ package{
 			_displayState = onBottomLeft;
 		}
 		
-		private function onRezChange(resX:uint,resY:uint):void
-		{
+		private function onRezChange(resX:uint,resY:uint):void{
 			stage.stageWidth = _video.width = resX;
 			stage.stageHeight = _video.height = resY;
 			settingsIcon(_settingsIcon.alpha);
 			_displayState();
 		}
-		
-/*		private function onFullDisplay(event:Event):void{	
-			stage.stageWidth = _video.width = 720;
-			stage.stageHeight = _video.height = 480;
-			settingsIcon(_settingsIcon.alpha);
-			_displayState();
-		}
-		
-		private function onWideDisplay(event:Event):void{
-			stage.stageWidth = _video.width = 360;
-			stage.stageHeight = _video.height = 240;
-			settingsIcon(_settingsIcon.alpha);
-			_displayState();
-		}
-		
-		private function onSmallDisplay(event:Event):void{
-			stage.stageWidth = _video.width = 320;
-			stage.stageHeight = _video.height = 240;
-			settingsIcon(_settingsIcon.alpha);
-			_displayState();
-		}
-		
-		private function settingVOVariables():void{
-			var settings:Settings = new Settings();
-		//	_inFront = settings.inFront;
-		}*/
 	}
 }

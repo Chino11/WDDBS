@@ -142,18 +142,21 @@ package{
 		// Responds to Constructor
 		private function stageFunctions():void{
 			stage.align = StageAlign.TOP;
-			stage.nativeWindow.alwaysInFront = _inFront;
+//			stage.nativeWindow.alwaysInFront = _inFront;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			_mainScreen = stage.nativeWindow;
+<<<<<<< HEAD
 			_mainScreen.width = 320;
 			_mainScreen.height = 240;
+=======
+			_mainScreen.width = _settingsVO.resolutionX;
+			_mainScreen.height = _settingsVO.resolutionY;
+>>>>>>> 5a3e48ff3b47565a848436be4852880db766847f
 		}
 		
 		private function onBoxCheck(event:Event):void{
-			trace('I am being called');
 			stage.nativeWindow.alwaysInFront = _settingsVO.inFront;
-			trace(_inFront);
 		}
 		
 		// BG is listening for mouse OVER and OUT
@@ -172,23 +175,19 @@ package{
 		// Being called in the constructor - calling camera and video to life
 		private function settingWebcam():void{	
 			_preBg = new PreBackground();
-			//addChild(_preBg);
-			
 			_holder.addChild(_preBg);
-			
 			_video = new Video(320, 240);
 			_video.smoothing = true;
 			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width) / 2;
 			stage.nativeWindow.y = (Screen.mainScreen.bounds.height - stage.nativeWindow.height) / 2;
 			_holder.addChild(_video);
-			
 			_camera = Camera.getCamera(_settingsVO.defaultCamera);
 			
 			if(!_camera){
 				_camera = Camera.getCamera();
 			}
 			
-			_camera.setMode(stage.stageWidth, stage.stageHeight, 30); // TODO: This would use the camera setting
+			_camera.setMode(_settingsVO.resolutionX, _settingsVO.resolutionY, 30, true); // TODO: This would use the camera setting
 //			_camera.setMode(320, 240, 30);
 			_video.attachCamera(_camera);
 			_camera.addEventListener(ActivityEvent.ACTIVITY, onActive);
@@ -203,10 +202,10 @@ package{
 			stage.nativeWindow.height = _video.height;
 			
 			if(_holder.contains(_preBg)) _holder.removeChild(_preBg);
-			settingsIcon(0);
 			_camera.removeEventListener(ActivityEvent.ACTIVITY, onActive);
 			_holder.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			_holder.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+			settingsIcon(0);
 			_displayState();
 		}
 		
@@ -248,6 +247,10 @@ package{
 		
 		private function onSettingsTabClick(event:MouseEvent):void
 		{
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5a3e48ff3b47565a848436be4852880db766847f
 			if(_shortcuts && _holder.contains(_shortcuts)){
 				_holder.removeChild(_shortcuts);
 				addSettings();
@@ -316,8 +319,8 @@ package{
 		}
 		
 		private function resetWindow():void{
-			stage.nativeWindow.width = _settingsVO.resolutionX;
-			stage.nativeWindow.height = _settingsVO.resolutionY;
+			stage.nativeWindow.width = _camera.width;
+			stage.nativeWindow.height = _camera.height;
 			settingsIcon(_settingsIcon.alpha);
 		}
 		
@@ -384,10 +387,12 @@ package{
 		}
 		
 		private function onRezChange(resX:uint,resY:uint):void{
-			stage.stageWidth = _video.width = resX;
-			stage.stageHeight = _video.height = resY;
-			settingsIcon(_settingsIcon.alpha);
-			_displayState();
+			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
+			_camera.setMode(resX,resY,30,true);
+			//stage.stageWidth = _video.width = resX;
+			//stage.stageHeight = _video.height = resY;
+		//	settingsIcon(_settingsIcon.alpha);
+		//	_displayState();
 		}
 	}
 }

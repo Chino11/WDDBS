@@ -145,8 +145,8 @@ package{
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			_mainScreen = stage.nativeWindow;
-			_mainScreen.width = 500;
-			_mainScreen.height = 397;
+			_mainScreen.width = 320;
+			_mainScreen.height = 240;
 		}
 		
 		private function onBoxCheck(event:Event):void{
@@ -247,11 +247,6 @@ package{
 		
 		private function onSettingsTabClick(event:MouseEvent):void
 		{
-<<<<<<< HEAD
-=======
-//			_shortcuts = new SettingsShortcuts();//Ask Sean how to fix this
-
->>>>>>> e6ce54ace34e6edce0dc3e38df137df14de03986
 			if(_shortcuts && _holder.contains(_shortcuts)){
 				_holder.removeChild(_shortcuts);
 				addSettings();

@@ -18,8 +18,7 @@ package com.ca.view
 //			this.resolutionDropDown.addEventListener(Event.CHANGE, onResolutionChange);
 		}
 		
-//		private function onResolutionChange(event:Event):void
-//		{
+//		private function onResolutionChange(event:Event):void{
 //			if(ComboBox(event.target).selectedItem.label == "320 X 240"){
 //				trace("this is the small resolution");
 //				var	eventSmall:MouseEvent = new MouseEvent('smallDisplay');

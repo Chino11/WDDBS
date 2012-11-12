@@ -7,8 +7,7 @@ package com.ca.view
 
 	public class SettingsShortcuts extends SettingsShortcutsBase
 	{
-		public function SettingsShortcuts()
-		{
+		public function SettingsShortcuts(){
 			super();
 			stopFrame();
 			
@@ -41,8 +40,7 @@ package com.ca.view
 			tabFullscreen.addEventListener(MouseEvent.CLICK, onClick);
 		}
 		
-		private function onClick(event:MouseEvent):void
-		{
+		private function onClick(event:MouseEvent):void{
 			if(event.currentTarget == tabTopLeft){
 				var	eventTopLeft:MouseEvent = new MouseEvent('topLeft');
 				dispatchEvent(eventTopLeft);
@@ -64,8 +62,7 @@ package com.ca.view
 			}
 		}
 		
-		private function onMouseOut(event:MouseEvent):void
-		{
+		private function onMouseOut(event:MouseEvent):void{
 			if(event.currentTarget == tabTopLeft){
 				tabTopLeft.gotoAndStop(1);
 			}else if(event.currentTarget == tabTopRight){
@@ -81,8 +78,7 @@ package com.ca.view
 			}
 		}
 		
-		private function onMouseOver(event:MouseEvent):void
-		{
+		private function onMouseOver(event:MouseEvent):void{
 			if(event.currentTarget == tabTopLeft){
 				tabTopLeft.gotoAndStop(2);
 			}else if(event.currentTarget == tabTopRight){
@@ -98,8 +94,7 @@ package com.ca.view
 			}
 		}
 		
-		private function stopFrame():void
-		{
+		private function stopFrame():void{
 			tabTopLeft.gotoAndStop(1);
 			tabTopRight.gotoAndStop(1);
 			tabMiddle.gotoAndStop(1);

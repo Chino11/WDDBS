@@ -33,7 +33,6 @@ package{
 		private var _settingsIcon:Sprite;
 		private var _mainScreen:NativeWindow;
 		private var _nw:NativeWindow;
-		private var _storageArray:ByteArray = new ByteArray();
 		private var _defaultCamera:String;
 		private var _inFront:Boolean;
 		private var _resolution:String;
@@ -46,10 +45,14 @@ package{
 		
 		public function Main(){
 			
+			registerClassAlias("com.ca.vo.SettingsVO",SettingsVO);
+			
 			_holder = new Sprite();
 			addChild(_holder);
 			
-			settingVOVariables();
+			openSavedSettings(); // Break out the "preBg" logic to run before this method.
+			
+			//settingVOVariables();
 			settingWebcam();
 			stageFunctions();
 			setupChrome();
@@ -58,8 +61,7 @@ package{
 			
 			var model:AppModel = new AppModel;
 			
-			openSavedSettings();
-			registerClassAlias("com.ca.vo.SettingsVO",SettingsVO);
+			
 			
 			
 			// Event Listeners for the Key Shortcuts - Positioning
@@ -77,34 +79,8 @@ package{
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_FULLSCREEN, onFullDisplay);
 		}
 		
-		private function onFullDisplay(event:Event):void{	
-			stage.stageWidth = _video.width = 720;
-			stage.stageHeight = _video.height = 480;
-			settingsIcon(_settingsIcon.alpha);
-			_displayState();
-		}
-		
-		private function onWideDisplay(event:Event):void{
-			stage.stageWidth = _video.width = 360;
-			stage.stageHeight = _video.height = 240;
-			settingsIcon(_settingsIcon.alpha);
-			_displayState();
-		}
-		
-		private function onSmallDisplay(event:Event):void{
-			stage.stageWidth = _video.width = 320;
-			stage.stageHeight = _video.height = 240;
-			settingsIcon(_settingsIcon.alpha);
-			_displayState();
-		}
-		
-		private function settingVOVariables():void{
-			var settings:Settings = new Settings();
-			_inFront = settings.inFront;
-		}
-		
 		// ACTUALLY listen on native window to close, that will call the onSave
-		private function onAppOpening():void{
+		private function writeSavedSettings():void{
 			var file:File = File.applicationStorageDirectory;
 			file.nativePath += File.separator + "settings.data";
 			
@@ -113,7 +89,7 @@ package{
 			_settingsVO.y = _mainScreen.y;
 			_settingsVO.width = _mainScreen.width;
 			_settingsVO.height = _mainScreen.height;
-//			_settingsVO.inFront = _settings.inFront;
+	//		_settingsVO.inFront = _settings.inFront;
 			_settingsVO.resolution = _resolution;
 			_settingsVO.defaultCamera = _defaultCamera;
 			
@@ -122,7 +98,7 @@ package{
 			fs.writeObject(_settingsVO);
 			fs.close();
 			
-			onAppOpening();
+			//onAppOpening();
 		}
 		
 		// ACTUALLY call this function when the app opens
@@ -132,15 +108,20 @@ package{
 			
 			if(! file.exists){
 				trace("File Does not exist");
+				// If the file doesn't exist, Perhaps populate a settings VO with default values.
+				// OR bring up the settings menu so the user can define and save their own settings.
 				return
 			}
 			
 			var fs:FileStream = new FileStream();
-			fs.open(file,FileMode.WRITE);
-			//			var settingsVO:SettingsVO = fs.readObject();
+			fs.open(file,FileMode.READ);
+			trace(fs.bytesAvailable);
+			//pull vo back out and cast it as vo and then set the var throughout the doc = to its variables
+			_settingsVO = fs.readObject();
 			fs.close();
 			
-			//pull vo back out and cast it as vo and then set the var throughout the doc = to its variables
+			trace("file Data: ",_settingsVO); // figure out how to see the object you saved to the file stream
+			
 		}
 		
 		private function setupChrome():void{
@@ -173,7 +154,7 @@ package{
 		
 		private function onBoxCheck(event:Event):void{
 			trace('I am being called');
-			stage.nativeWindow.alwaysInFront = _settings.inFront;
+			stage.nativeWindow.alwaysInFront = _settingsVO.inFront;
 			trace(_inFront);
 		}
 		
@@ -204,7 +185,7 @@ package{
 			_holder.addChild(_video);
 			
 			_camera = Camera.getCamera();
-			_camera.setMode(stage.stageWidth, stage.stageHeight, 30);
+			_camera.setMode(stage.stageWidth, stage.stageHeight, 30); // TODO: This would use the camera setting
 			_video.attachCamera(_camera);
 			_camera.addEventListener(ActivityEvent.ACTIVITY, onActive);
 		}
@@ -250,7 +231,7 @@ package{
 			_settings.alpha = 0;
 			_holder.addChild(_settings);
 			TweenLite.to(_settings, 1, {alpha:1});
-			_settings.addEventListener('checkBox', onBoxCheck);
+			//_settings.addEventListener('checkBox', onBoxCheck);
 		}
 		
 		private function onCloseClick(event:MouseEvent):void{
@@ -314,6 +295,32 @@ package{
 				y:Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height, ease:Circ.easeOut});
 			resetWindow();
 			_displayState = onBottomLeft;
+		}
+		
+		private function onFullDisplay(event:Event):void{	
+			stage.stageWidth = _video.width = 720;
+			stage.stageHeight = _video.height = 480;
+			settingsIcon(_settingsIcon.alpha);
+			_displayState();
+		}
+		
+		private function onWideDisplay(event:Event):void{
+			stage.stageWidth = _video.width = 360;
+			stage.stageHeight = _video.height = 240;
+			settingsIcon(_settingsIcon.alpha);
+			_displayState();
+		}
+		
+		private function onSmallDisplay(event:Event):void{
+			stage.stageWidth = _video.width = 320;
+			stage.stageHeight = _video.height = 240;
+			settingsIcon(_settingsIcon.alpha);
+			_displayState();
+		}
+		
+		private function settingVOVariables():void{
+			var settings:Settings = new Settings();
+		//	_inFront = settings.inFront;
 		}
 	}
 }

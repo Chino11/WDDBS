@@ -250,7 +250,7 @@ package{
 		
 		private function onSettingsTabClick(event:MouseEvent):void
 		{
-			if(_holder.contains(_shortcuts)){
+			if(_shortcuts && _holder.contains(_shortcuts)){
 				_holder.removeChild(_shortcuts);
 				addSettings();
 			}
@@ -258,7 +258,7 @@ package{
 		
 		private function onShortcutsTabClick(event:MouseEvent):void
 		{
-			if(_holder.contains(_settings)){
+			if(_settings && _holder.contains(_settings)){
 				_holder.removeChild(_settings);
 				addShortcuts();
 			}

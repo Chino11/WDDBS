@@ -146,13 +146,10 @@ package{
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			_mainScreen = stage.nativeWindow;
-<<<<<<< HEAD
 			_mainScreen.width = 320;
 			_mainScreen.height = 240;
-=======
 			_mainScreen.width = _settingsVO.resolutionX;
 			_mainScreen.height = _settingsVO.resolutionY;
->>>>>>> 5a3e48ff3b47565a848436be4852880db766847f
 		}
 		
 		private function onBoxCheck(event:Event):void{
@@ -247,10 +244,6 @@ package{
 		
 		private function onSettingsTabClick(event:MouseEvent):void
 		{
-<<<<<<< HEAD
-=======
-
->>>>>>> 5a3e48ff3b47565a848436be4852880db766847f
 			if(_shortcuts && _holder.contains(_shortcuts)){
 				_holder.removeChild(_shortcuts);
 				addSettings();

@@ -141,10 +141,10 @@ package
 		
 		
 		
-		import com.ca.model.AppModel;
-		import com.ca.utils.MenuUtils;
-		import com.ca.view.Settings;
-		import com.ca.vo.SettingsVO;
+		import com.alyssanicoll.model.AppModel;
+		import com.alyssanicoll.utils.MenuUtils;
+		import com.alyssanicoll.view.Settings;
+		import com.alyssanicoll.vo.SettingsVO;
 		import com.greensock.*;
 		import com.greensock.easing.*;
 		

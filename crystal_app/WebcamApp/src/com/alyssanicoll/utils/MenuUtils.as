@@ -1,6 +1,6 @@
-package com.ca.utils
+package com.alyssanicoll.utils
 {
-	import com.ca.events.MenuEvents;
+	import com.alyssanicoll.events.MenuEvents;
 	import com.greensock.*;
 	import com.greensock.easing.*;
 	

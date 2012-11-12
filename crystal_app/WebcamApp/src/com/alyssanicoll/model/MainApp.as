@@ -1,4 +1,4 @@
-package com.ca.model
+package com.alyssanicoll.model
 {
 	import flash.display.Sprite;
 		

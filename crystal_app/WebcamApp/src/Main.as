@@ -29,7 +29,7 @@ package{
 	
 	public class Main extends Sprite{
 		private var _video:Video;
-		private var _resolutions:Array = [];
+		//private var _resolutions:Array = [16:9 - 4:3];
 		private var _camera:Camera;
 		private var _settings:Settings;
 		private var _settingsIcon:Sprite;
@@ -59,6 +59,7 @@ package{
 			settingWebcam();
 			stageFunctions();
 			setupChrome();
+			trace(Camera.names);
 			
 			// Called in Constructor - sets up the menu that appears on the top of the screen
 			
@@ -330,39 +331,56 @@ package{
 		}
 		
 		private function onMiddle(event:Event=null):void{
-			TweenLite.to(stage.nativeWindow, .5, {x:(Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2, 
-				y:(Screen.mainScreen.visibleBounds.height - stage.nativeWindow.height)/2, ease:Circ.easeOut});
+//			TweenLite.to(stage.nativeWindow, .5, {x:(Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2, 
+//				y:(Screen.mainScreen.visibleBounds.height - stage.nativeWindow.height)/2, ease:Circ.easeOut});
+			tween((Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2,
+				(Screen.mainScreen.visibleBounds.height - stage.nativeWindow.height)/2);
+
 			resetWindow();
 			_displayState = onMiddle;
 		}
 		
 		private function onTopRight(event:Event=null):void{
-			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width, 
-				y:Screen.mainScreen.visibleBounds.top, ease:Circ.easeOut});
+//			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width, 
+//				y:Screen.mainScreen.visibleBounds.top, ease:Circ.easeOut});
+			tween(Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width,
+				Screen.mainScreen.visibleBounds.top);
 
 			resetWindow();
 			_displayState = onTopRight;
 		}
 		
 		private function onTopLeft(event:Event=null):void{
-			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.left, 
-				y:Screen.mainScreen.visibleBounds.top, ease:Circ.easeOut});
+//			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.left, 
+//				y:Screen.mainScreen.visibleBounds.top, ease:Circ.easeOut});
+			tween(Screen.mainScreen.visibleBounds.left, Screen.mainScreen.visibleBounds.top);
+
 			resetWindow();
 			_displayState = onTopLeft;
 		}
 		
 		private function onBottomRight(event:Event=null):void{
-			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width, 
-				y:Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height, ease:Circ.easeOut});
+//			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width, 
+//				y:Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height, ease:Circ.easeOut});
+			tween(Screen.mainScreen.visibleBounds.right - stage.nativeWindow.width,
+				Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height);
+
 			resetWindow();
 			_displayState = onBottomRight;
 		}
 		
 		private function onBottomLeft(event:Event=null):void{
-			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.left, 
-				y:Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height, ease:Circ.easeOut});
+//			TweenLite.to(stage.nativeWindow, .5, {x:Screen.mainScreen.visibleBounds.left, 
+//				y:Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height, ease:Circ.easeOut});
+			tween(Screen.mainScreen.visibleBounds.left, Screen.mainScreen.visibleBounds.bottom - stage.nativeWindow.height);
+			
 			resetWindow();
 			_displayState = onBottomLeft;
+		}
+		
+		private function tween(positionX:Number, positionY:Number):void
+		{
+			TweenLite.to(stage.nativeWindow, .5, {x:positionX, y:positionY, ease:Circ.easeOut});
 		}
 		
 		private function onRezChange(resX:uint,resY:uint):void{

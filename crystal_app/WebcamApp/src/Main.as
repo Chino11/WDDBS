@@ -269,14 +269,18 @@ package{
 		
 		private function onSettingsTabClick(event:MouseEvent):void
 		{
-			_holder.removeChild(_shortcuts);
-			addSettings();
+			if(_holder.contains(_shortcuts)){
+				_holder.removeChild(_shortcuts);
+				addSettings();
+			}
 		}
 		
 		private function onShortcutsTabClick(event:MouseEvent):void
 		{
-			_holder.removeChild(_settings);
-			addShortcuts();
+			if(_holder.contains(_settings)){
+				_holder.removeChild(_settings);
+				addShortcuts();
+			}
 		}
 		
 		private function addShortcuts():void
@@ -303,7 +307,11 @@ package{
 			_settings.alpha = 0;
 			_holder.addChild(_settings);
 			TweenLite.to(_settings, 1, {alpha:1});
+			
 			_settings.addEventListener('checkBox', onBoxCheck);
+//			_settings.addEventListener('smallDisplay', onSmallDisplay);
+//			_settings.addEventListener('wideDisplay', onWideDisplay);
+//			_settings.addEventListener('fullscreenDisplay', onFullDisplay);
 		}
 		
 		private function onCloseClick(event:MouseEvent):void{

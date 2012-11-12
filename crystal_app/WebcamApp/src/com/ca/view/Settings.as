@@ -1,5 +1,6 @@
 package com.ca.view
 {
+	import fl.controls.ComboBox;
 	import fl.events.ComponentEvent;
 	
 	import flash.events.Event;
@@ -13,7 +14,26 @@ package com.ca.view
 						
 			this.frontCheckBox.selected = true;
 			this.frontCheckBox.addEventListener(ComponentEvent.BUTTON_DOWN, onUpFrontCheckBox);
+			
+//			this.resolutionDropDown.addEventListener(Event.CHANGE, onResolutionChange);
 		}
+		
+//		private function onResolutionChange(event:Event):void
+//		{
+//			if(ComboBox(event.target).selectedItem.label == "320 X 240"){
+//				trace("this is the small resolution");
+//				var	eventSmall:MouseEvent = new MouseEvent('smallDisplay');
+//				dispatchEvent(eventSmall);
+//			}else if(ComboBox(event.target).selectedItem.label == "360 X 240"){
+//				trace("this is the wide resolution");
+//				var	eventWide:MouseEvent = new MouseEvent('wideDisplay');
+//				dispatchEvent(eventWide);
+//			}else if(ComboBox(event.target).selectedItem.label == "720 X 480"){
+//				trace("this is the fullscreen resolution");
+//				var	eventFullscreen:MouseEvent = new MouseEvent('fullscreenDisplay');
+//				dispatchEvent(eventFullscreen);
+//			}
+//		}
 		
 		public function get inFront():Boolean{
 			return _inFront;

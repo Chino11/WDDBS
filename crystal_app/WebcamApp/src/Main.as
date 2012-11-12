@@ -1,10 +1,11 @@
 package{
-	import com.ca.events.MenuEvents;
-	import com.ca.model.AppModel;
-	import com.ca.utils.MenuUtils;
-	import com.ca.view.Settings;
-	import com.ca.view.SettingsShortcuts;
-	import com.ca.vo.SettingsVO;
+	import com.alyssanicoll.events.MenuEvents;
+	import com.alyssanicoll.events.SettingsEvent;
+	import com.alyssanicoll.model.AppModel;
+	import com.alyssanicoll.utils.MenuUtils;
+	import com.alyssanicoll.view.Settings;
+	import com.alyssanicoll.view.SettingsShortcuts;
+	import com.alyssanicoll.vo.SettingsVO;
 	import com.greensock.*;
 	import com.greensock.easing.*;
 	import com.greensock.plugins.ShortRotationPlugin;
@@ -41,7 +42,7 @@ package{
 		private var _settingsVO:SettingsVO;
 		private var _preBg:PreBackground;
 		private var _holder:Sprite;
-		private var _displayState:Object;
+		private var _displayState:Function;
 
 		private var _mainCloseButton:CloseButton;
 
@@ -67,9 +68,6 @@ package{
 			
 			var model:AppModel = new AppModel;
 			
-			
-			
-			
 			// Event Listeners for the Key Shortcuts - Positioning
 			NativeApplication.nativeApplication.menu = MenuUtils.makeAppMenu(NativeApplication.nativeApplication.menu);
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_TOP_LEFT, onTopLeft);
@@ -80,9 +78,9 @@ package{
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_FULL_SCREEN, onFullscreen);
 			
 			// Event Listeners for the Key Shortcuts - Resolution
-			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_SMALL, onSmallDisplay);
-			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_WIDE, onWideDisplay);
-			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_FULLSCREEN, onFullDisplay);
+		//	NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_SMALL, onSmallDisplay);
+		//	NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_WIDE, onWideDisplay);
+		//	NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_FULLSCREEN, onFullDisplay);
 		}
 		
 		// ACTUALLY listen on native window to close, that will call the onSave
@@ -90,14 +88,8 @@ package{
 			var file:File = File.applicationStorageDirectory;
 			file.nativePath += File.separator + "settings.data";
 			
-			_settingsVO = new SettingsVO();
 			_settingsVO.x = _mainScreen.x;
 			_settingsVO.y = _mainScreen.y;
-			_settingsVO.width = _mainScreen.width;
-			_settingsVO.height = _mainScreen.height;
-	//		_settingsVO.inFront = _settings.inFront;
-			_settingsVO.resolution = _resolution;
-			_settingsVO.defaultCamera = _defaultCamera;
 			
 			var fs:FileStream = new FileStream();
 			fs.open(file,FileMode.WRITE);
@@ -116,6 +108,8 @@ package{
 				trace("File Does not exist");
 				// If the file doesn't exist, Perhaps populate a settings VO with default values.
 				// OR bring up the settings menu so the user can define and save their own settings.
+				_settingsVO = new SettingsVO();
+				addSettings();
 				return
 			}
 			
@@ -191,7 +185,12 @@ package{
 			stage.nativeWindow.y = (Screen.mainScreen.bounds.height - stage.nativeWindow.height) / 2;
 			_holder.addChild(_video);
 			
-			_camera = Camera.getCamera();
+			_camera = Camera.getCamera(_settingsVO.defaultCamera);
+			
+			if(!_camera){
+				_camera = Camera.getCamera();
+			}
+			
 			_camera.setMode(stage.stageWidth, stage.stageHeight, 30); // TODO: This would use the camera setting
 //			_camera.setMode(320, 240, 30);
 			_video.attachCamera(_camera);
@@ -284,16 +283,30 @@ package{
 		
 		private function addSettings():void {
 			_settings = new Settings();
+			_settings.settingsVO = _settingsVO;
 			_settings.y = 0;
 			_settings.x = 0;
 			_settings.alpha = 0;
 			_holder.addChild(_settings);
 			TweenLite.to(_settings, 1, {alpha:1});
-			//_settings.addEventListener('checkBox', onBoxCheck);
+			_settings.addEventListener(SettingsEvent.SETTINGS_CHANGE,onSettingsChange);
 			
-//			_settings.addEventListener('smallDisplay', onSmallDisplay);
-//			_settings.addEventListener('wideDisplay', onWideDisplay);
-//			_settings.addEventListener('fullscreenDisplay', onFullDisplay);
+		}
+		
+		private function onSettingsChange(event:SettingsEvent):void
+		{
+			_settingsVO = Settings(event.currentTarget).settingsVO;
+			
+			// Cleaning up dirty settings. Fix how it's stored and you won't need this!
+			var resString:String = _settingsVO.resolution.replace(/\s/g,'');
+			var res:Array = resString.split("X");
+			trace(resString);
+			
+			onRezChange(res[0],res[1]);
+			
+			// Use this function to update display and stuffs.
+			
+			writeSavedSettings();
 		}
 		
 		private function onCloseClick(event:MouseEvent):void{
@@ -365,7 +378,15 @@ package{
 			_displayState = onBottomLeft;
 		}
 		
-		private function onFullDisplay(event:Event):void{	
+		private function onRezChange(resX:uint,resY:uint):void
+		{
+			stage.stageWidth = _video.width = resX;
+			stage.stageHeight = _video.height = resY;
+			settingsIcon(_settingsIcon.alpha);
+			_displayState();
+		}
+		
+/*		private function onFullDisplay(event:Event):void{	
 			stage.stageWidth = _video.width = 720;
 			stage.stageHeight = _video.height = 480;
 			settingsIcon(_settingsIcon.alpha);
@@ -389,6 +410,6 @@ package{
 		private function settingVOVariables():void{
 			var settings:Settings = new Settings();
 		//	_inFront = settings.inFront;
-		}
+		}*/
 	}
 }

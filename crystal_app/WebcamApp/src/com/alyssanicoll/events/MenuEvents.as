@@ -1,4 +1,4 @@
-package com.ca.events{
+package com.alyssanicoll.events{
 	
 	import flash.events.Event;
 	

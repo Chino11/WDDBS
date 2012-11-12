@@ -1,6 +1,7 @@
-package com.ca.view
+package com.alyssanicoll.view
 {
-	import com.ca.vo.SettingsVO;
+	import com.alyssanicoll.events.SettingsEvent;
+	import com.alyssanicoll.vo.SettingsVO;
 	
 	import fl.controls.ComboBox;
 	import fl.events.ComponentEvent;
@@ -12,21 +13,32 @@ package com.ca.view
 	{
 		private var _inFront:Boolean = true;
 		
-		private var _settingsVO:SettingsVO;
+		private var _settingsVO:SettingsVO = new SettingsVO();
+		
 		public function Settings(){
 			super();
-						
-			this.frontCheckBox.selected = true;
-		//	this.frontCheckBox.addEventListener(ComponentEvent.BUTTON_DOWN, onUpFrontCheckBox);
-			this.frontCheckBox.addEventListener(Event.CHANGE,proveAlyssaWrong);
-		//	this.frontCheckBox.addEventListener(ComponentEvent.BUTTON_DOWN, onUpFrontCheckBox);
+			
+			//this.frontCheckBox.selected = true;
+			this.frontCheckBox.addEventListener(Event.CHANGE,onUpFrontCheckBoxChange);
+			this.resolutionDropDown.addEventListener(Event.CHANGE,onResChange);
 		}
 		
-		private function proveAlyssaWrong(event:Event):void
+		private function onResChange(event:Event):void
+		{
+			_settingsVO.resolution = ComboBox(event.currentTarget).selectedItem.label;
+			
+			dispatchEvent(new SettingsEvent(SettingsEvent.SETTINGS_CHANGE));
+		}
+		
+		private function onUpFrontCheckBoxChange(event:Event):void
 		{
 			trace("Checkbox Selection:",frontCheckBox.selected);
+			_settingsVO.inFront = frontCheckBox.selected;
+			
+			dispatchEvent(new SettingsEvent(SettingsEvent.SETTINGS_CHANGE));
 		}		
 			
+		
 //			this.resolutionDropDown.addEventListener(Event.CHANGE, onResolutionChange);
 		
 //		private function onResolutionChange(event:Event):void{
@@ -45,9 +57,9 @@ package com.ca.view
 //			}
 //		}
 		
-		public function get inFront():Boolean{
+	/*	public function get inFront():Boolean{
 			return _inFront;
-		}
+		}*/
 		
 		// create a public getter/setter for settingsVO.  
 		// this page will populate itself based on the set, and
@@ -61,6 +73,7 @@ package com.ca.view
 		public function set settingsVO(value:SettingsVO):void
 		{
 			_settingsVO = value;
+			
 			frontCheckBox.selected = _settingsVO.inFront;
 		}
 

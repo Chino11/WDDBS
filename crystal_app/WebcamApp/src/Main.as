@@ -28,6 +28,7 @@ package{
 	import flash.utils.ByteArray;
 	
 	import org.osmf.media.DefaultMediaFactory;
+	import com.alyssanicoll.view.Filters;
 	
 	public class Main extends Sprite{
 		private var _video:Video;
@@ -47,6 +48,7 @@ package{
 		private var _mainCloseButton:CloseButton;
 		private var _tabs:SettingsTabs;
 		private var _shortcuts:SettingsShortcuts;
+		private var _filters:Filters = new Filters();
 		
 		public function Main(){
 			
@@ -439,6 +441,30 @@ package{
 //			stage.stageHeight = _video.height = resY;
 //			settingsIcon(_settingsIcon.alpha);
 //			_displayState();
+			
+			if(_video.width >= 500 && _settings){
+				_settings.x = (_video.width - _settings.width)/2;
+				_settings.y = ((_video.height - _settings.height)/2)-100;
+			}
+				
+			else if(_video.width <= 499 && _settings){
+				_settings.x = 0;
+				_settings.y = 0;
+			}
+			
+			if(_video.width >= 500 && _shortcuts){
+				_shortcuts.x = ((_video.width - _shortcuts.width)/2)-30;
+				_shortcuts.y = ((_video.height - _shortcuts.height)/2)-100;
+				_tabs.x = (_video.width - (_tabs.width*2.5))/2;
+				_tabs.y = (_settings.y - _tabs.height);
+			}
+				
+			else if(_video.width <= 499 && _shortcuts){
+				_shortcuts.x = 0;
+				_shortcuts.y = 0;
+				_tabs.x = 0;
+				_tabs.y = 20;
+			}
 		}
 	}
 }

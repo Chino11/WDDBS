@@ -49,34 +49,34 @@ package com.alyssanicoll.utils
 			
 			var rightSubItem:NativeMenuItem = new NativeMenuItem("Top Right");
 			rightSubItem.keyEquivalent = "r";
-			rightSubItem.name = "TopRight";
 			rightSubItem.addEventListener(Event.SELECT, onSelect);
+
 			positionMenu.submenu.addItem(rightSubItem);
 			
 			var bLeftSubItem:NativeMenuItem = new NativeMenuItem("Bottom Left");
 			bLeftSubItem.keyEquivalentModifiers = [];
 			bLeftSubItem.keyEquivalent = "L";
-			bLeftSubItem.name = "BottomLeft";
-			bLeftSubItem.addEventListener(Event.SELECT, onSelect);
+			bLeftSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+				p.dispatchEvent(new MenuEvents(MenuEvents.POSITION_CHANGE));});
 			positionMenu.submenu.addItem(bLeftSubItem);
 			
 			var bRightSubItem:NativeMenuItem = new NativeMenuItem("Bottom Right");
 			bRightSubItem.keyEquivalentModifiers = [];
 			bRightSubItem.keyEquivalent = "R";
-			bRightSubItem.name = "BottomRight";
-			bRightSubItem.addEventListener(Event.SELECT, onSelect);
+			bRightSubItem.addEventListener(Event.SELECT, function(event:Event):void{
+				p.dispatchEvent(new MenuEvents(MenuEvents.POSITION_CHANGE));});
 			positionMenu.submenu.addItem(bRightSubItem);
 			
-			var centerSubItem:NativeMenuItem = new NativeMenuItem("Center");
-			centerSubItem.keyEquivalent = "c";
-			centerSubItem.name = "Center";
-			centerSubItem.addEventListener(Event.SELECT, onSelect);
-			positionMenu.submenu.addItem(centerSubItem);
+			var middleSubItem:NativeMenuItem = new NativeMenuItem("Center");
+			middleSubItem.keyEquivalent = "c";
+			middleSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+				p.dispatchEvent(new MenuEvents(MenuEvents.POSITION_CHANGE));});
+			positionMenu.submenu.addItem(middleSubItem);
 			
 			var fullscreenSubItem:NativeMenuItem = new NativeMenuItem("FullScreen");
 			fullscreenSubItem.keyEquivalent = "f";
-			fullscreenSubItem.name = "Fullscreen";
-			fullscreenSubItem.addEventListener(Event.SELECT, onSelect);
+			fullscreenSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
+				p.dispatchEvent(new MenuEvents(MenuEvents.POSITION_CHANGE));});
 			positionMenu.submenu.addItem(fullscreenSubItem);
 			
 			

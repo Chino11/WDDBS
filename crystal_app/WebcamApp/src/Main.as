@@ -308,6 +308,9 @@ package{
 		private function onSettingsChange(event:SettingsEvent):void{
 			trace(_settingsVO.defaultCamera)
 			
+			
+			_camera = Camera.getCamera(String(_settingsVO.defaultCameraIndex));
+			_video.attachCamera(_camera);
 			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
 
 //			onSettingsRezChange(_settingsVO.resolutionX,_settingsVO.resolutionY);
@@ -350,6 +353,13 @@ package{
 		private function onFullscreen(event:Event):void{
 			stage.nativeWindow.width = Screen.mainScreen.visibleBounds.width;
 			stage.nativeWindow.height = Screen.mainScreen.visibleBounds.height;
+			
+//			_holder.width = 1025;
+//			_holder.height = 768;
+
+//			_holder.x = (stage.nativeWindow.width - _holder.width)/2;
+//			_holder.y = (stage.nativeWindow.height - _holder.height)/2;
+
 			_camera.setMode(_holder.width,_holder.height,30,true);
 			settingsIcon(_settingsIcon.alpha);
 			
@@ -388,7 +398,7 @@ package{
 					_displayState = onBottomRight;
 					break;
 				
-				case "Center":
+				case "Middle":
 					onPositionTween((Screen.mainScreen.visibleBounds.width - _camera.width)/2,
 						(Screen.mainScreen.visibleBounds.height - _camera.height)/2);
 					_displayState = onCenter;
@@ -428,7 +438,6 @@ package{
 			_settingsVO.resolutionX = e.width;
 			_settingsVO.resolutionY = e.height;
 			_settingsVO.resolutionSelected = e.index;
-<<<<<<< HEAD
 			if(_video.width >= 500 && _settings){
 				_settings.x = (_video.width - _settings.width)/2;
 				_settings.y = ((_video.height - _settings.height)/2)-100;
@@ -452,12 +461,10 @@ package{
 				_tabs.x = 0;
 				_tabs.y = 20;
 			}
-=======
 //			stage.stageWidth = _video.width = resX;
 //			stage.stageHeight = _video.height = resY;
 //			settingsIcon(_settingsIcon.alpha);
 //			_displayState();
->>>>>>> parent of 09a432f... Hopefully this really will fix our merge conflicts
 		}
 	}
 }

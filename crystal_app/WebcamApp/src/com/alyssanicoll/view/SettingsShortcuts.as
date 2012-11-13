@@ -1,5 +1,7 @@
 package com.alyssanicoll.view
 {
+	import com.alyssanicoll.events.MenuEvents;
+	
 	import fl.controls.ListItem;
 	
 	import flash.display.MovieClip;
@@ -41,26 +43,31 @@ package com.alyssanicoll.view
 		}
 		
 		private function onClick(event:MouseEvent):void{
-			if(event.currentTarget == tabTopLeft){
-				var	eventTopLeft:MouseEvent = new MouseEvent('topLeft');
-				dispatchEvent(eventTopLeft);
-			}else if(event.currentTarget == tabTopRight){
-				var	eventTopRight:MouseEvent = new MouseEvent('topRight');
-				dispatchEvent(eventTopRight);
-			}else if(event.currentTarget == tabMiddle){
-				var	eventMiddle:MouseEvent = new MouseEvent('middle');
-				dispatchEvent(eventMiddle);
-			}else if(event.currentTarget == tabBottomLeft){
-				var	eventBottomLeft:MouseEvent = new MouseEvent('bottomLeft');
-				dispatchEvent(eventBottomLeft);
-			}else if(event.currentTarget == tabBottomRight){
-				var	eventBottomRight:MouseEvent = new MouseEvent('bottomRight');
-				dispatchEvent(eventBottomRight);
-			}else if(event.currentTarget == tabFullscreen){
-				var	eventFullscreen:MouseEvent = new MouseEvent('fullscreen');
-				dispatchEvent(eventFullscreen);
-			}
+			var	p:MenuEvents = new MenuEvents(MenuEvents.POSITION_CHANGE);
+			p.newPos = MovieClip(event.currentTarget).name.slice(3,MovieClip(event.currentTarget).name.length);
+			dispatchEvent(p);
 		}
+//		private function onClick(event:MouseEvent):void{
+//			if(event.currentTarget == tabTopLeft){
+//				var	eventTopLeft:MouseEvent = new MouseEvent('topLeft');
+//				dispatchEvent(eventTopLeft);
+//			}else if(event.currentTarget == tabTopRight){
+//				var	eventTopRight:MouseEvent = new MouseEvent('topRight');
+//				dispatchEvent(eventTopRight);
+//			}else if(event.currentTarget == tabMiddle){
+//				var	eventMiddle:MouseEvent = new MouseEvent('middle');
+//				dispatchEvent(eventMiddle);
+//			}else if(event.currentTarget == tabBottomLeft){
+//				var	eventBottomLeft:MouseEvent = new MouseEvent('bottomLeft');
+//				dispatchEvent(eventBottomLeft);
+//			}else if(event.currentTarget == tabBottomRight){
+//				var	eventBottomRight:MouseEvent = new MouseEvent('bottomRight');
+//				dispatchEvent(eventBottomRight);
+//			}else if(event.currentTarget == tabFullscreen){
+//				var	eventFullscreen:MouseEvent = new MouseEvent('fullscreen');
+//				dispatchEvent(eventFullscreen);
+//			}
+//		}
 		
 		private function onMouseOut(event:MouseEvent):void{
 			if(event.currentTarget == tabTopLeft){

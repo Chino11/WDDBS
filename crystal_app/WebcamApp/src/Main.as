@@ -3,12 +3,12 @@ package{
 	import com.alyssanicoll.events.SettingsEvent;
 	import com.alyssanicoll.model.AppModel;
 	import com.alyssanicoll.utils.MenuUtils;
-	import com.alyssanicoll.view.Filters;
 	import com.alyssanicoll.view.Settings;
 	import com.alyssanicoll.view.SettingsShortcuts;
 	import com.alyssanicoll.vo.SettingsVO;
 	import com.greensock.*;
 	import com.greensock.easing.*;
+	import com.greensock.plugins.ShortRotationPlugin;
 	
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeWindow;
@@ -22,10 +22,10 @@ package{
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
-	import flash.filters.BlurFilter;
 	import flash.media.Camera;
 	import flash.media.Video;
 	import flash.net.registerClassAlias;
+	import flash.utils.ByteArray;
 	
 	public class Main extends Sprite{
 		private var _video:Video;
@@ -45,8 +45,6 @@ package{
 		private var _mainCloseButton:CloseButton;
 		private var _tabs:SettingsTabs;
 		private var _shortcuts:SettingsShortcuts;
-		private var _filters:Filters = new Filters();
-		
 		
 		public function Main(){
 			
@@ -143,6 +141,7 @@ package{
 		// Responds to Constructor
 		private function stageFunctions():void{
 			stage.align = StageAlign.TOP;
+//			stage.nativeWindow.alwaysInFront = _inFront;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			_mainScreen = stage.nativeWindow;
@@ -189,7 +188,8 @@ package{
 		}
 		
 		private function onActive(event:ActivityEvent):void{
-			_displayState = onMiddle; 
+//			trace(_camera.width,_camera.height);
+			_displayState = onMiddle;   //Set display state onActive  <-------------
 			_video.height = _camera.height;
 			_video.width = _camera.width;
 			stage.nativeWindow.width = _video.width;
@@ -227,10 +227,10 @@ package{
 		private function addTabs():void
 		{
 			_tabs = new SettingsTabs();
-			trace(_tabs.width);
+			_tabs.x = -_tabs.width/2;
 			_tabs.alpha = 0;
 			_holder.addChild(_tabs);
-			TweenLite.to(_tabs, .5, {alpha:1});
+			TweenLite.to(_tabs, 1, {alpha:1});
 			
 			_tabs.tabShortcuts.buttonMode = true;
 			_tabs.tabSettings.buttonMode = true;
@@ -258,6 +258,9 @@ package{
 		
 		private function addShortcuts():void{
 			_shortcuts = new SettingsShortcuts();
+
+			_shortcuts.y = 0;
+			_shortcuts.x = 0;
 			_shortcuts.alpha = 0;
 			_holder.addChild(_shortcuts);
 			TweenLite.to(_shortcuts, 1, {alpha:1});
@@ -267,19 +270,17 @@ package{
 			_shortcuts.addEventListener('bottomLeft', onBottomLeft);
 			_shortcuts.addEventListener('bottomRight', onBottomRight);
 			_shortcuts.addEventListener('fullscreen', onFullscreen);
-			
-//			_video.filters = [_filters.myBlur, _filters.myGlow];
 		}
 		
 		private function addSettings():void {
 			_settings = new Settings();
 			_settings.settingsVO = _settingsVO;
+			_settings.x = 0;
+			_settings.y = 0;
 			_settings.alpha = 0;
 			_holder.addChild(_settings);
-			TweenLite.to(_settings, .5, {alpha:1});
+			TweenLite.to(_settings, 1, {alpha:1});
 			_settings.addEventListener(SettingsEvent.SETTINGS_CHANGE,onSettingsChange);
-			
-			_video.filters = [_filters.myBlur, _filters.myGlow];
 		}
 		
 		private function onSettingsChange(event:SettingsEvent):void{
@@ -305,7 +306,6 @@ package{
 				_holder.removeChild(_tabs);
 				_mainCloseButton.name = "mainCloseButton";
 				_settingsIcon.addEventListener(MouseEvent.CLICK, onSettingsClick);
-				_video.filters = [];
 			}
 		}
 		
@@ -363,30 +363,6 @@ package{
 		private function onRezChange(resX:uint,resY:uint):void{
 			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
 			_camera.setMode(resX,resY,30,true);
-			
-			if(_video.width >= 500 && _settings){
-				_settings.x = (_video.width - _settings.width)/2;
-				_settings.y = ((_video.height - _settings.height)/2)-100;
-			}
-			
-			else if(_video.width <= 499 && _settings){
-				_settings.x = 0;
-				_settings.y = 0;
-			}
-			
-			if(_video.width >= 500 && _shortcuts){
-				_shortcuts.x = ((_video.width - _shortcuts.width)/2)-30;
-				_shortcuts.y = ((_video.height - _shortcuts.height)/2)-100;
-				_tabs.x = (_video.width - (_tabs.width*2.5))/2;
-				_tabs.y = (_settings.y - _tabs.height);
-			}
-			
-			else if(_video.width <= 499 && _shortcuts){
-				_shortcuts.x = 0;
-				_shortcuts.y = 0;
-				_tabs.x = 0;
-				_tabs.y = 20;
-			}
 			//stage.stageWidth = _video.width = resX;
 			//stage.stageHeight = _video.height = resY;
 		//	settingsIcon(_settingsIcon.alpha);

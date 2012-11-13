@@ -9,8 +9,8 @@ package com.alyssanicoll.vo
 		
 		
 		public var _webcams:Array = Camera.names;
-		public var x:uint = 50; // how do we grab the last place that the window was
-		public var y:uint = 50;
+		public var x:uint = 0; // how do we grab the last place that the window was
+		public var y:uint = 0;
 		public var width:uint = resolutionX;
 		public var height:uint = resolutionY;
 		public var inFront:Boolean = false;

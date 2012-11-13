@@ -91,6 +91,7 @@ package{
 			
 			_settingsVO.x = _mainScreen.x;
 			_settingsVO.y = _mainScreen.y;
+			_settingsVO.resolutionSelected;
 			
 			var fs:FileStream = new FileStream();
 			fs.open(file,FileMode.WRITE);
@@ -182,7 +183,7 @@ package{
 			_mainScreen.height = _settingsVO.resolutionY;
 		}
 		
-		private function onBoxCheck(event:Event):void{
+		private function onBoxCheck():void{
 			stage.nativeWindow.alwaysInFront = _settingsVO.inFront;
 		}
 		
@@ -205,8 +206,6 @@ package{
 			_holder.addChild(_preBg);
 			_video = new Video(320, 240);
 			_video.smoothing = true;
-			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width) / 2;
-			stage.nativeWindow.y = (Screen.mainScreen.bounds.height - stage.nativeWindow.height) / 2;
 			_holder.addChild(_video);
 			_camera = Camera.getCamera(String(_settingsVO.defaultCameraIndex));
 			
@@ -217,8 +216,11 @@ package{
 //			_camera.setMode(320, 240, 30);
 			_video.attachCamera(_camera);
 			_camera.addEventListener(ActivityEvent.ACTIVITY, onActive);
-			_preBg.width = _camera.width*2;
-			_preBg.height = _camera.height;
+			stage.nativeWindow.x = ((Screen.mainScreen.bounds.width - _camera.width) / 2)/2;
+			stage.nativeWindow.y = ((Screen.mainScreen.bounds.height - _camera.height) / 2)/2;
+			_preBg.width = _settingsVO.resolutionX*2;
+			_preBg.height = _settingsVO.resolutionY;
+			
 		}
 		
 		// Called by Mouse OVER and OUT functions -  adding settings Icon to the screen
@@ -294,20 +296,27 @@ package{
 			_holder.addChild(_settings);
 			TweenLite.to(_settings, 1, {alpha:1});
 			_settings.addEventListener(SettingsEvent.SETTINGS_CHANGE,onSettingsChange);
+			_settings.addEventListener(SettingsEvent.CAMERA_CHANGE,onCameraChange);
+		}
+		
+		private function onCameraChange(event:Event):void
+		{
+			_camera = Camera.getCamera(String(_settingsVO.defaultCameraIndex));
+			_video.attachCamera(_camera);
+			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
+
 		}
 		
 		private function onSettingsChange(event:SettingsEvent):void{
 			trace(_settingsVO.defaultCamera)
 			
-			
-			_camera = Camera.getCamera(String(_settingsVO.defaultCameraIndex));
-			_video.attachCamera(_camera);
 			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
 
 //			onSettingsRezChange(_settingsVO.resolutionX,_settingsVO.resolutionY);
 			_settingsVO = Settings(event.currentTarget).settingsVO;
 			_camera.setMode(_settingsVO.resolutionX,_settingsVO.resolutionY,30,true);
 			// Use this function to update display and stuffs.
+			onBoxCheck();
 			writeSavedSettings();
 		}
 		
@@ -381,7 +390,7 @@ package{
 					_displayState = onBottomRight;
 					break;
 				
-				case "Middle":
+				case "Center":
 					onPositionTween((Screen.mainScreen.visibleBounds.width - _camera.width)/2,
 						(Screen.mainScreen.visibleBounds.height - _camera.height)/2);
 					_displayState = onCenter;
@@ -415,8 +424,6 @@ package{
 			_displayState = onBottomLeft;
 		}
 		
-//		private function onRezChange(resolutionX:uint,resolutionY:uint):void{
-
 		private function onRezChange(e:MenuEvents):void{
 			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
 			_camera.setMode(e.width,e.height,30,true);

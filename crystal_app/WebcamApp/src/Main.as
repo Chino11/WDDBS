@@ -27,6 +27,8 @@ package{
 	import flash.net.registerClassAlias;
 	import flash.utils.ByteArray;
 	
+	import org.osmf.media.DefaultMediaFactory;
+	
 	public class Main extends Sprite{
 		private var _video:Video;
 		//private var _resolutions:Array = [16:9 - 4:3];
@@ -132,6 +134,9 @@ package{
 		
 		private function onActive(event:ActivityEvent):void{
 //			trace(_camera.width,_camera.height);
+			trace("From settings vo in onActive",Camera.names[0]);
+//			_camera = new Camera();
+			_camera.setMode(_settingsVO.resolutionX, _settingsVO.resolutionY, 30, true); // TODO: This would use the camera setting
 			_displayState = onCenter;   //Set display state onActive  <-------------
 			_video.height = _camera.height;
 			_video.width = _camera.width;
@@ -199,13 +204,12 @@ package{
 			stage.nativeWindow.x = (Screen.mainScreen.bounds.width - stage.nativeWindow.width) / 2;
 			stage.nativeWindow.y = (Screen.mainScreen.bounds.height - stage.nativeWindow.height) / 2;
 			_holder.addChild(_video);
-			_camera = Camera.getCamera(_settingsVO.defaultCamera);
+			_camera = Camera.getCamera(String(_settingsVO.defaultCameraIndex));
 			
 			if(!_camera){
 				_camera = Camera.getCamera();
 			}
 			
-			_camera.setMode(_settingsVO.resolutionX, _settingsVO.resolutionY, 30, true); // TODO: This would use the camera setting
 //			_camera.setMode(320, 240, 30);
 			_video.attachCamera(_camera);
 			_camera.addEventListener(ActivityEvent.ACTIVITY, onActive);
@@ -274,12 +278,13 @@ package{
 			_shortcuts.alpha = 0;
 			_holder.addChild(_shortcuts);
 			TweenLite.to(_shortcuts, 1, {alpha:1});
-			_shortcuts.addEventListener('topLeft', onTopLeft);
-			_shortcuts.addEventListener('topRight', onTopRight);
-			_shortcuts.addEventListener('middle', onCenter);
-			_shortcuts.addEventListener('bottomLeft', onBottomLeft);
-			_shortcuts.addEventListener('bottomRight', onBottomRight);
-			_shortcuts.addEventListener('fullscreen', onFullscreen);
+//			_shortcuts.addEventListener('topLeft', onTopLeft);
+//			_shortcuts.addEventListener('topRight', onTopRight);
+//			_shortcuts.addEventListener('middle', onCenter);
+//			_shortcuts.addEventListener('bottomLeft', onBottomLeft);
+//			_shortcuts.addEventListener('bottomRight', onBottomRight);
+//			_shortcuts.addEventListener('fullscreen', onFullscreen);
+			_shortcuts.addEventListener(MenuEvents.POSITION_CHANGE, onPosition);
 		}
 		
 		private function addSettings():void {
@@ -294,7 +299,11 @@ package{
 		}
 		
 		private function onSettingsChange(event:SettingsEvent):void{
-
+			trace(_settingsVO.defaultCamera)
+			
+			
+			_camera = Camera.getCamera(String(_settingsVO.defaultCameraIndex));
+			_video.attachCamera(_camera);
 			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
 
 //			onSettingsRezChange(_settingsVO.resolutionX,_settingsVO.resolutionY);
@@ -337,8 +346,8 @@ package{
 			stage.nativeWindow.width = Screen.mainScreen.visibleBounds.width;
 			stage.nativeWindow.height = Screen.mainScreen.visibleBounds.height;
 			
-			_holder.width = 1025;
-			_holder.height = 768;
+//			_holder.width = 1025;
+//			_holder.height = 768;
 
 //			_holder.x = (stage.nativeWindow.width - _holder.width)/2;
 //			_holder.y = (stage.nativeWindow.height - _holder.height)/2;
@@ -351,6 +360,36 @@ package{
 				_settingsVO.top);
 			
 			_displayState = onCenter;
+		}
+		
+		private function onPosition(p:MenuEvents):void{
+			switch (p.newPos){
+				case "TopLeft":
+				onPositionTween(_settingsVO.left, _settingsVO.top);
+				_displayState = onTopLeft;
+				break;
+				
+				case "TopRight":
+				onPositionTween(_settingsVO.right - _camera.width, _settingsVO.top);
+				_displayState = onTopRight;
+				break;
+				
+				case "BottomLeft":
+				onPositionTween(_settingsVO.left, _settingsVO.bottom - _camera.height);
+				_displayState = onBottomLeft;
+				break;
+				
+				case "BottomRight":
+				onPositionTween(_settingsVO.right - stage.nativeWindow.width, _settingsVO.bottom - _camera.height);
+				_displayState = onBottomRight;
+				break;
+				
+				case "Middle":
+				onPositionTween((Screen.mainScreen.visibleBounds.width - _camera.width)/2,
+					(Screen.mainScreen.visibleBounds.height - _camera.height)/2);
+				_displayState = onCenter;
+				break;
+			}
 		}
 		
 		private function onCenter(event:Event=null):void{

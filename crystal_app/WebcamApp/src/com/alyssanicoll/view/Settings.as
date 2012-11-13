@@ -5,6 +5,7 @@ package com.alyssanicoll.view{
 	import fl.controls.ComboBox;
 	
 	import flash.events.Event;
+	import flash.media.Camera;
 	
 	public class Settings extends SettingsBase{
 		private var _inFront:Boolean = true;
@@ -15,6 +16,26 @@ package com.alyssanicoll.view{
 			
 			this.frontCheckBox.addEventListener(Event.CHANGE,onUpFrontCheckBoxChange);
 			this.resolutionDropDown.addEventListener(Event.CHANGE,onResChange);
+			
+			onAddingCameras();
+			this.cameraDropDown.addEventListener(Event.CHANGE,onCamChange); 
+		}
+		
+		private function onAddingCameras():void
+		{
+			var cameras:Array = Camera.names;
+			for(var n:Number = 0; n<cameras.length; n++) {
+				cameraDropDown.addItem( { label: cameras[n]} );
+			}
+			cameraDropDown.enabled = true;
+		}
+		
+		private function onCamChange(event:Event):void
+		{
+//			trace(ComboBox(event.currentTarget).selectedLabel);
+			_settingsVO.defaultCameraIndex = ComboBox(event.currentTarget).selectedIndex;
+			
+			dispatchEvent(new SettingsEvent(SettingsEvent.SETTINGS_CHANGE));
 		}
 		
 		private function onResChange(event:Event):void{
@@ -42,6 +63,7 @@ package com.alyssanicoll.view{
 			_settingsVO = value;
 			//Set    selectedIndex here
 			resolutionDropDown.selectedIndex = _settingsVO.resolutionSelected;
+			cameraDropDown.selectedIndex = _settingsVO.defaultCameraIndex; //array index
 			frontCheckBox.selected = _settingsVO.inFront;
 		}
 	}

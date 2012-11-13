@@ -17,7 +17,8 @@ package com.alyssanicoll.vo
 		public var resolutionX:uint = 320; 
 		public var resolutionY:uint = 240;
 		public var resolutionSelected:uint;
-		public var defaultCamera:String = _webcams[0];
+		public var defaultCamera:String;
+		public var defaultCameraIndex:uint = 0;
 		public var bottom:Number = Screen.mainScreen.visibleBounds.bottom;
 		public var top:Number = Screen.mainScreen.visibleBounds.top;
 		public var right:Number = Screen.mainScreen.visibleBounds.right;

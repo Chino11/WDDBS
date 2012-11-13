@@ -17,86 +17,105 @@ package com.alyssanicoll.utils
 		public function MenuUtils()
 		{
 		}
-		public static function makeAppMenu(menu:NativeMenu):NativeMenu{
+		public static function makeAppMenu(p:NativeMenu):NativeMenu{
 	
-			for each(var mi:NativeMenuItem in menu.items){
+			for each(var mi:NativeMenuItem in p.items){
 				if(mi.label == "Edit"){
-					menu.removeItem(mi);
+					p.removeItem(mi);
 				}
 			}
 			var positionMenu:NativeMenuItem = new NativeMenuItem("Position");
-			menu.addItem(positionMenu);
+			p.addItem(positionMenu);
 			
 			positionMenu.submenu = new NativeMenu();
 			
 			var leftSubItem:NativeMenuItem = new NativeMenuItem("Top Left");
 			leftSubItem.keyEquivalent = "l";
 			leftSubItem.data = TOP_LEFT;
-			leftSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
-				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_TOP_LEFT));});
+			leftSubItem.addEventListener(Event.SELECT, function(event:Event):void{
+				p.dispatchEvent(new MenuEvents(MenuEvents.POSITION_CHANGE));});
 			positionMenu.submenu.addItem(leftSubItem);
 			
 			var rightSubItem:NativeMenuItem = new NativeMenuItem("Top Right");
 			rightSubItem.keyEquivalent = "r";
 			rightSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
-				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_TOP_RIGHT));});
+				p.dispatchEvent(new MenuEvents(MenuEvents.POSITION_CHANGE));});
 			positionMenu.submenu.addItem(rightSubItem);
 			
 			var bLeftSubItem:NativeMenuItem = new NativeMenuItem("Bottom Left");
 			bLeftSubItem.keyEquivalentModifiers = [];
 			bLeftSubItem.keyEquivalent = "L";
 			bLeftSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
-				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_BOTTOM_LEFT));});
+				p.dispatchEvent(new MenuEvents(MenuEvents.POSITION_CHANGE));});
 			positionMenu.submenu.addItem(bLeftSubItem);
 			
 			var bRightSubItem:NativeMenuItem = new NativeMenuItem("Bottom Right");
 			bRightSubItem.keyEquivalentModifiers = [];
 			bRightSubItem.keyEquivalent = "R";
 			bRightSubItem.addEventListener(Event.SELECT, function(event:Event):void{
-				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_BOTTOM_RIGHT));});
+				p.dispatchEvent(new MenuEvents(MenuEvents.POSITION_CHANGE));});
 			positionMenu.submenu.addItem(bRightSubItem);
 			
 			var middleSubItem:NativeMenuItem = new NativeMenuItem("Center");
 			middleSubItem.keyEquivalent = "c";
 			middleSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
-				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_CENTER));});
+				p.dispatchEvent(new MenuEvents(MenuEvents.POSITION_CHANGE));});
 			positionMenu.submenu.addItem(middleSubItem);
 			
 			var fullscreenSubItem:NativeMenuItem = new NativeMenuItem("FullScreen");
 			fullscreenSubItem.keyEquivalent = "f";
 			fullscreenSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
-				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_FULL_SCREEN));});
+				p.dispatchEvent(new MenuEvents(MenuEvents.POSITION_CHANGE));});
 			positionMenu.submenu.addItem(fullscreenSubItem);
 			
 			
 			var resolutionMenu:NativeMenuItem = new NativeMenuItem("Resolution");
-			menu.addItem(resolutionMenu);
+			p.addItem(resolutionMenu);
 			
 			resolutionMenu.submenu = new NativeMenu();
 			
 			var smallSubItem:NativeMenuItem = new NativeMenuItem("320x240");
 			smallSubItem.keyEquivalent = "1";
-			//smallSubItem.data = SMALL;
-			smallSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
-				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_SMALL));});
+			smallSubItem.addEventListener(Event.SELECT, function(event:Event):void{
+				var e:MenuEvents = new MenuEvents(MenuEvents.REQUEST_RESOLUTION_CHANGE);
+				e.width = 320;
+				e.height = 240;
+				e.index = 0;
+				p.dispatchEvent(e);});
 			resolutionMenu.submenu.addItem(smallSubItem);
 			
-			var wideSubItem:NativeMenuItem = new NativeMenuItem("360x240");
+			var wideSubItem:NativeMenuItem = new NativeMenuItem("640x480");
 			wideSubItem.keyEquivalent = "2";
-			//wideSubItem.data = SMALL;
-			wideSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
-				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_WIDE));});
+			wideSubItem.addEventListener(Event.SELECT, function(event:Event):void{
+				var e:MenuEvents = new MenuEvents(MenuEvents.REQUEST_RESOLUTION_CHANGE);
+				e.width = 640;
+				e.height = 480;
+				e.index = 1;
+				p.dispatchEvent(e);});
 			resolutionMenu.submenu.addItem(wideSubItem);
 			
-			var fullSubItem:NativeMenuItem = new NativeMenuItem("720x480");
-			fullSubItem.keyEquivalent = "3";
-			//fullSubItem.data = SMALL;
-			fullSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
-				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_FULLSCREEN));});
+			var bigSubItem:NativeMenuItem = new NativeMenuItem("800x600");
+			bigSubItem.keyEquivalent = "3";
+			bigSubItem.addEventListener(Event.SELECT, function(event:Event):void{
+				var e:MenuEvents = new MenuEvents(MenuEvents.REQUEST_RESOLUTION_CHANGE);
+				e.width = 800;
+				e.height = 600;
+				e.index = 2;
+				p.dispatchEvent(e);});
+			resolutionMenu.submenu.addItem(bigSubItem);
+			
+			var fullSubItem:NativeMenuItem = new NativeMenuItem("1024x768");
+			fullSubItem.keyEquivalent = "4";
+			fullSubItem.addEventListener(Event.SELECT, function(event:Event):void{
+				var e:MenuEvents = new MenuEvents(MenuEvents.REQUEST_RESOLUTION_CHANGE);
+				e.width = 1024;
+				e.height = 768;
+				e.index = 3;
+				p.dispatchEvent(e);});
 			resolutionMenu.submenu.addItem(fullSubItem);
 
 			
-			return menu;
+			return p;
 		}
 	}
 }

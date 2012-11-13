@@ -10,12 +10,16 @@ package com.alyssanicoll.events{
 		public static const REQUEST_BOTTOM_RIGHT:String = 'requestBottomRight';
 		public static const REQUEST_CENTER:String = 'requestCenter';
 		public static const REQUEST_FULL_SCREEN:String = 'requestFullScreen';
+		public static const POSITION_CHANGE:String = 'positionChange';
 		
-		public static const REQUEST_SMALL:String = 'requestSmall';
-		public static const REQUEST_WIDE:String = 'requestWIDE';
-		public static const REQUEST_FULLSCREEN:String = 'requestFullscreen';
+		public static const REQUEST_RESOLUTION_CHANGE:String = 'requestResolutionChange';
 		
-		public function MenuEvents(type:String, bubbles:Boolean=false, cancelable:Boolean=false){
+		public var newPos:String;
+		public var height:Number;
+		public var width:Number;
+		public var index:uint;
+		
+		public function MenuEvents(type:String, bubbles:Boolean=true, cancelable:Boolean=false){
 			super(type, bubbles, cancelable);
 		}
 	}

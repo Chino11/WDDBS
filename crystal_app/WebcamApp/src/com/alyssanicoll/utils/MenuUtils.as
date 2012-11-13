@@ -8,22 +8,25 @@ package com.alyssanicoll.utils
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 
-	public class MenuUtils
+	public class MenuUtils extends EventDispatcher
 	{
 		public static const TOP_LEFT:String = "screenTopLeft"
 		public static const TOP_RIGHT:String = "screenTopRight";
+		public static var _natMen:NativeMenu;
 		
 		public function MenuUtils()
 		{
 		}
 		public static function makeAppMenu(p:NativeMenu):NativeMenu{
-	
+			_natMen = p;
 			for each(var mi:NativeMenuItem in p.items){
 				if(mi.label == "Edit"){
 					p.removeItem(mi);
 				}
 			}
+			
 			var positionMenu:NativeMenuItem = new NativeMenuItem("Position");
 			p.addItem(positionMenu);
 			
@@ -31,15 +34,23 @@ package com.alyssanicoll.utils
 			
 			var leftSubItem:NativeMenuItem = new NativeMenuItem("Top Left");
 			leftSubItem.keyEquivalent = "l";
+			leftSubItem.name = "TopLeft";
 			leftSubItem.data = TOP_LEFT;
-			leftSubItem.addEventListener(Event.SELECT, function(event:Event):void{
-				p.dispatchEvent(new MenuEvents(MenuEvents.POSITION_CHANGE));});
+			leftSubItem.addEventListener(Event.SELECT, onSelect);
 			positionMenu.submenu.addItem(leftSubItem);
+
+			
+//			var leftSubItem:NativeMenuItem = new NativeMenuItem("Top Left");
+//			leftSubItem.keyEquivalent = "l";
+//			leftSubItem.data = TOP_LEFT;
+//			leftSubItem.addEventListener(Event.SELECT, function(event:Event):void{
+//				p.dispatchEvent(new MenuEvents(MenuEvents.POSITION_CHANGE));});
+//			positionMenu.submenu.addItem(leftSubItem);
 			
 			var rightSubItem:NativeMenuItem = new NativeMenuItem("Top Right");
 			rightSubItem.keyEquivalent = "r";
-			rightSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
-				p.dispatchEvent(new MenuEvents(MenuEvents.POSITION_CHANGE));});
+			rightSubItem.addEventListener(Event.SELECT, onSelect);
+
 			positionMenu.submenu.addItem(rightSubItem);
 			
 			var bLeftSubItem:NativeMenuItem = new NativeMenuItem("Bottom Left");
@@ -116,6 +127,13 @@ package com.alyssanicoll.utils
 
 			
 			return p;
+		}
+		
+		private static function onSelect(event:Event):void
+		{
+			var	p:MenuEvents = new MenuEvents(MenuEvents.POSITION_CHANGE);
+			p.newPos = event.currentTarget.name;
+			_natMen.dispatchEvent(p);
 		}
 	}
 }

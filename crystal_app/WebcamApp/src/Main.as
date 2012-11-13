@@ -75,6 +75,8 @@ package{
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_BOTTOM_RIGHT, onBottomRight);
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_CENTER, onCenter);
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_FULL_SCREEN, onFullscreen);
+			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.POSITION_CHANGE, onPosition);
+
 			
 			// Event Listeners for the Key Shortcuts - Resolution
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_RESOLUTION_CHANGE, onRezChange);

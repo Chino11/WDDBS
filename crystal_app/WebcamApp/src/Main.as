@@ -91,6 +91,7 @@ package{
 			
 			_settingsVO.x = _mainScreen.x;
 			_settingsVO.y = _mainScreen.y;
+			_settingsVO.inFront;
 			
 			var fs:FileStream = new FileStream();
 			fs.open(file,FileMode.WRITE);
@@ -182,7 +183,7 @@ package{
 			_mainScreen.height = _settingsVO.resolutionY;
 		}
 		
-		private function onBoxCheck(event:Event):void{
+		private function onBoxCheck():void{
 			stage.nativeWindow.alwaysInFront = _settingsVO.inFront;
 		}
 		
@@ -314,13 +315,12 @@ package{
 		
 		private function onSettingsChange(event:SettingsEvent):void{
 			
-			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
+//			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
 			
-//			onSettingsRezChange(_settingsVO.resolutionX,_settingsVO.resolutionY);
+			onBoxCheck();
 			_settingsVO = Settings(event.currentTarget).settingsVO;
 			_camera.setMode(_settingsVO.resolutionX,_settingsVO.resolutionY,30,true);
 			// Use this function to update display and stuffs.
-			_inFront = _settingsVO.inFront
 			writeSavedSettings();
 		}
 		
@@ -390,13 +390,19 @@ package{
 					stage.nativeWindow.width = Screen.mainScreen.visibleBounds.width;
 					stage.nativeWindow.height = Screen.mainScreen.visibleBounds.height;
 					
+					_settingsVO.resolutionX = 1024;
+					_settingsVO.resolutionY = 768;
+					_settingsVO.resolutionSelected = 3;
+					_camera.setMode(_settingsVO.resolutionX,_settingsVO.resolutionY,30,true);
+
+					
 					//			_holder.width = 1025;
 					//			_holder.height = 768;
 					
-					//			_holder.x = (stage.nativeWindow.width - _holder.width)/2;
-					//			_holder.y = (stage.nativeWindow.height - _holder.height)/2;
+					_holder.x = (stage.nativeWindow.width - _holder.width)/2;
+					_holder.y = (stage.nativeWindow.height - _holder.height)/2;
 					
-					_camera.setMode(_holder.width,_holder.height,30,true);
+					//_camera.setMode(_holder.width,_holder.height,30,true);
 					settingsIcon(_settingsIcon.alpha);
 					
 					//onPositionTween(_settingsVO.left, _settingsVO.top);

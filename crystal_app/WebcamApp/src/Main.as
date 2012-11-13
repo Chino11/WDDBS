@@ -120,6 +120,7 @@ package{
 		
 		private function setupChrome():void{
 			_mainCloseButton = new CloseButton();
+			_mainCloseButton.stop();
 			_mainCloseButton.buttonMode = true;
 			_holder.addChild(_mainCloseButton);
 			_mainCloseButton.addEventListener(MouseEvent.CLICK, onCloseClick);
@@ -129,6 +130,21 @@ package{
 			stage.addEventListener(MouseEvent.MOUSE_UP,onMouseUp);
 		}
 		
+		private function onActive(event:ActivityEvent):void{
+//			trace(_camera.width,_camera.height);
+			_displayState = onCenter;   //Set display state onActive  <-------------
+			_video.height = _camera.height;
+			_video.width = _camera.width;
+			stage.nativeWindow.width = _video.width;
+			stage.nativeWindow.height = _video.height;
+			
+			if(_holder.contains(_preBg)) _holder.removeChild(_preBg);
+			_camera.removeEventListener(ActivityEvent.ACTIVITY, onActive);
+			_holder.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+			_holder.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+			settingsIcon(0);
+			_displayState();
+		}
 		
 		private function onWindowClose(event:MouseEvent):void{
 			stage.nativeWindow.close();
@@ -197,22 +213,6 @@ package{
 			_preBg.height = _camera.height;
 		}
 		
-		private function onActive(event:ActivityEvent):void{
-//			trace(_camera.width,_camera.height);
-			_displayState = onCenter;   //Set display state onActive  <-------------
-			_video.height = _camera.height;
-			_video.width = _camera.width;
-			stage.nativeWindow.width = _video.width;
-			stage.nativeWindow.height = _video.height;
-			
-			if(_holder.contains(_preBg)) _holder.removeChild(_preBg);
-			_camera.removeEventListener(ActivityEvent.ACTIVITY, onActive);
-			_holder.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-			_holder.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-			settingsIcon(0);
-			_displayState();
-		}
-		
 		// Called by Mouse OVER and OUT functions -  adding settings Icon to the screen
 		private function settingsIcon(alpha:Number):void{
 			if(_settingsIcon==null){
@@ -229,6 +229,7 @@ package{
 		private function onSettingsClick(event:MouseEvent):void{
 			addSettings();
 			addTabs();
+			_mainCloseButton.gotoAndStop(2);
 			
 			_mainCloseButton.name = "settingsCloseButton";
 			_settingsIcon.removeEventListener(MouseEvent.CLICK, onSettingsClick);
@@ -293,12 +294,16 @@ package{
 		}
 		
 		private function onSettingsChange(event:SettingsEvent):void{
+
+			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
+
+//			onSettingsRezChange(_settingsVO.resolutionX,_settingsVO.resolutionY);
 			_settingsVO = Settings(event.currentTarget).settingsVO;
-//			onRezChange(_settingsVO.resolutionX,_settingsVO.resolutionY);
 			_camera.setMode(_settingsVO.resolutionX,_settingsVO.resolutionY,30,true);
 			// Use this function to update display and stuffs.
 			writeSavedSettings();
 		}
+		
 		
 		private function onCloseClick(event:MouseEvent):void{
 			trace(event.currentTarget.name);
@@ -308,9 +313,11 @@ package{
 			else{
 				if(_holder.contains(_settings)){
 					_holder.removeChild(_settings);
+					_mainCloseButton.gotoAndStop(1);
 				}
 				else{
 					_holder.removeChild(_shortcuts);
+					_mainCloseButton.gotoAndStop(1);
 				}
 				_holder.removeChild(_tabs);
 				_mainCloseButton.name = "mainCloseButton";
@@ -329,23 +336,31 @@ package{
 		private function onFullscreen(event:Event):void{
 			stage.nativeWindow.width = Screen.mainScreen.visibleBounds.width;
 			stage.nativeWindow.height = Screen.mainScreen.visibleBounds.height;
+			
+			_holder.width = 1025;
+			_holder.height = 768;
 
 //			_holder.x = (stage.nativeWindow.width - _holder.width)/2;
 //			_holder.y = (stage.nativeWindow.height - _holder.height)/2;
+
+			_camera.setMode(_holder.width,_holder.height,30,true);
+			settingsIcon(_settingsIcon.alpha);
 			
-			onPositionTween(_settingsVO.left, _settingsVO.top);
+			//onPositionTween(_settingsVO.left, _settingsVO.top);
+			onPositionTween((Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2,
+				_settingsVO.top);
 			
 			_displayState = onCenter;
 		}
 		
 		private function onCenter(event:Event=null):void{
-			onPositionTween((Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2,
-				(Screen.mainScreen.visibleBounds.height - stage.nativeWindow.height)/2);
+			onPositionTween((Screen.mainScreen.visibleBounds.width - _camera.width)/2,
+				(Screen.mainScreen.visibleBounds.height - _camera.height)/2);
 			_displayState = onCenter;
 		}
 		
 		private function onTopRight(event:Event=null):void{
-			onPositionTween(_settingsVO.right - stage.nativeWindow.width, _settingsVO.top);
+			onPositionTween(_settingsVO.right - _camera.width, _settingsVO.top);
 			_displayState = onTopRight;
 		}
 		
@@ -355,12 +370,12 @@ package{
 		}
 		
 		private function onBottomRight(event:Event=null):void{
-			onPositionTween(_settingsVO.right - stage.nativeWindow.width, _settingsVO.bottom - stage.nativeWindow.height);
+			onPositionTween(_settingsVO.right - stage.nativeWindow.width, _settingsVO.bottom - _camera.height);
 			_displayState = onBottomRight;
 		}
 		
 		private function onBottomLeft(event:Event=null):void{			
-			onPositionTween(_settingsVO.left, _settingsVO.bottom - stage.nativeWindow.height);
+			onPositionTween(_settingsVO.left, _settingsVO.bottom - _camera.height);
 			_displayState = onBottomLeft;
 		}
 		
@@ -376,8 +391,8 @@ package{
 			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
 //			_camera.setMode(resolutionX,resolutionY,30,true);
 			_camera.setMode(e.width,e.height,30,true);
-			_settingsVO.width = e.width;
-			_settingsVO.height = e.height;
+			_settingsVO.resolutionX = e.width;
+			_settingsVO.resolutionY = e.height;
 			_settingsVO.resolutionSelected = e.index;
 //			stage.stageWidth = _video.width = resX;
 //			stage.stageHeight = _video.height = resY;

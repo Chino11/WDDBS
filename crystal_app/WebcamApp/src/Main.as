@@ -28,7 +28,6 @@ package{
 	import flash.utils.ByteArray;
 	
 	import org.osmf.media.DefaultMediaFactory;
-	import com.alyssanicoll.view.Filters;
 	
 	public class Main extends Sprite{
 		private var _video:Video;
@@ -48,7 +47,6 @@ package{
 		private var _mainCloseButton:CloseButton;
 		private var _tabs:SettingsTabs;
 		private var _shortcuts:SettingsShortcuts;
-		private var _filters:Filters = new Filters();
 		
 		public function Main(){
 			
@@ -430,6 +428,7 @@ package{
 			_settingsVO.resolutionX = e.width;
 			_settingsVO.resolutionY = e.height;
 			_settingsVO.resolutionSelected = e.index;
+<<<<<<< HEAD
 			if(_video.width >= 500 && _settings){
 				_settings.x = (_video.width - _settings.width)/2;
 				_settings.y = ((_video.height - _settings.height)/2)-100;
@@ -453,6 +452,12 @@ package{
 				_tabs.x = 0;
 				_tabs.y = 20;
 			}
+=======
+//			stage.stageWidth = _video.width = resX;
+//			stage.stageHeight = _video.height = resY;
+//			settingsIcon(_settingsIcon.alpha);
+//			_displayState();
+>>>>>>> parent of 09a432f... Hopefully this really will fix our merge conflicts
 		}
 	}
 }

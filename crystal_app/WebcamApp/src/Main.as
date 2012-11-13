@@ -3,6 +3,7 @@ package{
 	import com.alyssanicoll.events.SettingsEvent;
 	import com.alyssanicoll.model.AppModel;
 	import com.alyssanicoll.utils.MenuUtils;
+	import com.alyssanicoll.view.Filters;
 	import com.alyssanicoll.view.Settings;
 	import com.alyssanicoll.view.SettingsShortcuts;
 	import com.alyssanicoll.vo.SettingsVO;
@@ -47,6 +48,7 @@ package{
 		private var _mainCloseButton:CloseButton;
 		private var _tabs:SettingsTabs;
 		private var _shortcuts:SettingsShortcuts;
+		private var _filters:Filters = new Filters();
 		
 		public function Main(){
 			
@@ -61,19 +63,13 @@ package{
 			settingWebcam();
 			stageFunctions();
 			setupChrome();
-			trace(Camera.names);
-			
-			// Called in Constructor - sets up the menu that appears on the top of the screen
-			
-			var model:AppModel = new AppModel;
-			
+						
 			// Event Listeners for the Key Shortcuts - Positioning
 			NativeApplication.nativeApplication.menu = MenuUtils.makeAppMenu(NativeApplication.nativeApplication.menu);
-			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.POSITION_CHANGE, onPosition);
+			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.POSITION_CHANGE, onPositionChange);
 
-			
 			// Event Listeners for the Key Shortcuts - Resolution
-			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_RESOLUTION_CHANGE, onRezChange);
+			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_RESOLUTION_CHANGE, onResolutionChange);
 		}
 		
 		// ACTUALLY listen on native window to close, that will call the onSave
@@ -145,7 +141,7 @@ package{
 			_holder.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			_holder.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 			settingsIcon(0);
-			onPosition();
+			onPositionChange();
 		}
 		
 		private function onWindowClose(event:MouseEvent):void{
@@ -276,7 +272,7 @@ package{
 			_shortcuts.alpha = 0;
 			_holder.addChild(_shortcuts);
 			TweenLite.to(_shortcuts, 1, {alpha:1});
-			_shortcuts.addEventListener(MenuEvents.POSITION_CHANGE, onPosition);
+			_shortcuts.addEventListener(MenuEvents.POSITION_CHANGE, onPositionChange);
 		}
 		
 		private function addSettings():void {
@@ -348,7 +344,7 @@ package{
 			TweenLite.to(stage.nativeWindow, .5, {x:positionX, y:positionY, ease:Circ.easeOut});
 		}
 		
-		private function onPosition(p:MenuEvents=null):void{
+		private function onPositionChange(p:MenuEvents=null):void{
 			var compareVal:String="";
 			(p == null) ? compareVal = _displayState : compareVal = p.newPos;
 			switch (compareVal){
@@ -382,33 +378,36 @@ package{
 					stage.nativeWindow.width = Screen.mainScreen.visibleBounds.width;
 					stage.nativeWindow.height = Screen.mainScreen.visibleBounds.height;
 					
-					//			_holder.width = 1025;
-					//			_holder.height = 768;
+					_video.width = 1025;
+					_video.height = 768;
 					
-					//			_holder.x = (stage.nativeWindow.width - _holder.width)/2;
-					//			_holder.y = (stage.nativeWindow.height - _holder.height)/2;
+//					_holder.x = (stage.nativeWindow.width - _holder.width)/2;
+//					_holder.y = (stage.nativeWindow.height - _holder.height)/2;
 					
-					_camera.setMode(_holder.width,_holder.height,30,true);
+					_camera.setMode(_video.width,_video.height,30,true);
 					settingsIcon(_settingsIcon.alpha);
 					
 					//onPositionTween(_settingsVO.left, _settingsVO.top);
-					onPositionTween((Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2,
-						_settingsVO.top);
+					onPositionTween((Screen.mainScreen.visibleBounds.width - _camera.width)/2,
+						(Screen.mainScreen.visibleBounds.height - _camera.height)/2);
 					
 					_displayState = "Center";
 					break;
 			}
 		}
 		
-		private function onRezChange(e:MenuEvents):void{
+		private function onResolutionChange(e:MenuEvents):void{
 			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
 			_camera.setMode(e.width,e.height,30,true);
 			_settingsVO.resolutionX = e.width;
 			_settingsVO.resolutionY = e.height;
 			_settingsVO.resolutionSelected = e.index;
+			
 			if(_video.width >= 500 && _settings){
 				_settings.x = (_video.width - _settings.width)/2;
 				_settings.y = ((_video.height - _settings.height)/2)-100;
+				_tabs.x = (_video.width - (_tabs.width*2.5))/2;
+				_tabs.y = (_settings.y - _tabs.height);
 			}
 				
 			else if(_video.width <= 499 && _settings){

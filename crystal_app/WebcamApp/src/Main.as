@@ -2,13 +2,14 @@ package{
 	import com.alyssanicoll.events.MenuEvents;
 	import com.alyssanicoll.events.SettingsEvent;
 	import com.alyssanicoll.model.AppModel;
+	import com.alyssanicoll.model.FileStore;
 	import com.alyssanicoll.utils.MenuUtils;
+	import com.alyssanicoll.view.Filters;
 	import com.alyssanicoll.view.Settings;
 	import com.alyssanicoll.view.SettingsShortcuts;
 	import com.alyssanicoll.vo.SettingsVO;
 	import com.greensock.*;
 	import com.greensock.easing.*;
-	import com.greensock.plugins.ShortRotationPlugin;
 	
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeWindow;
@@ -19,16 +20,9 @@ package{
 	import flash.events.ActivityEvent;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
-	import flash.filesystem.FileStream;
 	import flash.media.Camera;
 	import flash.media.Video;
 	import flash.net.registerClassAlias;
-	import flash.utils.ByteArray;
-	
-	import org.osmf.media.DefaultMediaFactory;
-	import com.alyssanicoll.view.Filters;
 	
 	public class Main extends Sprite{
 		private var _video:Video;
@@ -49,6 +43,8 @@ package{
 		private var _tabs:SettingsTabs;
 		private var _shortcuts:SettingsShortcuts;
 		private var _filters:Filters = new Filters();
+
+		private var _fileStore:FileStore;
 		
 		public function Main(){
 			
@@ -57,17 +53,17 @@ package{
 			_holder = new Sprite();
 			addChild(_holder);
 			
-			openSavedSettings(); // Break out the "preBg" logic to run before this method.
+			_fileStore = new FileStore();
+			_settingsVO = _fileStore.settingsVO;
+			trace(_settingsVO.inFront);
 			
-			//settingVOVariables();
 			settingWebcam();
 			stageFunctions();
 			setupChrome();
-			trace(Camera.names);
 			
 			// Called in Constructor - sets up the menu that appears on the top of the screen
 			
-			var model:AppModel = new AppModel;
+//			var model:AppModel = new AppModel;
 			
 			// Event Listeners for the Key Shortcuts - Positioning
 			NativeApplication.nativeApplication.menu = MenuUtils.makeAppMenu(NativeApplication.nativeApplication.menu);
@@ -82,46 +78,6 @@ package{
 			
 			// Event Listeners for the Key Shortcuts - Resolution
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_RESOLUTION_CHANGE, onRezChange);
-		}
-		
-		// ACTUALLY listen on native window to close, that will call the onSave
-		private function writeSavedSettings():void{
-			var file:File = File.applicationStorageDirectory;
-			file.nativePath += File.separator + "settings.data";
-			
-			_settingsVO.x = _mainScreen.x;
-			_settingsVO.y = _mainScreen.y;
-			
-			var fs:FileStream = new FileStream();
-			fs.open(file,FileMode.WRITE);
-			fs.writeObject(_settingsVO);
-			fs.close();
-			
-		}
-		
-		// ACTUALLY call this function when the app opens
-		private function openSavedSettings():void{
-			var file:File = File.applicationStorageDirectory;
-			file.nativePath += File.separator + "settings.data";
-			
-			if(! file.exists){
-				trace("File Does not exist");
-				// If the file doesn't exist, Perhaps populate a settings VO with default values.
-				// OR bring up the settings menu so the user can define and save their own settings.
-				_settingsVO = new SettingsVO();
-				addSettings();
-				return
-			}
-			
-			var fs:FileStream = new FileStream();
-			fs.open(file,FileMode.READ);
-			trace(fs.bytesAvailable);
-			//pull vo back out and cast it as vo and then set the var throughout the doc = to its variables
-			_settingsVO = fs.readObject();
-			fs.close();
-			
-			trace("file Data: ",_settingsVO); // figure out how to see the object you saved to the file stream
-			
 		}
 		
 		private function setupChrome():void{
@@ -292,7 +248,7 @@ package{
 			_settings.y = 0;
 			_settings.alpha = 0;
 			_holder.addChild(_settings);
-			TweenLite.to(_settings, 1, {alpha:1});
+			TweenLite.to(_settings, .5, {alpha:1});
 			_settings.addEventListener(SettingsEvent.SETTINGS_CHANGE,onSettingsChange);
 		}
 		
@@ -308,7 +264,7 @@ package{
 			_settingsVO = Settings(event.currentTarget).settingsVO;
 			_camera.setMode(_settingsVO.resolutionX,_settingsVO.resolutionY,30,true);
 			// Use this function to update display and stuffs.
-			writeSavedSettings();
+			_fileStore.settingsVO = _settingsVO;
 		}
 		
 		
@@ -418,6 +374,7 @@ package{
 //		private function onRezChange(resolutionX:uint,resolutionY:uint):void{
 
 		private function onRezChange(e:MenuEvents):void{
+			trace('rez change');
 			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
 			_camera.setMode(e.width,e.height,30,true);
 			_settingsVO.resolutionX = e.width;

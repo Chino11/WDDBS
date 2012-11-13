@@ -44,7 +44,7 @@ package{
 		private var _settingsVO:SettingsVO;
 		private var _preBg:PreBackground;
 		private var _holder:Sprite;
-		private var _displayState:Function;
+		private var _displayState:String;
 		private var _mainCloseButton:CloseButton;
 		private var _tabs:SettingsTabs;
 		private var _shortcuts:SettingsShortcuts;
@@ -71,12 +71,12 @@ package{
 			
 			// Event Listeners for the Key Shortcuts - Positioning
 			NativeApplication.nativeApplication.menu = MenuUtils.makeAppMenu(NativeApplication.nativeApplication.menu);
-			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_TOP_LEFT, onTopLeft);
-			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_BOTTOM_LEFT, onBottomLeft);
-			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_TOP_RIGHT, onTopRight);
-			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_BOTTOM_RIGHT, onBottomRight);
-			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_CENTER, onCenter);
-			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_FULL_SCREEN, onFullscreen);
+//			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_TOP_LEFT, onTopLeft);
+//			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_BOTTOM_LEFT, onBottomLeft);
+//			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_TOP_RIGHT, onTopRight);
+//			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_BOTTOM_RIGHT, onBottomRight);
+//			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_CENTER, onCenter);
+//			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_FULL_SCREEN, onFullscreen);
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.POSITION_CHANGE, onPosition);
 
 			
@@ -141,7 +141,7 @@ package{
 			trace("From settings vo in onActive",Camera.names[0]);
 //			_camera = new Camera();
 			_camera.setMode(_settingsVO.resolutionX, _settingsVO.resolutionY, 30, true); // TODO: This would use the camera setting
-			_displayState = onCenter;   //Set display state onActive  <-------------
+			_displayState = "Center";   //Set display state onActive  <-------------
 			_video.height = _camera.height;
 			_video.width = _camera.width;
 			stage.nativeWindow.width = _video.width;
@@ -152,7 +152,7 @@ package{
 			_holder.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			_holder.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 			settingsIcon(0);
-			_displayState();
+			onPosition();
 		}
 		
 		private function onWindowClose(event:MouseEvent):void{
@@ -174,7 +174,7 @@ package{
 		// Responds to Constructor
 		private function stageFunctions():void{
 			stage.align = StageAlign.TOP;
-//			stage.nativeWindow.alwaysInFront = _inFront;
+			stage.nativeWindow.alwaysInFront = _inFront;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			_mainScreen = stage.nativeWindow;
@@ -300,20 +300,27 @@ package{
 			_holder.addChild(_settings);
 			TweenLite.to(_settings, 1, {alpha:1});
 			_settings.addEventListener(SettingsEvent.SETTINGS_CHANGE,onSettingsChange);
+			_settings.addEventListener(SettingsEvent.CAMERA_CHANGE,onCameraChange);
 		}
 		
-		private function onSettingsChange(event:SettingsEvent):void{
-			trace(_settingsVO.defaultCamera)
-			
-			
+		private function onCameraChange(event:Event):void
+		{
 			_camera = Camera.getCamera(String(_settingsVO.defaultCameraIndex));
 			_video.attachCamera(_camera);
 			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
-
+			_camera.setMode(_settingsVO.resolutionX,_settingsVO.resolutionY,30,true);
+			writeSavedSettings();
+		}
+		
+		private function onSettingsChange(event:SettingsEvent):void{
+			
+			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
+			
 //			onSettingsRezChange(_settingsVO.resolutionX,_settingsVO.resolutionY);
 			_settingsVO = Settings(event.currentTarget).settingsVO;
 			_camera.setMode(_settingsVO.resolutionX,_settingsVO.resolutionY,30,true);
 			// Use this function to update display and stuffs.
+			_inFront = _settingsVO.inFront
 			writeSavedSettings();
 		}
 		
@@ -346,86 +353,91 @@ package{
 			settingsIcon(_settingsIcon.alpha);
 		}
 		
-		private function onFullscreen(event:Event):void{
-			stage.nativeWindow.width = Screen.mainScreen.visibleBounds.width;
-			stage.nativeWindow.height = Screen.mainScreen.visibleBounds.height;
+		private function onPosition(p:MenuEvents = null):void{
 			
-//			_holder.width = 1025;
-//			_holder.height = 768;
-
-//			_holder.x = (stage.nativeWindow.width - _holder.width)/2;
-//			_holder.y = (stage.nativeWindow.height - _holder.height)/2;
-
-			_camera.setMode(_holder.width,_holder.height,30,true);
-			settingsIcon(_settingsIcon.alpha);
+			var compareVal:String="";
 			
-			//onPositionTween(_settingsVO.left, _settingsVO.top);
-			onPositionTween((Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2,
-				_settingsVO.top);
+			(p == null) ? compareVal = _displayState : compareVal = p.newPos;
 			
-			_displayState = onCenter;
+			switch (compareVal){
+				case "TopLeft":
+					onPositionTween(_settingsVO.left, _settingsVO.top);
+					_displayState = compareVal;
+					break;
+				
+				case "TopRight":
+					onPositionTween(_settingsVO.right - _camera.width, _settingsVO.top);
+					_displayState = compareVal;
+					break;
+				
+				case "BottomLeft":
+					onPositionTween(_settingsVO.left, _settingsVO.bottom - _camera.height);
+					_displayState = compareVal;
+					break;
+				
+				case "BottomRight":
+					onPositionTween(_settingsVO.right - stage.nativeWindow.width, _settingsVO.bottom - _camera.height);
+					_displayState = compareVal;
+					break;
+				
+				case "Center":
+					onPositionTween((Screen.mainScreen.visibleBounds.width - _camera.width)/2,
+						(Screen.mainScreen.visibleBounds.height - _camera.height)/2);
+					_displayState = compareVal;
+					break;
+				
+				case "Fullscreen":
+					stage.nativeWindow.width = Screen.mainScreen.visibleBounds.width;
+					stage.nativeWindow.height = Screen.mainScreen.visibleBounds.height;
+					
+					//			_holder.width = 1025;
+					//			_holder.height = 768;
+					
+					//			_holder.x = (stage.nativeWindow.width - _holder.width)/2;
+					//			_holder.y = (stage.nativeWindow.height - _holder.height)/2;
+					
+					_camera.setMode(_holder.width,_holder.height,30,true);
+					settingsIcon(_settingsIcon.alpha);
+					
+					//onPositionTween(_settingsVO.left, _settingsVO.top);
+					onPositionTween((Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2,
+						_settingsVO.top);
+					
+					_displayState = compareVal;
+					break;
+			}
 		}
+		
+//		private function onCenter(event:Event=null):void{
+//			onPositionTween((Screen.mainScreen.visibleBounds.width - _camera.width)/2,
+//				(Screen.mainScreen.visibleBounds.height - _camera.height)/2);
+//			_displayState = onCenter;
+//		}
+//		
+//		private function onTopRight(event:Event=null):void{
+//			onPositionTween(_settingsVO.right - _camera.width, _settingsVO.top);
+//			_displayState = onTopRight;
+//		}
+//		
+//		private function onTopLeft(event:Event=null):void{
+//			onPositionTween(_settingsVO.left, _settingsVO.top);
+//			_displayState = onTopLeft;
+//		}
+//		
+//		private function onBottomRight(event:Event=null):void{
+//			onPositionTween(_settingsVO.right - stage.nativeWindow.width, _settingsVO.bottom - _camera.height);
+//			_displayState = onBottomRight;
+//		}
+//		
+//		private function onBottomLeft(event:Event=null):void{			
+//			onPositionTween(_settingsVO.left, _settingsVO.bottom - _camera.height);
+//			_displayState = onBottomLeft;
+//		}
 		
 		private function onPositionTween(positionX:Number, positionY:Number):void
 		{
 			resetWindow();
 			TweenLite.to(stage.nativeWindow, .5, {x:positionX, y:positionY, ease:Circ.easeOut});
-		}
-		
-		private function onPosition(p:MenuEvents):void{
-			switch (p.newPos){
-				case "TopLeft":
-					onPositionTween(_settingsVO.left, _settingsVO.top);
-					_displayState = onTopLeft;
-					break;
-				
-				case "TopRight":
-					onPositionTween(_settingsVO.right - _camera.width, _settingsVO.top);
-					_displayState = onTopRight;
-					break;
-				
-				case "BottomLeft":
-					onPositionTween(_settingsVO.left, _settingsVO.bottom - _camera.height);
-					_displayState = onBottomLeft;
-					break;
-				
-				case "BottomRight":
-					onPositionTween(_settingsVO.right - stage.nativeWindow.width, _settingsVO.bottom - _camera.height);
-					_displayState = onBottomRight;
-					break;
-				
-				case "Middle":
-					onPositionTween((Screen.mainScreen.visibleBounds.width - _camera.width)/2,
-						(Screen.mainScreen.visibleBounds.height - _camera.height)/2);
-					_displayState = onCenter;
-					break;
-			}
-		}
-		
-		private function onCenter(event:Event=null):void{
-			onPositionTween((Screen.mainScreen.visibleBounds.width - _camera.width)/2,
-				(Screen.mainScreen.visibleBounds.height - _camera.height)/2);
-			_displayState = onCenter;
-		}
-		
-		private function onTopRight(event:Event=null):void{
-			onPositionTween(_settingsVO.right - _camera.width, _settingsVO.top);
-			_displayState = onTopRight;
-		}
-		
-		private function onTopLeft(event:Event=null):void{
-			onPositionTween(_settingsVO.left, _settingsVO.top);
-			_displayState = onTopLeft;
-		}
-		
-		private function onBottomRight(event:Event=null):void{
-			onPositionTween(_settingsVO.right - stage.nativeWindow.width, _settingsVO.bottom - _camera.height);
-			_displayState = onBottomRight;
-		}
-		
-		private function onBottomLeft(event:Event=null):void{			
-			onPositionTween(_settingsVO.left, _settingsVO.bottom - _camera.height);
-			_displayState = onBottomLeft;
 		}
 		
 //		private function onRezChange(resolutionX:uint,resolutionY:uint):void{

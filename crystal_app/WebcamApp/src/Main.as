@@ -313,11 +313,14 @@ package{
 			_video.attachCamera(_camera);
 			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
 
+			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
+			
 //			onSettingsRezChange(_settingsVO.resolutionX,_settingsVO.resolutionY);
 			_settingsVO = Settings(event.currentTarget).settingsVO;
 			_camera.setMode(_settingsVO.resolutionX,_settingsVO.resolutionY,30,true);
 			// Use this function to update display and stuffs.
 			onBoxCheck();
+			_inFront = _settingsVO.inFront
 			writeSavedSettings();
 		}
 		
@@ -377,31 +380,54 @@ package{
 		}
 		
 		private function onPosition(p:MenuEvents):void{
-			switch (p.newPos){
+			var compareVal:String="";
+			(p == null) ? compareVal = _displayState : compareVal = p.newPos;
+			switch (compareVal){
 				case "TopLeft":
 					onPositionTween(_settingsVO.left, _settingsVO.top);
-					_displayState = onTopLeft;
+					_displayState = compareVal;
 					break;
 				
 				case "TopRight":
 					onPositionTween(_settingsVO.right - _camera.width, _settingsVO.top);
-					_displayState = onTopRight;
+					_displayState = compareVal;
 					break;
 				
 				case "BottomLeft":
 					onPositionTween(_settingsVO.left, _settingsVO.bottom - _camera.height);
-					_displayState = onBottomLeft;
+					_displayState = compareVal;
 					break;
 				
 				case "BottomRight":
 					onPositionTween(_settingsVO.right - stage.nativeWindow.width, _settingsVO.bottom - _camera.height);
-					_displayState = onBottomRight;
+					_displayState = compareVal;
 					break;
 				
 				case "Middle":
 					onPositionTween((Screen.mainScreen.visibleBounds.width - _camera.width)/2,
 						(Screen.mainScreen.visibleBounds.height - _camera.height)/2);
 					_displayState = onCenter;
+					_displayState = compareVal;
+					break;
+				
+				case "Fullscreen":
+					stage.nativeWindow.width = Screen.mainScreen.visibleBounds.width;
+					stage.nativeWindow.height = Screen.mainScreen.visibleBounds.height;
+					
+					//			_holder.width = 1025;
+					//			_holder.height = 768;
+					
+					//			_holder.x = (stage.nativeWindow.width - _holder.width)/2;
+					//			_holder.y = (stage.nativeWindow.height - _holder.height)/2;
+					
+					_camera.setMode(_holder.width,_holder.height,30,true);
+					settingsIcon(_settingsIcon.alpha);
+					
+					//onPositionTween(_settingsVO.left, _settingsVO.top);
+					onPositionTween((Screen.mainScreen.visibleBounds.width - stage.nativeWindow.width)/2,
+						_settingsVO.top);
+					
+					_displayState = compareVal;
 					break;
 			}
 		}

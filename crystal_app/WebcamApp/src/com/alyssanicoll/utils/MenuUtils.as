@@ -76,23 +76,42 @@ package com.alyssanicoll.utils
 			
 			var smallSubItem:NativeMenuItem = new NativeMenuItem("320x240");
 			smallSubItem.keyEquivalent = "1";
-			//smallSubItem.data = SMALL;
-			smallSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
-				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_SMALL));});
+			smallSubItem.addEventListener(Event.SELECT, function(event:Event):void{
+				var e:MenuEvents = new MenuEvents(MenuEvents.REQUEST_RESOLUTION_CHANGE);
+				e.width = 320;
+				e.height = 240;
+				e.index = 0;
+				menu.dispatchEvent(e);});
 			resolutionMenu.submenu.addItem(smallSubItem);
 			
-			var wideSubItem:NativeMenuItem = new NativeMenuItem("360x240");
+			var wideSubItem:NativeMenuItem = new NativeMenuItem("640x480");
 			wideSubItem.keyEquivalent = "2";
-			//wideSubItem.data = SMALL;
-			wideSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
-				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_WIDE));});
+			wideSubItem.addEventListener(Event.SELECT, function(event:Event):void{
+				var e:MenuEvents = new MenuEvents(MenuEvents.REQUEST_RESOLUTION_CHANGE);
+				e.width = 640;
+				e.height = 480;
+				e.index = 1;
+				menu.dispatchEvent(e);});
 			resolutionMenu.submenu.addItem(wideSubItem);
 			
-			var fullSubItem:NativeMenuItem = new NativeMenuItem("720x480");
-			fullSubItem.keyEquivalent = "3";
-			//fullSubItem.data = SMALL;
-			fullSubItem.addEventListener(Event.SELECT, function(event:Event):void{ 
-				menu.dispatchEvent(new MenuEvents(MenuEvents.REQUEST_FULLSCREEN));});
+			var bigSubItem:NativeMenuItem = new NativeMenuItem("800x600");
+			bigSubItem.keyEquivalent = "3";
+			bigSubItem.addEventListener(Event.SELECT, function(event:Event):void{
+				var e:MenuEvents = new MenuEvents(MenuEvents.REQUEST_RESOLUTION_CHANGE);
+				e.width = 800;
+				e.height = 600;
+				e.index = 2;
+				menu.dispatchEvent(e);});
+			resolutionMenu.submenu.addItem(bigSubItem);
+			
+			var fullSubItem:NativeMenuItem = new NativeMenuItem("1024x768");
+			fullSubItem.keyEquivalent = "4";
+			fullSubItem.addEventListener(Event.SELECT, function(event:Event):void{
+				var e:MenuEvents = new MenuEvents(MenuEvents.REQUEST_RESOLUTION_CHANGE);
+				e.width = 1024;
+				e.height = 768;
+				e.index = 3;
+				menu.dispatchEvent(e);});
 			resolutionMenu.submenu.addItem(fullSubItem);
 
 			

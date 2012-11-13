@@ -1,8 +1,9 @@
 package com.alyssanicoll.vo
 {
+	import flash.display.Screen;
 	import flash.media.Camera;
 
-	[RemoteClass(alias = "com.ca.vo.SettingsVO")]
+	[RemoteClass(alias = "com.alyssanicoll.vo.SettingsVO")]
 	public class SettingsVO
 	{
 		
@@ -15,7 +16,12 @@ package com.alyssanicoll.vo
 		public var inFront:Boolean = false;
 		public var resolutionX:uint = 320; 
 		public var resolutionY:uint = 240;
+		public var resolutionSelected:uint;
 		public var defaultCamera:String = _webcams[0];
+		public var bottom:Number = Screen.mainScreen.visibleBounds.bottom;
+		public var top:Number = Screen.mainScreen.visibleBounds.top;
+		public var right:Number = Screen.mainScreen.visibleBounds.right;
+		public var left:Number = Screen.mainScreen.visibleBounds.left;
 		public function SettingsVO()
 		{
 		}

@@ -1,7 +1,9 @@
 package com.alyssanicoll.view{
 	import com.alyssanicoll.events.SettingsEvent;
 	import com.alyssanicoll.vo.SettingsVO;
+	
 	import fl.controls.ComboBox;
+	
 	import flash.events.Event;
 	
 	public class Settings extends SettingsBase{
@@ -20,6 +22,8 @@ package com.alyssanicoll.view{
 			_settingsVO.resolutionX = dataArray[0];
 			_settingsVO.resolutionY = dataArray[1];
 			
+			_settingsVO.resolutionSelected = ComboBox(event.currentTarget).selectedIndex;
+			
 			dispatchEvent(new SettingsEvent(SettingsEvent.SETTINGS_CHANGE));
 		}
 		
@@ -36,7 +40,8 @@ package com.alyssanicoll.view{
 
 		public function set settingsVO(value:SettingsVO):void{
 			_settingsVO = value;
-			
+			//Set    selectedIndex here
+			resolutionDropDown.selectedIndex = _settingsVO.resolutionSelected;
 			frontCheckBox.selected = _settingsVO.inFront;
 		}
 	}

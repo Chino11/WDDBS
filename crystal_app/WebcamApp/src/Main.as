@@ -11,6 +11,8 @@ package{
 	import com.greensock.*;
 	import com.greensock.easing.*;
 	
+	import fl.controls.ComboBox;
+	
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeWindow;
 	import flash.display.Screen;
@@ -24,6 +26,7 @@ package{
 	import flash.media.Video;
 	import flash.net.registerClassAlias;
 	import flash.utils.ByteArray;
+	
 	import org.osmf.media.DefaultMediaFactory;
 	
 	public class Main extends Sprite{
@@ -62,7 +65,8 @@ package{
 			settingWebcam();
 			stageFunctions();
 			setupChrome();
-			
+			addSettings(0);
+			_video.filters = [];
 			// Called in Constructor - sets up the menu that appears on the top of the screen
 			
 //			var model:AppModel = new AppModel;
@@ -268,14 +272,14 @@ package{
 			_video.filters = [_filters.myBlur, _filters.myGlow];
 		}
 		
-		private function addSettings():void {
-			_settings = new Settings();
+		private function addSettings(defaultAlpha:Number = 1):void {
+			if(_settings==null) _settings = new Settings();
 			_settings.settingsVO = _settingsVO;
 			_settings.x = 0;
 			_settings.y = 0;
 			_settings.alpha = 0;
 			_holder.addChild(_settings);
-			TweenLite.to(_settings, .5, {alpha:1});
+			TweenLite.to(_settings, .5, {alpha:defaultAlpha});
 			_settings.addEventListener(SettingsEvent.SETTINGS_CHANGE,onSettingsChange);
 			_settings.addEventListener(SettingsEvent.CAMERA_CHANGE,onCameraChange);
 			
@@ -301,7 +305,8 @@ package{
 			// Use this function to update display and stuffs.
 			_fileStore.settingsVO = _settingsVO;
 			onBoxCheck();
-			_inFront = _settingsVO.inFront
+			_inFront = _settingsVO.inFront;
+			
 		}
 		
 		

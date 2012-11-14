@@ -1,6 +1,8 @@
 package com.alyssanicoll.utils
 {
 	import com.alyssanicoll.events.MenuEvents;
+	import com.alyssanicoll.view.Settings;
+	import com.alyssanicoll.vo.SettingsVO;
 	import com.greensock.*;
 	import com.greensock.easing.*;
 	
@@ -15,6 +17,10 @@ package com.alyssanicoll.utils
 		public static const TOP_LEFT:String = "screenTopLeft"
 		public static const TOP_RIGHT:String = "screenTopRight";
 		public static var _natMen:NativeMenu;
+
+		private static var _settingsVO:SettingsVO = new SettingsVO;
+
+		private static var _settings:Settings;
 		
 		public function MenuUtils()
 		{
@@ -86,6 +92,7 @@ package com.alyssanicoll.utils
 				e.width = 320;
 				e.height = 240;
 				e.index = 0;
+//				_settingsVO.resolutionSelected = _settings.resolutionDropDown[e].selectedIndex;
 				p.dispatchEvent(e);});
 			resolutionMenu.submenu.addItem(smallSubItem);
 			
@@ -96,6 +103,7 @@ package com.alyssanicoll.utils
 				e.width = 640;
 				e.height = 480;
 				e.index = 1;
+//				_settingsVO.resolutionSelected = e.index;
 				p.dispatchEvent(e);});
 			resolutionMenu.submenu.addItem(wideSubItem);
 			
@@ -106,6 +114,7 @@ package com.alyssanicoll.utils
 				e.width = 800;
 				e.height = 600;
 				e.index = 2;
+//				_settingsVO.resolutionSelected = _settings.resolutionDropDown[e].selectedIndex;
 				p.dispatchEvent(e);});
 			resolutionMenu.submenu.addItem(bigSubItem);
 			
@@ -116,6 +125,7 @@ package com.alyssanicoll.utils
 				e.width = 1024;
 				e.height = 768;
 				e.index = 3;
+//				_settingsVO.resolutionSelected = _settings.resolutionDropDown[e].selectedIndex;
 				p.dispatchEvent(e);});
 			resolutionMenu.submenu.addItem(fullSubItem);
 

@@ -45,7 +45,6 @@ package{
 		private var _tabs:SettingsTabs;
 		private var _shortcuts:SettingsShortcuts;
 		private var _filters:Filters = new Filters();
-
 		private var _fileStore:FileStore;
 		
 		public function Main(){
@@ -62,7 +61,13 @@ package{
 			settingWebcam();
 			stageFunctions();
 			setupChrome();
+<<<<<<< HEAD
 			
+=======
+			addSettings(0);
+			_video.filters = [];
+			repositionSettings();
+>>>>>>> 0960129bdb6560d0769f29c02e25cc405e76842f
 			// Called in Constructor - sets up the menu that appears on the top of the screen
 			
 //			var model:AppModel = new AppModel;
@@ -82,16 +87,45 @@ package{
 			_mainCloseButton.stop();
 			_mainCloseButton.buttonMode = true;
 			_holder.addChild(_mainCloseButton);
-			_mainCloseButton.addEventListener(MouseEvent.CLICK, onCloseClick);
+			_mainCloseButton.addEventListener(MouseEvent.MOUSE_DOWN, onCloseClick);
 			_mainCloseButton.name = "mainCloseButton";
 			_mainCloseButton.mouseChildern = false;
 			stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
 			stage.addEventListener(MouseEvent.MOUSE_UP,onMouseUp);
 		}
 		
+		private function repositionSettings():void{
+			if(_video.width >= 500 && _settings && _tabs){
+				_settings.x = (_video.width - _settings.width)/2;
+				_settings.y = ((_video.height - _settings.height)/2)-100;
+				_tabs.x = (_video.width - _tabs.width)/2;
+				_tabs.y = (_settings.y - _tabs.height);
+			}
+				
+			else if(_video.width <= 499 && _settings && _tabs){
+				_settings.x = 0;
+				_settings.y = 0;
+				_tabs.x = (_video.width - (_tabs.width*2.5))/2;
+				_tabs.y = (_settings.y - _tabs.height) + 35;
+			}
+			
+			if(_video.width >= 500 && _shortcuts && _tabs){
+				_shortcuts.x = ((_video.width - _shortcuts.width)/2)-30;
+				_shortcuts.y = ((_video.height - _shortcuts.height)/2)-100;
+				_tabs.x = (_video.width - _tabs.width)/2;
+				_tabs.y = (_settings.y - _tabs.height);
+			}
+				
+			else if(_video.width <= 499 && _shortcuts && _tabs){
+				_shortcuts.x = 0;
+				_shortcuts.y = 0;
+				_tabs.x = (_video.width - (_tabs.width*2.5))/2;
+				_tabs.y = (_settings.y - _tabs.height) + 35;
+			}
+		}
 		private function onActive(event:ActivityEvent):void{
 //			trace(_camera.width,_camera.height);
-			trace("From settings vo in onActive",Camera.names[0]);
+//			trace("From settings vo in onActive",Camera.names[0]);
 //			_camera = new Camera();
 			_camera.setMode(_settingsVO.resolutionX, _settingsVO.resolutionY, 30, true); // TODO: This would use the camera setting
 			_displayState = "Center";   //Set display state onActive  <-------------
@@ -106,33 +140,7 @@ package{
 			_holder.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 			settingsIcon(0);
 			onPositionChange();
-			
-			
-			if(_video.width >= 500 && _settings){
-				_settings.x = (_video.width - _settings.width)/2;
-				_settings.y = ((_video.height - _settings.height)/2)-100;
-				_tabs.x = (_video.width - _tabs.width)/2;
-				_tabs.y = (_settings.y - _tabs.height);
-			}
-				
-			else if(_video.width <= 499 && _settings){
-				_settings.x = 0;
-				_settings.y = 0;
-			}
-			
-			if(_video.width >= 500 && _shortcuts){
-				_shortcuts.x = ((_video.width - _shortcuts.width)/2)-30;
-				_shortcuts.y = ((_video.height - _shortcuts.height)/2)-100;
-				_tabs.x = (_video.width - _tabs.width)/2;
-				_tabs.y = (_settings.y - _tabs.height);
-			}
-				
-			else if(_video.width <= 499 && _shortcuts){
-				_shortcuts.x = 0;
-				_shortcuts.y = 0;
-				_tabs.x = 0;
-				_tabs.y = 20;
-			}
+			repositionSettings();
 		}
 		
 		private function onWindowClose(event:MouseEvent):void{
@@ -224,12 +232,13 @@ package{
 			_settingsIcon.removeEventListener(MouseEvent.CLICK, onSettingsClick);
 		}
 		
-		private function addTabs():void
+		private function addTabs(defaultAlpha:Number=1):void
 		{
-			_tabs = new SettingsTabs();
+			if(_tabs==null) _tabs = new SettingsTabs();
+
 			_tabs.x = -_tabs.width/2;
 			_holder.addChild(_tabs);
-			TweenLite.to(_tabs, 1, {alpha:1});
+			TweenLite.to(_tabs, 1, {alpha:defaultAlpha});
 			
 			_tabs.tabShortcuts.buttonMode = true;
 			_tabs.tabSettings.buttonMode = true;
@@ -244,6 +253,7 @@ package{
 				_holder.removeChild(_shortcuts);
 				addSettings();
 			}
+			repositionSettings();
 		}
 		
 		private function onShortcutsTabClick(event:MouseEvent):void
@@ -252,6 +262,7 @@ package{
 				_holder.removeChild(_settings);
 				addShortcuts();
 			}
+			repositionSettings();
 		}
 		
 		private function addShortcuts():void{
@@ -291,7 +302,11 @@ package{
 		
 		private function onSettingsChange(event:SettingsEvent):void{
 			trace(_settingsVO.defaultCamera)
-
+			
+			_camera = Camera.getCamera(String(_settingsVO.defaultCameraIndex));
+			_video.attachCamera(_camera);
+			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
+			
 			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
 			
 //			onSettingsRezChange(_settingsVO.resolutionX,_settingsVO.resolutionY);
@@ -398,6 +413,7 @@ package{
 			_settingsVO.resolutionX = e.width;
 			_settingsVO.resolutionY = e.height;
 			_settingsVO.resolutionSelected = e.index;
+<<<<<<< HEAD
 			_fileStore.settingsVO = _settingsVO;
 			
 			if(_video.width >= 500 && _settings){
@@ -425,6 +441,9 @@ package{
 				_tabs.x = 0;
 				_tabs.y = 20;
 			}
+=======
+			_settings.settingsVO = _settingsVO;
+>>>>>>> 0960129bdb6560d0769f29c02e25cc405e76842f
 		}
 	}
 }

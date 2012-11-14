@@ -49,7 +49,7 @@ package com.alyssanicoll.view{
 		}
 		
 		private function onUpFrontCheckBoxChange(event:Event):void{
-			trace("Checkbox Selection:",frontCheckBox.selected);
+//			trace("Checkbox Selection:",frontCheckBox.selected);
 			_inFront = false;
 			if(!this.frontCheckBox.selected){
 				_inFront = true;

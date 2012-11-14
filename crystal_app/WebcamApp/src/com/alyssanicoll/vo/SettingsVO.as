@@ -11,9 +11,6 @@ package com.alyssanicoll.vo
 
 		public var x:uint = 50;
 		public var y:uint = 50;
-
-//		public var x:uint = 0; 
-//		public var y:uint = 0;
 		public var width:uint = resolutionX;
 		public var height:uint = resolutionY;
 		public var inFront:Boolean = false;
@@ -26,6 +23,7 @@ package com.alyssanicoll.vo
 		public var top:Number = Screen.mainScreen.visibleBounds.top;
 		public var right:Number = Screen.mainScreen.visibleBounds.right;
 		public var left:Number = Screen.mainScreen.visibleBounds.left;
+		
 		public function SettingsVO()
 		{
 		}

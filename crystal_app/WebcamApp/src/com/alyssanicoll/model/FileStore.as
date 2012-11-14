@@ -64,6 +64,7 @@ package com.alyssanicoll.model
 				
 			//	this.dispatchEvent(new Event(Event.CANCEL));
 				_settingsVO = new SettingsVO();
+				_settingsVO.defaultCamera = "999";
 				return
 			}
 			

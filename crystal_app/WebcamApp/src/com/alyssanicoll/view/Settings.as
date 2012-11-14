@@ -67,6 +67,7 @@ package com.alyssanicoll.view{
 			_settingsVO = value;
 			//Set    selectedIndex here
 			resolutionDropDown.selectedIndex = _settingsVO.resolutionSelected;
+//			trace(_settingsVO.resolutionSelected);
 			cameraDropDown.selectedIndex = _settingsVO.defaultCameraIndex; //array index
 			frontCheckBox.selected = _settingsVO.inFront;
 		}

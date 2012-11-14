@@ -115,7 +115,7 @@ package{
 			if(_video.width >= 500 && _settings){
 				_settings.x = (_video.width - _settings.width)/2;
 				_settings.y = ((_video.height - _settings.height)/2)-100;
-				_tabs.x = (_video.width - (_tabs.width*2.5))/2;
+				_tabs.x = (_video.width - _tabs.width)/2;
 				_tabs.y = (_settings.y - _tabs.height);
 			}
 				
@@ -242,7 +242,7 @@ package{
 			_tabs.tabShortcuts.addEventListener(MouseEvent.CLICK, onShortcutsTabClick);
 			_tabs.tabSettings.addEventListener(MouseEvent.CLICK, onSettingsTabClick);
 		}
-		
+			
 		private function onSettingsTabClick(event:MouseEvent):void
 		{
 			if(_shortcuts && _holder.contains(_shortcuts)){

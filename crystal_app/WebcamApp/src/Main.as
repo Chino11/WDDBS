@@ -61,13 +61,10 @@ package{
 			settingWebcam();
 			stageFunctions();
 			setupChrome();
-<<<<<<< HEAD
 			
-=======
-			addSettings(0);
+			addSettings();
 			_video.filters = [];
 			repositionSettings();
->>>>>>> 0960129bdb6560d0769f29c02e25cc405e76842f
 			// Called in Constructor - sets up the menu that appears on the top of the screen
 			
 //			var model:AppModel = new AppModel;
@@ -413,7 +410,6 @@ package{
 			_settingsVO.resolutionX = e.width;
 			_settingsVO.resolutionY = e.height;
 			_settingsVO.resolutionSelected = e.index;
-<<<<<<< HEAD
 			_fileStore.settingsVO = _settingsVO;
 			
 			if(_video.width >= 500 && _settings){
@@ -441,9 +437,7 @@ package{
 				_tabs.x = 0;
 				_tabs.y = 20;
 			}
-=======
 			_settings.settingsVO = _settingsVO;
->>>>>>> 0960129bdb6560d0769f29c02e25cc405e76842f
 		}
 	}
 }

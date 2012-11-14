@@ -30,7 +30,7 @@ package{
 	import org.osmf.media.DefaultMediaFactory;
 	
 	public class Main extends Sprite{
-		private var _video:Video;
+		private var _video:Video = new Video();
 		//private var _resolutions:Array = [16:9 - 4:3];
 		private var _camera:Camera;
 		private var _settings:Settings;
@@ -59,7 +59,6 @@ package{
 			
 			_fileStore = new FileStore();
 			_settingsVO = _fileStore.settingsVO;
-			trace(_settingsVO.inFront);
 			
 			settingWebcam();
 			stageFunctions();
@@ -67,6 +66,14 @@ package{
 			addSettings(0);
 			_video.filters = [];
 			repositionSettings();
+			
+			if(_settingsVO.defaultCamera == "999"){
+				_settingsVO.defaultCamera = "0";
+//				settingsView = 1;
+//				_video.filters = [_filters.myBlur, _filters.myGlow];
+				onSettingsClick();
+				_fileStore.settingsVO = _settingsVO;
+			}
 			// Called in Constructor - sets up the menu that appears on the top of the screen
 			
 //			var model:AppModel = new AppModel;
@@ -78,8 +85,7 @@ package{
 
 			// Event Listeners for the Key Shortcuts - Resolution
 			NativeApplication.nativeApplication.menu.addEventListener(MenuEvents.REQUEST_RESOLUTION_CHANGE, onResolutionChange);
-		}
-		
+		}	
 		
 		private function setupChrome():void{
 			_mainCloseButton = new CloseButton();
@@ -187,13 +193,15 @@ package{
 		}
 	
 		// Being called in the constructor - calling camera and video to life
-		private function settingWebcam():void{	
+		private function settingWebcam():void{
+			var cam:String = String(_settingsVO.defaultCameraIndex);
 			_preBg = new PreBackground();
 			_holder.addChild(_preBg);
 			_video = new Video(320, 240);
 			_video.smoothing = true;
 			_holder.addChild(_video);
-			_camera = Camera.getCamera(String(_settingsVO.defaultCameraIndex));
+			if(_settingsVO.defaultCamera == "999") cam = "0";
+			_camera = Camera.getCamera(cam);
 			
 			if(!_camera){
 				_camera = Camera.getCamera();
@@ -222,13 +230,13 @@ package{
 			_holder.addChild(_settingsIcon);
 		}
 		
-		private function onSettingsClick(event:MouseEvent):void{
+		private function onSettingsClick(event:MouseEvent = null):void{
 			addSettings();
 			addTabs();
 			_mainCloseButton.gotoAndStop(2);
 			
 			_mainCloseButton.name = "settingsCloseButton";
-			_settingsIcon.removeEventListener(MouseEvent.CLICK, onSettingsClick);
+			if(_settingsIcon) _settingsIcon.removeEventListener(MouseEvent.CLICK, onSettingsClick);
 		}
 		
 		private function addTabs(defaultAlpha:Number=1):void

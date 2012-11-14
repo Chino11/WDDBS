@@ -51,6 +51,7 @@ package com.alyssanicoll.utils
 			rightSubItem.keyEquivalent = "r";
 			rightSubItem.name = "TopRight";
 			rightSubItem.addEventListener(Event.SELECT, onSelect);
+
 			positionMenu.submenu.addItem(rightSubItem);
 			
 			var bLeftSubItem:NativeMenuItem = new NativeMenuItem("Bottom Left");
@@ -132,7 +133,7 @@ package com.alyssanicoll.utils
 		private static function onSelect(event:Event):void
 		{
 			var	p:MenuEvents = new MenuEvents(MenuEvents.POSITION_CHANGE);
-			p.newPos = event.currentTarget.name;
+			p.newPos = String(event.currentTarget.name);
 			_natMen.dispatchEvent(p);
 		}
 	}

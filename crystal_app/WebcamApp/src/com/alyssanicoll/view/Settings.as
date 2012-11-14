@@ -24,8 +24,8 @@ package com.alyssanicoll.view{
 		private function onAddingCameras():void
 		{
 			var cameras:Array = Camera.names;
-			for(var c:Number = 0; c<cameras.length; c++) {
-				cameraDropDown.addItem( { label: cameras[c]} );
+			for(var n:Number = 0; n<cameras.length; n++) {
+				cameraDropDown.addItem( { label: cameras[n]} );
 			}
 			cameraDropDown.enabled = true;
 		}
@@ -35,7 +35,7 @@ package com.alyssanicoll.view{
 //			trace(ComboBox(event.currentTarget).selectedLabel);
 			_settingsVO.defaultCameraIndex = ComboBox(event.currentTarget).selectedIndex;
 			
-			dispatchEvent(new SettingsEvent(SettingsEvent.CAMERA_CHANGE));
+			dispatchEvent(new SettingsEvent(SettingsEvent.SETTINGS_CHANGE));
 		}
 		
 		private function onResChange(event:Event):void{
@@ -50,7 +50,7 @@ package com.alyssanicoll.view{
 		
 		private function onUpFrontCheckBoxChange(event:Event):void{
 			trace("Checkbox Selection:",frontCheckBox.selected);
-			//_inFront = false;
+			_inFront = false;
 			if(!this.frontCheckBox.selected){
 				_inFront = true;
 			}

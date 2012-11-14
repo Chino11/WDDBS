@@ -61,7 +61,7 @@ package{
 			stageFunctions();
 			setupChrome();
 			
-			addSettings();
+			addSettings(0);
 			_video.filters = [];
 			repositionSettings();
 			
@@ -271,7 +271,7 @@ package{
 		}
 		
 		private function addShortcuts():void{
-			_shortcuts = new SettingsShortcuts();
+			if(_shortcuts==null) _shortcuts = new SettingsShortcuts();
 
 			_shortcuts.y = 0;
 			_shortcuts.x = 0;
@@ -311,9 +311,7 @@ package{
 			_camera = Camera.getCamera(String(_settingsVO.defaultCameraIndex));
 			_video.attachCamera(_camera);
 			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
-			
-			_camera.addEventListener(ActivityEvent.ACTIVITY,onActive);
-			
+						
 //			onSettingsRezChange(_settingsVO.resolutionX,_settingsVO.resolutionY);
 			_settingsVO = Settings(event.currentTarget).settingsVO;
 			_camera.setMode(_settingsVO.resolutionX,_settingsVO.resolutionY,30,true);

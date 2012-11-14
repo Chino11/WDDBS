@@ -50,7 +50,7 @@ package{
 		
 		public function Main(){
 			
-			registerClassAlias("com.ca.vo.SettingsVO",SettingsVO);
+			registerClassAlias("com.ca.vo.SettingsVO", SettingsVO);
 			
 			_holder = new Sprite();
 			addChild(_holder);
@@ -106,6 +106,33 @@ package{
 			_holder.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 			settingsIcon(0);
 			onPositionChange();
+			
+			
+			if(_video.width >= 500 && _settings){
+				_settings.x = (_video.width - _settings.width)/2;
+				_settings.y = ((_video.height - _settings.height)/2)-100;
+				_tabs.x = (_video.width - (_tabs.width*2.5))/2;
+				_tabs.y = (_settings.y - _tabs.height);
+			}
+				
+			else if(_video.width <= 499 && _settings){
+				_settings.x = 0;
+				_settings.y = 0;
+			}
+			
+			if(_video.width >= 500 && _shortcuts){
+				_shortcuts.x = ((_video.width - _shortcuts.width)/2)-30;
+				_shortcuts.y = ((_video.height - _shortcuts.height)/2)-100;
+				_tabs.x = (_video.width - (_tabs.width*2.5))/2;
+				_tabs.y = (_settings.y - _tabs.height);
+			}
+				
+			else if(_video.width <= 499 && _shortcuts){
+				_shortcuts.x = 0;
+				_shortcuts.y = 0;
+				_tabs.x = 0;
+				_tabs.y = 20;
+			}
 		}
 		
 		private function onWindowClose(event:MouseEvent):void{
@@ -371,32 +398,6 @@ package{
 			_settingsVO.resolutionX = e.width;
 			_settingsVO.resolutionY = e.height;
 			_settingsVO.resolutionSelected = e.index;
-			
-			if(_video.width >= 500 && _settings){
-				_settings.x = (_video.width - _settings.width)/2;
-				_settings.y = ((_video.height - _settings.height)/2)-100;
-				_tabs.x = (_video.width - (_tabs.width*2.5))/2;
-				_tabs.y = (_settings.y - _tabs.height);
-			}
-				
-			else if(_video.width <= 499 && _settings){
-				_settings.x = 0;
-				_settings.y = 0;
-			}
-			
-			if(_video.width >= 500 && _shortcuts){
-				_shortcuts.x = ((_video.width - _shortcuts.width)/2)-30;
-				_shortcuts.y = ((_video.height - _shortcuts.height)/2)-100;
-				_tabs.x = (_video.width - (_tabs.width*2.5))/2;
-				_tabs.y = (_settings.y - _tabs.height);
-			}
-				
-			else if(_video.width <= 499 && _shortcuts){
-				_shortcuts.x = 0;
-				_shortcuts.y = 0;
-				_tabs.x = 0;
-				_tabs.y = 20;
-			}
 		}
 	}
 }

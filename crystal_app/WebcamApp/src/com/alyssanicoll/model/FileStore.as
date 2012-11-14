@@ -61,6 +61,9 @@ package com.alyssanicoll.model
 				trace("File Does not exist");
 				// If the file doesn't exist, Perhaps populate a settings VO with default values.
 				// OR bring up the settings menu so the user can define and save their own settings.
+				
+			//	this.dispatchEvent(new Event(Event.CANCEL));
+				_settingsVO = new SettingsVO();
 				return
 			}
 			

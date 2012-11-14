@@ -38,14 +38,6 @@ package com.alyssanicoll.utils
 			leftSubItem.data = TOP_LEFT;
 			leftSubItem.addEventListener(Event.SELECT, onSelect);
 			positionMenu.submenu.addItem(leftSubItem);
-
-			
-//			var leftSubItem:NativeMenuItem = new NativeMenuItem("Top Left");
-//			leftSubItem.keyEquivalent = "l";
-//			leftSubItem.data = TOP_LEFT;
-//			leftSubItem.addEventListener(Event.SELECT, function(event:Event):void{
-//				p.dispatchEvent(new MenuEvents(MenuEvents.POSITION_CHANGE));});
-//			positionMenu.submenu.addItem(leftSubItem);
 			
 			var rightSubItem:NativeMenuItem = new NativeMenuItem("Top Right");
 			rightSubItem.keyEquivalent = "r";
@@ -84,6 +76,7 @@ package com.alyssanicoll.utils
 			var resolutionMenu:NativeMenuItem = new NativeMenuItem("Resolution");
 			p.addItem(resolutionMenu);
 			
+/////////////////////////////////////////
 			resolutionMenu.submenu = new NativeMenu();
 			
 			var smallSubItem:NativeMenuItem = new NativeMenuItem("320x240");

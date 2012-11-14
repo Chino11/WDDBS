@@ -11,8 +11,6 @@ package{
 	import com.greensock.*;
 	import com.greensock.easing.*;
 	
-	import fl.controls.ComboBox;
-	
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeWindow;
 	import flash.display.Screen;
@@ -26,7 +24,6 @@ package{
 	import flash.media.Video;
 	import flash.net.registerClassAlias;
 	import flash.utils.ByteArray;
-	
 	import org.osmf.media.DefaultMediaFactory;
 	
 	public class Main extends Sprite{
@@ -65,8 +62,7 @@ package{
 			settingWebcam();
 			stageFunctions();
 			setupChrome();
-			addSettings(0);
-			_video.filters = [];
+			
 			// Called in Constructor - sets up the menu that appears on the top of the screen
 			
 //			var model:AppModel = new AppModel;
@@ -127,7 +123,7 @@ package{
 			if(_video.width >= 500 && _shortcuts){
 				_shortcuts.x = ((_video.width - _shortcuts.width)/2)-30;
 				_shortcuts.y = ((_video.height - _shortcuts.height)/2)-100;
-				_tabs.x = (_video.width - (_tabs.width*2.5))/2;
+				_tabs.x = (_video.width - _tabs.width)/2;
 				_tabs.y = (_settings.y - _tabs.height);
 			}
 				
@@ -232,7 +228,6 @@ package{
 		{
 			_tabs = new SettingsTabs();
 			_tabs.x = -_tabs.width/2;
-			_tabs.alpha = 0;
 			_holder.addChild(_tabs);
 			TweenLite.to(_tabs, 1, {alpha:1});
 			
@@ -272,14 +267,14 @@ package{
 			_video.filters = [_filters.myBlur, _filters.myGlow];
 		}
 		
-		private function addSettings(defaultAlpha:Number = 1):void {
-			if(_settings==null) _settings = new Settings();
+		private function addSettings():void {
+			_settings = new Settings();
 			_settings.settingsVO = _settingsVO;
 			_settings.x = 0;
 			_settings.y = 0;
 			_settings.alpha = 0;
 			_holder.addChild(_settings);
-			TweenLite.to(_settings, .5, {alpha:defaultAlpha});
+			TweenLite.to(_settings, .5, {alpha:1});
 			_settings.addEventListener(SettingsEvent.SETTINGS_CHANGE,onSettingsChange);
 			_settings.addEventListener(SettingsEvent.CAMERA_CHANGE,onCameraChange);
 			
@@ -403,6 +398,33 @@ package{
 			_settingsVO.resolutionX = e.width;
 			_settingsVO.resolutionY = e.height;
 			_settingsVO.resolutionSelected = e.index;
+			_fileStore.settingsVO = _settingsVO;
+			
+			if(_video.width >= 500 && _settings){
+				_settings.x = (_video.width - _settings.width)/2;
+				_settings.y = ((_video.height - _settings.height)/2)-100;
+				_tabs.x = (_video.width - _tabs.width)/2;
+				_tabs.y = (_settings.y - _tabs.height);
+			}
+				
+			else if(_video.width <= 499 && _settings){
+				_settings.x = 0;
+				_settings.y = 0;
+			}
+			
+			if(_video.width >= 500 && _shortcuts){
+				_shortcuts.x = ((_video.width - _shortcuts.width)/2)-30;
+				_shortcuts.y = ((_video.height - _shortcuts.height)/2)-100;
+				_tabs.x = (_video.width - _tabs.width)/2;
+				_tabs.y = (_settings.y - _tabs.height);
+			}
+				
+			else if(_video.width <= 499 && _shortcuts){
+				_shortcuts.x = 0;
+				_shortcuts.y = 0;
+				_tabs.x = 0;
+				_tabs.y = 20;
+			}
 		}
 	}
 }

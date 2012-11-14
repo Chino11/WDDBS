@@ -274,7 +274,8 @@ package{
 			// Use this function to update display and stuffs.
 			_fileStore.settingsVO = _settingsVO;
 			onBoxCheck();
-			_inFront = _settingsVO.inFront
+			_inFront = _settingsVO.inFront;
+			
 		}
 		
 		
@@ -371,6 +372,7 @@ package{
 			_settingsVO.resolutionX = e.width;
 			_settingsVO.resolutionY = e.height;
 			_settingsVO.resolutionSelected = e.index;
+			_fileStore.settingsVO = _settingsVO;
 			
 			if(_video.width >= 500 && _settings){
 				_settings.x = (_video.width - _settings.width)/2;
